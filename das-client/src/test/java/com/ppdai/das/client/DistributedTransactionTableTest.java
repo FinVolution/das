@@ -37,10 +37,10 @@ public class DistributedTransactionTableTest {
     public static Collection data() throws SQLException {
         return Arrays.asList(new Object[][]{
             {new DasClientTest(MySql)},
-         /*   {new DasClientTest(SqlServer)},*/
+            {new DasClientTest(SqlServer)},
             
-            {DasClientShardByTableTest.of(MySql)},
-      /*      {DasClientShardByTableTest.of(SqlServer)},*/
+            {DasClientTableTest.of(MySql)},
+            {DasClientTableTest.of(SqlServer)},
         });
     }
 

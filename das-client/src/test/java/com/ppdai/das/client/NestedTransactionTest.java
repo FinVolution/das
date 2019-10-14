@@ -39,26 +39,26 @@ public class NestedTransactionTest {
     @Parameters
     public static Collection data() throws SQLException {
         return Arrays.asList(new Object[][]{
-            {DasClientShardByDbTableTest.of(DatabaseCategory.MySql), true}, 
-            {DasClientShardByDbTableTest.of(DatabaseCategory.SqlServer), true},
+            {DasClientDbTableTest.of(DatabaseCategory.MySql), true}, 
+            {DasClientDbTableTest.of(DatabaseCategory.SqlServer), true},
             
-            {DasClientShardByDBTest.of(DatabaseCategory.MySql), true}, 
-            {DasClientShardByDBTest.of(DatabaseCategory.SqlServer), true},
+            {DasClientDBTest.of(DatabaseCategory.MySql), true}, 
+            {DasClientDBTest.of(DatabaseCategory.SqlServer), true},
             
-            {DasClientShardByTableTest.of(DatabaseCategory.MySql), true}, 
-            {DasClientShardByTableTest.of(DatabaseCategory.SqlServer), true},
+            {DasClientTableTest.of(DatabaseCategory.MySql), true}, 
+            {DasClientTableTest.of(DatabaseCategory.SqlServer), true},
             
             {new DasClientTest(MySql), true},
             {new DasClientTest(SqlServer), true},
             //==============================================================//
-            {DasClientShardByDbTableTest.of(DatabaseCategory.MySql), false}, 
-            {DasClientShardByDbTableTest.of(DatabaseCategory.SqlServer), false},
+            {DasClientDbTableTest.of(DatabaseCategory.MySql), false}, 
+            {DasClientDbTableTest.of(DatabaseCategory.SqlServer), false},
             
-            {DasClientShardByDBTest.of(DatabaseCategory.MySql), false}, 
-            {DasClientShardByDBTest.of(DatabaseCategory.SqlServer), false},
+            {DasClientDBTest.of(DatabaseCategory.MySql), false}, 
+            {DasClientDBTest.of(DatabaseCategory.SqlServer), false},
             
-            {DasClientShardByTableTest.of(DatabaseCategory.MySql), false}, 
-            {DasClientShardByTableTest.of(DatabaseCategory.SqlServer), false},
+            {DasClientTableTest.of(DatabaseCategory.MySql), false}, 
+            {DasClientTableTest.of(DatabaseCategory.SqlServer), false},
             
             {new DasClientTest(MySql), false},
             {new DasClientTest(SqlServer), false},

@@ -36,11 +36,11 @@ public class DistributedTransactionDbTest {
     @Parameters
     public static Collection data() throws SQLException {
         return Arrays.asList(new Object[][]{
-            {DasClientShardByDBTest.of(MySql)},
-            {DasClientShardByDBTest.of(SqlServer)},
+            {DasClientDBTest.of(MySql)},
+            {DasClientDBTest.of(SqlServer)},
             
-            {DasClientShardByDbTableTest.of(MySql)},
-            {DasClientShardByDbTableTest.of(SqlServer)},
+            {DasClientDbTableTest.of(MySql)},
+            {DasClientDbTableTest.of(SqlServer)},
         });
     }
 

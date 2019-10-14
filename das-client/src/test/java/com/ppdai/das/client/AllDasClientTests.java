@@ -29,10 +29,6 @@ import com.ppdai.das.util.ConvertUtilsTest;
     DasClientTableTest.class,
     DasClientDbTableTest.class,
 
-    DasClientShardByDbTableTest.class,
-    DasClientShardByDBTest.class,
-    DasClientShardByTableTest.class,
-
     DasClientDiagnoseTest.class,
 
     SqlBuilderDBShardTest.class,
