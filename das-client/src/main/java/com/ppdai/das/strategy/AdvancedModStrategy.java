@@ -9,7 +9,7 @@ import java.util.Set;
  * @author hejiehui
  *
  */
-public class AdvancedModStrategy extends AbstractColumnConditionStrategy {
+public class AdvancedModStrategy extends AbstractConditionStrategy {
     /**
      * Key used to declared mod for locating DB shards.
      */

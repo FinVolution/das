@@ -1,5 +1,6 @@
 package com.ppdai.das.strategy;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -14,18 +15,49 @@ import com.ppdai.das.client.sqlbuilder.AbstractColumn;
  *
  */
 public abstract class AbstractConditionStrategy extends AbstractShardingStrategy {
+    /**
+     * Key used to declared columns for locating DB shards.
+     */
+    public static final String COLUMNS = "columns";
 
-    public abstract boolean isDbShardingRelated(ConditionContext ctx);
+    /**
+     * Key used to declared columns for locating table shards.
+     */
+    public static final String TABLE_COLUMNS = "tableColumns";
 
     public abstract Set<String> locateDbShardsByValue(ShardingContext ctx, Object shardValue);
 
     public abstract Set<String> locateDbShards(ConditionContext ctx);
     
-    public abstract boolean isTableShardingRelated(TableConditionContext ctx);
-
     public abstract Set<String> locateTableShardsByValue(TableShardingContext ctx, Object tableShardValue);
     
     public abstract Set<String> locateTableShards(TableConditionContext ctx);
+
+    private Set<String> dbShardColumns;
+    private Set<String> tableShardColumns;
+
+    @Override
+    public void initialize(Map<String, String> settings) {
+        super.initialize(settings);
+        
+        if(settings.containsKey(COLUMNS)) {
+            dbShardColumns = parseNames(settings.get(COLUMNS));
+            setShardByDb(true);
+        }
+        
+        if(settings.containsKey(TABLE_COLUMNS)) {
+            tableShardColumns = parseNames(settings.get(TABLE_COLUMNS));
+            setShardByTable(true);
+        }
+    }
+
+    protected boolean isDbShardingRelated(ConditionContext ctx) {
+        return dbShardColumns.contains(ctx.getColumnName().toLowerCase());
+    }
+
+    protected boolean isTableShardingRelated(TableConditionContext ctx) {
+        return tableShardColumns.contains(ctx.getColumnName().toLowerCase());
+    }
 
     @Override
     public Set<String> locateDbShards(ShardingContext ctx) {
