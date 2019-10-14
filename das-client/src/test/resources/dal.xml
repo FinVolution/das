@@ -1,0 +1,103 @@
+<dal name="das-test">
+  <databaseSets>
+
+    <!-- MySqlSimple -->
+    <databaseSet name="MySqlSimple" provider="mysqlProvider">
+      <add  name="dal_shard_0" databaseType="Master" sharding="" connectionString="dal_shard_0"/>
+    </databaseSet>
+
+    <!-- SqlSvrSimple -->
+    <databaseSet name="SqlSvrSimple" provider="sqlProvider">
+      <add  name="sql_shard_0" databaseType="Master" sharding="" connectionString="sql_shard_0"/>
+    </databaseSet>
+
+    <!-- SimpleMysqlFreshness -->
+    <databaseSet name="SimpleMysqlFreshness" provider="mysqlProvider" >
+      <add  name="dal_shard_0" databaseType="Master" sharding="" connectionString="dal_shard_0"/>
+      <add  name="dal_shard_1" databaseType="Slave" sharding="" connectionString="dal_shard_1"/>
+    </databaseSet>
+
+    <!-- SimpleMysqlShardFreshness -->
+    <databaseSet name="SimpleMysqlShardFreshness" provider="mysqlProvider" shardingStrategy=" class=com.ppdai.das.strategy.AdvancedModStrategy;
+    columns=CountryID;
+    mod=2">
+      <add  name="dal_shard_0" databaseType="Master" sharding="0" connectionString="dal_shard_0"/>
+      <add  name="dal_shard_1" databaseType="Master" sharding="1" connectionString="dal_shard_1"/>
+      <add  name="dal_shard_2" databaseType="Slave" sharding="0" connectionString="dal_shard_0"/>
+      <add  name="dal_shard_3" databaseType="Slave" sharding="1" connectionString="dal_shard_1"/>
+    </databaseSet>
+
+    <!-- MySqlConditionDbTableShard -->
+    <databaseSet name="MySqlConditionDbTableShard" provider="mysqlProvider"  shardingStrategy="class=com.ppdai.das.strategy.AdvancedModStrategy;columns=CountryID;mod=2;tableColumns=CityID;tableMod=4;separator=_;shardedTables=person">
+      <add  name="dal_shard_0" databaseType="Master" sharding="0" connectionString="dal_shard_0"/>
+      <add  name="dal_shard_1" databaseType="Master" sharding="1" connectionString="dal_shard_1"/>
+    </databaseSet>
+
+    <!-- MySqlConditionDbShard -->
+    <databaseSet name="MySqlConditionDbShard" provider="mysqlProvider"  shardingStrategy="class=com.ppdai.das.strategy.AdvancedModStrategy;columns=CountryID;mod=2;">
+      <add  name="dal_shard_0" databaseType="Master" sharding="0" connectionString="dal_shard_0"/>
+      <add  name="dal_shard_1" databaseType="Master" sharding="1" connectionString="dal_shard_1"/>
+    </databaseSet>
+
+    <!-- MySqlConditionTableShard -->
+    <databaseSet name="MySqlConditionTableShard" provider="mysqlProvider"  shardingStrategy="class=com.ppdai.das.strategy.AdvancedModStrategy;tableColumns=CityID;tableMod=4;separator=_;shardedTables=person">
+      <add  name="dal_shard_0" databaseType="Master" sharding="" connectionString="dal_shard_0"/>
+    </databaseSet>
+
+    <!-- SqlSvrConditionDbTableShard -->
+    <databaseSet name="SqlSvrConditionDbTableShard" provider="sqlProvider"  shardingStrategy="class=com.ppdai.das.strategy.AdvancedModStrategy;columns=CountryID;mod=2;tableColumns=CityID;tableMod=4;separator=_;shardedTables=person">
+      <add  name="sql_shard_0" databaseType="Master" sharding="0" connectionString="sql_shard_0"/>
+      <add  name="sql_shard_1" databaseType="Master" sharding="1" connectionString="sql_shard_1"/>
+    </databaseSet>
+
+    <!-- SqlSvrConditionDbShard -->
+    <databaseSet name="SqlSvrConditionDbShard" provider="sqlProvider"  shardingStrategy="class=com.ppdai.das.strategy.AdvancedModStrategy;columns=CountryID;mod=2;">
+      <add  name="sql_shard_0" databaseType="Master" sharding="0" connectionString="sql_shard_0"/>
+      <add  name="sql_shard_1" databaseType="Master" sharding="1" connectionString="sql_shard_1"/>
+    </databaseSet>
+
+    <!-- SqlSvrConditionTableShard -->
+    <databaseSet name="SqlSvrConditionTableShard" provider="sqlProvider"  shardingStrategy="class=com.ppdai.das.strategy.AdvancedModStrategy;tableColumns=CityID;tableMod=4;separator=_;shardedTables=person">
+      <add  name="sql_shard_0" databaseType="Master" sharding="" connectionString="sql_shard_0"/>
+    </databaseSet>
+
+  </databaseSets>
+  <LogListener enabled="true">
+  	  <logger>com.ppdai.das.core.client.DefaultLogger</logger>
+      <settings>
+        <encrypt>false</encrypt>
+        <secretKey>dalctripcn</secretKey>
+        <simplified>false</simplified>
+        <sampling>true</sampling>
+        <samplingLow>2</samplingLow>
+	  	<samplingHigh>1</samplingHigh>
+	  	<sampleMaxNum>5000</sampleMaxNum>
+	  	<sampleClearInterval>30</sampleClearInterval>
+        <asyncLogging>false</asyncLogging>
+      </settings>
+  </LogListener>
+  <ConnectionLocator>
+      <locator>com.ppdai.das.core.datasource.DefaultDalConnectionLocator</locator>
+      <settings>
+        <!--
+          <path>/opt/settings/dal/database.properties</path>
+         -->
+       <!-- <path>D:\IdeaProjects\ppdai-das-client\src\test\resources\database.properties</path> -->
+         <dataSourceConfigureProvider>com.ppdai.das.core.configure.DefaultDataSourceConfigureProvider</dataSourceConfigureProvider>
+      </settings>
+  </ConnectionLocator>
+  <TaskFactory>
+      <settings>
+		 <maxPoolSize>100</maxPoolSize>
+	  </settings>
+  </TaskFactory>
+  <DatabaseSelector>
+      <selector>com.ppdai.das.core.configure.FreshnessSelector</selector>
+      <settings>
+         <freshnessReader>com.ppdai.das.core.configure.SlaveStatusFreshnessReader</freshnessReader>
+         <updateInterval>2</updateInterval>
+         <querySQL>select 0 as r</querySQL>
+         <selectField>r</selectField>
+      </settings>
+  </DatabaseSelector>
+</dal>

@@ -1,0 +1,194 @@
+package com.ppdai.das.core.client;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Set;
+
+import com.ppdai.das.core.DalEventEnum;
+import com.ppdai.das.core.DalHintEnum;
+import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.configure.DalConfigure;
+import com.ppdai.das.core.configure.DatabaseSet;
+import com.ppdai.das.core.configure.SelectionContext;
+import com.ppdai.das.core.exceptions.DalException;
+import com.ppdai.das.core.exceptions.ErrorCode;
+import com.ppdai.das.core.markdown.MarkdownManager;
+import com.ppdai.das.core.status.DalStatusManager;
+import com.ppdai.das.strategy.ConditionList;
+import com.ppdai.das.strategy.ShardingContext;
+import com.ppdai.das.strategy.ShardingStrategy;
+
+public class DalConnectionManager {
+	private DalConfigure config;
+	private String logicDbName;
+	private DalLogger logger;
+	private DalConnectionLocator locator;
+
+	public DalConnectionManager(String logicDbName, DalConfigure config) {
+		this.logicDbName = logicDbName;
+		this.config = config;
+		this.logger = config.getDalLogger();
+		this.locator = config.getLocator();
+	}
+
+	public String getLogicDbName() {
+		return logicDbName;
+	}
+
+	public DalConfigure getConfig() {
+		return config;
+	}
+
+	public DalLogger getLogger() {
+		return logger;
+	}
+
+	public DalConnection getNewConnection(Hints hints, boolean useMaster, DalEventEnum operation)
+			throws SQLException {
+		DalConnection connHolder = null;
+		String realDbName = logicDbName;
+		try
+		{
+			if(DalStatusManager.getDatabaseSetStatus(config.getAppId(), logicDbName).isMarkdown())
+				throw new DalException(ErrorCode.MarkdownLogicDb, logicDbName);
+
+			boolean isMaster = hints.is(DalHintEnum.masterOnly) || useMaster;
+			boolean isSelect = operation == DalEventEnum.QUERY;
+
+			connHolder = getConnectionFromDSLocator(hints, isMaster, isSelect);
+
+			connHolder.setAutoCommit(true);
+			connHolder.applyHints(hints);
+
+			if(hints.getHA() != null){
+				hints.getHA().setDatabaseCategory(connHolder.getMeta().getDatabaseCategory());
+			}
+
+			realDbName = connHolder.getDatabaseName();
+		}
+		catch(SQLException ex)
+		{
+			logger.getConnectionFailed(realDbName, ex);
+			throw ex;
+		}
+		return connHolder;
+	}
+
+	public String evaluateShard(Hints hints) throws SQLException {
+		DatabaseSet dbSet = config.getDatabaseSet(logicDbName);
+		String shardId;
+
+		if(!dbSet.isShardingSupported())
+			return null;
+
+		shardId = hints.getShard();
+		if(shardId == null)
+			shardId = getShardId(hints);
+
+		// We allow this happen
+//		if(shardId == null)
+//			return null;
+
+		dbSet.validate(shardId);
+
+		return shardId;
+	}
+	
+	private String getShardId(Hints hints) throws SQLException {
+	    Set<String> shards = config.getDatabaseSet(logicDbName).getStrategy().locateDbShards(new ShardingContext(config, logicDbName, hints, ConditionList.andList()));
+	    if(shards.isEmpty())
+	        return null;
+
+	    if(shards.size() == 1) 
+	        return shards.iterator().next();
+	    
+	    throw new IllegalStateException("More than one shards detected" + shards);
+	}
+
+	private DalConnection getConnectionFromDSLocator(Hints hints,
+													 boolean isMaster, boolean isSelect) throws SQLException {
+		Connection conn;
+		String allInOneKey;
+		DatabaseSet dbSet = config.getDatabaseSet(logicDbName);
+		String shardId = null;
+
+		if(dbSet.isShardingSupported()){
+			ShardingStrategy strategy = dbSet.getStrategy();
+
+			shardId = hints.getShard();
+			if(shardId == null)
+				shardId = getShardId(hints);
+			if(shardId == null)
+				throw new DalException(ErrorCode.ShardLocated, logicDbName);
+			dbSet.validate(shardId);
+		}
+
+		allInOneKey = select(logicDbName, dbSet, hints, shardId, isMaster, isSelect);
+		
+		try {	
+			conn = locator.getConnection(allInOneKey);
+			DbMeta meta = DbMeta.createIfAbsent(allInOneKey, dbSet.getDatabaseCategory(), conn);
+			return new DalConnection(conn, isMaster, shardId, meta);
+		} catch (Throwable e) {
+			throw new DalException(ErrorCode.CantGetConnection, e, allInOneKey);
+		}
+	}
+	
+	private String select(String logicDbName, DatabaseSet dbSet, Hints hints, String shard, boolean isMaster, boolean isSelect) throws DalException {
+	    SelectionContext context = new SelectionContext(config.getAppId(), logicDbName, hints, shard, isMaster, isSelect);
+	    
+	    if(shard == null) {
+	        context.setMasters(dbSet.getMasterDbs());
+	        context.setSlaves(dbSet.getSlaveDbs());
+	    }else{
+            context.setMasters(dbSet.getMasterDbs(shard));
+            context.setSlaves(dbSet.getSlaveDbs(shard));	        
+	    }
+	    
+	    return config.getSelector().select(context);
+	}
+	
+	public <T> T doInConnection(ConnectionAction<T> action, Hints hints)
+			throws SQLException {
+	    action.config = config;
+	    // If HA disabled or not query, we just directly call _doInConnnection
+
+		if(!DalStatusManager.getHaStatus().isEnabled()
+				|| action.operation != DalEventEnum.QUERY)
+			return _doInConnection(action, hints);
+
+		DalHA highAvalible = new DalHA();
+		hints.setHA(highAvalible);
+		do{
+			try {
+				return _doInConnection(action, hints);
+			} catch (SQLException e) {
+				highAvalible.update(e);
+			}
+		}while(highAvalible.needTryAgain());
+
+		throw highAvalible.getException();
+	}
+
+	private <T> T _doInConnection(ConnectionAction<T> action, Hints hints)
+			throws SQLException {
+		action.initLogEntry(logicDbName, hints);
+		action.start();
+
+		Throwable ex = null;
+		T result = null;
+		try {
+			result = action.execute();
+		} catch (Throwable e) {
+			MarkdownManager.detect(action.connHolder, action.start, e);
+			action.error(e);
+		} finally {
+		    action.endExectue();
+			action.populateDbMeta();
+			action.cleanup();
+		}
+
+		action.end(result);
+		return result;
+	}
+}
