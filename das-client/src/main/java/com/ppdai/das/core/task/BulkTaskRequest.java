@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasVersionInfo;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.KeyHolder;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 public class BulkTaskRequest<K, T> implements DalRequest<K>{
     private String appId;
@@ -48,10 +48,10 @@ public class BulkTaskRequest<K, T> implements DalRequest<K>{
     @Override
     public void validate() throws SQLException {
         if(null == rawPojos)
-            throw new DalException(ErrorCode.ValidatePojoList);
+            throw new DasException(ErrorCode.ValidatePojoList);
 
         if(bulkTask == null)
-            throw new DalException(ErrorCode.ValidateTask);
+            throw new DasException(ErrorCode.ValidateTask);
 
         dbShardMerger = bulkTask.createMerger();
         daoPojos = bulkTask.getPojosFields(rawPojos);
@@ -195,7 +195,7 @@ public class BulkTaskRequest<K, T> implements DalRequest<K>{
 
             // Upper level may handle continue on error
             if(error != null)
-                throw DalException.wrap(error);
+                throw DasException.wrap(error);
 
             return partial;
         }

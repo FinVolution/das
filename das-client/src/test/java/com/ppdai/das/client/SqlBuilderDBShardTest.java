@@ -30,8 +30,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.ppdai.das.client.Person.PersonDefinition;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.enums.DatabaseCategory;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 @RunWith(Parameterized.class)
 public class SqlBuilderDBShardTest extends DataPreparer {

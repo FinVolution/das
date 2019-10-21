@@ -15,8 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.delegate.EntityMeta;
 import com.ppdai.das.client.delegate.EntityMetaManager;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.core.task.DaoTask;
 import com.ppdai.das.core.task.KeyHolderAwaredTask;
 import com.ppdai.das.service.Entity;
@@ -121,7 +119,7 @@ public class KeyHolder {
         try {
             return getId(getKeyList().get(index));
         } catch (Throwable e) {
-            throw new DalException(ErrorCode.ValidateKeyHolderConvert, e);
+            throw new DasException(ErrorCode.ValidateKeyHolderConvert, e);
         }
     }
 
@@ -138,7 +136,7 @@ public class KeyHolder {
 
     public Map<String, Object> getUniqueKey() throws SQLException {
         if (size() != 1) {
-            throw new DalException(ErrorCode.ValidateKeyHolderSize, getKeyList());
+            throw new DasException(ErrorCode.ValidateKeyHolderSize, getKeyList());
         }
 
         return allKeys.get(0);
@@ -148,11 +146,11 @@ public class KeyHolder {
      * Get all the generated keys for multiple insert.
      * 
      * @return all the generated keys
-     * @throws DalException
+     * @throws DasException
      */
-    public List<Map<String, Object>> getKeyList() throws DalException {
+    public List<Map<String, Object>> getKeyList() throws DasException {
         if (requireMerge && merged.get() == false)
-            throw new DalException(ErrorCode.KeyGenerationFailOrNotCompleted);
+            throw new DasException(ErrorCode.KeyGenerationFailOrNotCompleted);
 
         List<Map<String, Object>> keyList = new ArrayList<>();
 
@@ -179,11 +177,11 @@ public class KeyHolder {
             return idList;
         } catch (Throwable e) {
             e.printStackTrace();
-            throw new DalException(ErrorCode.ValidateKeyHolderConvert, e);
+            throw new DasException(ErrorCode.ValidateKeyHolderConvert, e);
         }
     }
 
-    private Number getId(Map<String, Object> key) throws DalException {
+    private Number getId(Map<String, Object> key) throws DasException {
         return (Number) key.values().iterator().next();
     }
 
@@ -353,7 +351,7 @@ public class KeyHolder {
             }
     }
 
-    private static boolean isEmptyKey(KeyHolder keyHolder, int index) throws DalException {
+    private static boolean isEmptyKey(KeyHolder keyHolder, int index) throws DasException {
         Map<String, Object> map = keyHolder.getKeyList().get(index);
         return map.size() == 0;
     }
@@ -393,7 +391,7 @@ public class KeyHolder {
                 return;
             }
         } catch (Throwable e) {
-            throw new DalException(ErrorCode.SetPrimaryKeyFailed, entity.getClass().getName(), pkFlield.getName());
+            throw new DasException(ErrorCode.SetPrimaryKeyFailed, entity.getClass().getName(), pkFlield.getName());
         }
     }
 
@@ -427,7 +425,7 @@ public class KeyHolder {
                 return;
             }
         } catch (Throwable e) {
-            throw new DalException(ErrorCode.SetPrimaryKeyFailed, entity.getClass().getName(), key);
+            throw new DasException(ErrorCode.SetPrimaryKeyFailed, entity.getClass().getName(), key);
         }
     }
 }

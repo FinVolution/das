@@ -8,13 +8,13 @@ import com.ppdai.das.core.ConnectionLocator;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.EventEnum;
 import com.ppdai.das.core.DasConfigure;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.DatabaseSet;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.HaContext;
 import com.ppdai.das.core.SelectionContext;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.core.markdown.MarkdownManager;
 import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.strategy.ConditionList;
@@ -53,7 +53,7 @@ public class DalConnectionManager {
 		try
 		{
 			if(StatusManager.getDatabaseSetStatus(config.getAppId(), logicDbName).isMarkdown())
-				throw new DalException(ErrorCode.MarkdownLogicDb, logicDbName);
+				throw new DasException(ErrorCode.MarkdownLogicDb, logicDbName);
 
 			boolean isMaster = hints.is(HintEnum.masterOnly) || useMaster;
 			boolean isSelect = operation == EventEnum.QUERY;
@@ -122,7 +122,7 @@ public class DalConnectionManager {
 			if(shardId == null)
 				shardId = getShardId(hints);
 			if(shardId == null)
-				throw new DalException(ErrorCode.ShardLocated, logicDbName);
+				throw new DasException(ErrorCode.ShardLocated, logicDbName);
 			dbSet.validate(shardId);
 		}
 
@@ -133,11 +133,11 @@ public class DalConnectionManager {
 			DbMeta meta = DbMeta.createIfAbsent(allInOneKey, dbSet.getDatabaseCategory(), conn);
 			return new DalConnection(conn, isMaster, shardId, meta);
 		} catch (Throwable e) {
-			throw new DalException(ErrorCode.CantGetConnection, e, allInOneKey);
+			throw new DasException(ErrorCode.CantGetConnection, e, allInOneKey);
 		}
 	}
 	
-	private String select(String logicDbName, DatabaseSet dbSet, Hints hints, String shard, boolean isMaster, boolean isSelect) throws DalException {
+	private String select(String logicDbName, DatabaseSet dbSet, Hints hints, String shard, boolean isMaster, boolean isSelect) throws DasException {
 	    SelectionContext context = new SelectionContext(config.getAppId(), logicDbName, hints, shard, isMaster, isSelect);
 	    
 	    if(shard == null) {

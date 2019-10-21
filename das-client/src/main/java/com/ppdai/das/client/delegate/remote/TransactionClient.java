@@ -6,9 +6,9 @@ import com.ppdai.das.client.CallableTransaction;
 import com.ppdai.das.client.DasClientFactory;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.service.DasHints;
 import com.ppdai.das.service.DasTransactionId;
 
@@ -104,7 +104,7 @@ public class TransactionClient {
 
         if(startLevel != (transactionId.level - 1)) {
             rollbackTransaction();
-            throw new DalException(ErrorCode.TransactionLevelMatch, (transactionId.level - 1), startLevel);
+            throw new DasException(ErrorCode.TransactionLevelMatch, (transactionId.level - 1), startLevel);
         }
         
         if(transactionId.level > 1) {
@@ -139,9 +139,9 @@ public class TransactionClient {
             throw new RuntimeException(ex);
     }
 
-    private void checkState(DasTransactionId transactionId) throws DalException {
+    private void checkState(DasTransactionId transactionId) throws DasException {
         if(transactionId.rolledBack || transactionId.completed)
-            throw new DalException(ErrorCode.TransactionState);
+            throw new DasException(ErrorCode.TransactionState);
     }
 
     private void rollbackTransaction() throws SQLException {
@@ -183,6 +183,6 @@ public class TransactionClient {
 
     private void handleException(Throwable e) throws SQLException {
         if(e != null)
-            throw e instanceof SQLException ? (SQLException)e : DalException.wrap(e);
+            throw e instanceof SQLException ? (SQLException)e : DasException.wrap(e);
     }
 }

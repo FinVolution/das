@@ -16,9 +16,9 @@ import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.DasCoreVersion;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.LogEntry;
-import com.ppdai.das.core.exceptions.DalException;
 
 public abstract class ConnectionAction<T> {
     public DasConfigure config;
@@ -267,7 +267,7 @@ public abstract class ConnectionAction<T> {
 
 	private void handleException(Throwable e) throws SQLException {
 		if(e != null)
-			throw e instanceof SQLException ? (SQLException)e : DalException.wrap(e);
+			throw e instanceof SQLException ? (SQLException)e : DasException.wrap(e);
 	}
 
 	private String wrapAPPID(String sql){

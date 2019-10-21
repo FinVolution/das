@@ -3,10 +3,10 @@ package com.ppdai.das.core.task;
 import java.util.concurrent.Callable;
 
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.LogContext;
 import com.ppdai.das.core.LogEntry;
-import com.ppdai.das.core.exceptions.DalException;
 
 public class RequestTaskWrapper<T> implements Callable<T> {
     private DasLogger logger = DasConfigureFactory.getLogger();
@@ -40,7 +40,7 @@ public class RequestTaskWrapper<T> implements Callable<T> {
         logger.endTask(logContext, shard, error);
 
         if(error != null)
-            throw DalException.wrap(error);
+            throw DasException.wrap(error);
 
         return result;
     }

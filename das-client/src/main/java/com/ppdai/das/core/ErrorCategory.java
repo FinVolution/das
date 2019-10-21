@@ -1,6 +1,6 @@
-package com.ppdai.das.core.exceptions;
+package com.ppdai.das.core;
 
-public enum ErrorClassify {
+public enum ErrorCategory {
 	Assert(5000, 5100),
 	Validate(5100, 5300),
 	Connection(5300, 5400),
@@ -15,7 +15,7 @@ public enum ErrorClassify {
 	private final int min;
 	private final int max;
 	
-	ErrorClassify(int min, int max){
+	ErrorCategory(int min, int max){
 		this.min = min;
 		this.max = max;
 	}
