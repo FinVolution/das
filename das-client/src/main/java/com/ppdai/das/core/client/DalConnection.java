@@ -8,8 +8,8 @@ import org.apache.tomcat.jdbc.pool.PooledConnection;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
-import com.ppdai.das.core.exceptions.DalException;
 
 public class DalConnection {
 	private Integer oldIsolationLevel;
@@ -98,7 +98,7 @@ public class DalConnection {
 
 	private boolean isDisconnectionException(Throwable e) {
 		//Filter wrapping exception
-		while(e!= null && e instanceof DalException) {
+		while(e!= null && e instanceof DasException) {
 			e = e.getCause();
 		}
 

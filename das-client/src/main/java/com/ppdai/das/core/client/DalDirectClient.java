@@ -17,11 +17,11 @@ import com.ppdai.das.core.EventEnum;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigure;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.KeyHolder;
 import com.ppdai.das.core.LogEntry;
 import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.helper.DalColumnMapRowMapper;
 import com.ppdai.das.core.helper.DalRowMapperExtractor;
 import com.ppdai.das.core.helper.HintsAwareExtractor;
@@ -255,7 +255,7 @@ public class DalDirectClient implements DalClient {
                 }
 
                 if (hints.is(HintEnum.retrieveAllSpResults) && resultParameters.size() > 0)
-                    throw new DalException(
+                    throw new DasException(
                             "Dal hint 'autoRetrieveAllResults' should only be used when there is no special result parameter specified");
 
                 conn = getConnection(hints, this);

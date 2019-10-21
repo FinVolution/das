@@ -2,9 +2,9 @@ package com.ppdai.das.core.helper;
 
 import java.sql.SQLException;
 
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.ResultMerger;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 public class DalSingleResultMerger<T> implements ResultMerger<T>{
 	private T result;
@@ -17,7 +17,7 @@ public class DalSingleResultMerger<T> implements ResultMerger<T>{
 		if(result == null)
 			result = partial;
 		else
-			throw new DalException(ErrorCode.AssertSingle);
+			throw new DasException(ErrorCode.AssertSingle);
 	}
 
 	@Override

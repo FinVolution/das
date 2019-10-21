@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.LogContext;
 import com.ppdai.das.core.ResultMerger;
 import com.ppdai.das.core.client.DalResultCallback;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 /**
  * Common reuqest executor that support execute request that is of pojo or 
@@ -110,7 +110,7 @@ public class DalRequestExecutor {
 				result = nonCrossShardExecute(logContext, hints, request);
 
 			if(result == null && !nullable)
-				throw new DalException(ErrorCode.AssertNull);
+				throw new DasException(ErrorCode.AssertNull);
 
 			request.endExecution();
 		} catch (Throwable e) {
@@ -121,7 +121,7 @@ public class DalRequestExecutor {
 		
 		handleCallback(hints, result, error);
 		if(error != null)
-			throw DalException.wrap(error);
+			throw DasException.wrap(error);
 		
 		return result;
 	}
@@ -158,7 +158,7 @@ public class DalRequestExecutor {
 		logger.endCrossShards(logContext, error);
 
 		if(error != null)
-            throw DalException.wrap(error);
+            throw DasException.wrap(error);
 		
 		return result;
 

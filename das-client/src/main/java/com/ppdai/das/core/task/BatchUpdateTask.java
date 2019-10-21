@@ -12,15 +12,15 @@ import com.ppdai.das.client.Parameter;
 import org.apache.commons.lang.StringUtils;
 
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.UpdatableEntity;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 public class BatchUpdateTask<T> extends AbstractIntArrayBulkTask<T> {
 	public static final String TMPL_SQL_UPDATE = "UPDATE %s SET %s WHERE %s";
 
 	@Override
-	public BulkTaskContext<T> createTaskContext(Hints hints, List<Map<String, ?>> daoPojos, List<T> rawPojos) throws DalException {
+	public BulkTaskContext<T> createTaskContext(Hints hints, List<Map<String, ?>> daoPojos, List<T> rawPojos) throws DasException {
 		BulkTaskContext<T> taskContext = new BulkTaskContext<T>(rawPojos);
 		
 		Map<String, Boolean> pojoFieldStatus = taskContext.isUpdatableEntity() ?
@@ -28,7 +28,7 @@ public class BatchUpdateTask<T> extends AbstractIntArrayBulkTask<T> {
 					filterNullColumns(hints, daoPojos);
 
 		if(pojoFieldStatus.size() == 0)
-			throw new DalException(ErrorCode.ValidateFieldCount);
+			throw new DasException(ErrorCode.ValidateFieldCount);
 		
 		taskContext.setPojoFieldStatus(pojoFieldStatus);
 		return taskContext;
@@ -188,13 +188,13 @@ public class BatchUpdateTask<T> extends AbstractIntArrayBulkTask<T> {
 		return String.format(TMPL_SQL_UPDATE, tableName, updateColumnsTmpl, updateCriteriaTmpl);
 	}
 	
-	private void addVersion(List<Parameter> parameters, Map<String, ?> pojo) throws DalException {
+	private void addVersion(List<Parameter> parameters, Map<String, ?> pojo) throws DasException {
 		if(!hasVersion)
 			return;
 		
 		Object version = pojo.get(parser.getVersionColumn());
 		if(version == null)
-			throw new DalException(ErrorCode.ValidateVersion);
+			throw new DasException(ErrorCode.ValidateVersion);
 		
 		addParameter(parameters, parameters.size() + 1, parser.getVersionColumn(), version);
 	}	

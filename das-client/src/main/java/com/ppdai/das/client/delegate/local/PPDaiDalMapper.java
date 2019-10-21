@@ -13,11 +13,11 @@ import java.util.Set;
 import com.ppdai.das.client.delegate.EntityMeta;
 import com.ppdai.das.client.delegate.EntityMetaManager;
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.UpdatableEntity;
 import com.ppdai.das.core.client.DalRowMapper;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.core.helper.CustomizableMapper;
 
 public class PPDaiDalMapper<T> implements DalRowMapper<T>, CustomizableMapper<T> {
@@ -49,7 +49,7 @@ public class PPDaiDalMapper<T> implements DalRowMapper<T>, CustomizableMapper<T>
                     if (ignorMissingFields)
                         continue;
                     else
-                        throw new DalException(ErrorCode.FieldNotExists, clazz.getName(), columnNames[i]);
+                        throw new DasException(ErrorCode.FieldNotExists, clazz.getName(), columnNames[i]);
                 setValue(field, instance, rs, i);
             }
 
@@ -58,7 +58,7 @@ public class PPDaiDalMapper<T> implements DalRowMapper<T>, CustomizableMapper<T>
 
             return instance;
         } catch (Throwable e) {
-            throw DalException.wrap(ErrorCode.ResultMappingError, e);
+            throw DasException.wrap(ErrorCode.ResultMappingError, e);
         }
     }
 

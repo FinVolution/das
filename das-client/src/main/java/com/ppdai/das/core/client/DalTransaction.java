@@ -8,9 +8,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
+import com.ppdai.das.core.ErrorCode;
 
 public class DalTransaction  {
 	private final String logicDbName;
@@ -45,10 +45,10 @@ public class DalTransaction  {
     
     public void validate(String desiganateLogicDbName, String desiganateShard) throws SQLException {
 		if(desiganateLogicDbName == null || desiganateLogicDbName.length() == 0)
-			throw new DalException(ErrorCode.LogicDbEmpty);
+			throw new DasException(ErrorCode.LogicDbEmpty);
 		
 		if(!desiganateLogicDbName.equals(this.logicDbName))
-			throw new DalException(ErrorCode.TransactionDistributed, this.logicDbName, desiganateLogicDbName);
+			throw new DasException(ErrorCode.TransactionDistributed, this.logicDbName, desiganateLogicDbName);
 		
 		String curShard = connHolder.getShardId();
 		if(curShard == null)
@@ -58,7 +58,7 @@ public class DalTransaction  {
 		    return;
 		
 		if(!curShard.equals(desiganateShard))
-		    throw new DalException(ErrorCode.TransactionDistributedShard, curShard, desiganateShard);
+		    throw new DasException(ErrorCode.TransactionDistributedShard, curShard, desiganateShard);
 	}
 	
 	public String getLogicDbName() {
@@ -102,19 +102,19 @@ public class DalTransaction  {
 
 	public int startTransaction() throws SQLException {
 		if(rolledBack.get() || completed.get())
-			throw new DalException(ErrorCode.TransactionState);
+			throw new DasException(ErrorCode.TransactionState);
 		
 		return level.getAndIncrement();
 	}
 	
 	public void endTransaction(int startLevel) throws SQLException {
 	    if(rolledBack.get() || completed.get())
-			throw new DalException(ErrorCode.TransactionState);
+			throw new DasException(ErrorCode.TransactionState);
 
 	    int curLevel = level.get();
 		if(startLevel != (curLevel - 1)) {
 			rollbackTransaction();
-			throw new DalException(ErrorCode.TransactionLevelMatch, (curLevel - 1), startLevel);
+			throw new DasException(ErrorCode.TransactionLevelMatch, (curLevel - 1), startLevel);
 		}
 		
 		if(curLevel > 1) {

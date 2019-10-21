@@ -5,9 +5,9 @@ import java.util.*;
 
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.Parameter;
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.UpdatableEntity;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 public class SingleUpdateTask<T> extends TaskAdapter<T> implements SingleTask<T> {
 	public static final String TMPL_SQL_UPDATE = "UPDATE %s SET %s WHERE %s";
@@ -15,7 +15,7 @@ public class SingleUpdateTask<T> extends TaskAdapter<T> implements SingleTask<T>
 	@Override
 	public int execute(Hints hints, Map<String, ?> fields, T rawPojo) throws SQLException {
 		if (fields.size() == 0)
-			throw new DalException(ErrorCode.ValidateFieldCount);
+			throw new DasException(ErrorCode.ValidateFieldCount);
 		Map<String, ?> pks = getPrimaryKeys(fields);
 		
 		Object version = getVersion(fields);
@@ -41,18 +41,18 @@ public class SingleUpdateTask<T> extends TaskAdapter<T> implements SingleTask<T>
 		return client.update(updateSql, parameters, hints.setFields(fields));
 	}
 
-	private Object getVersion(Map<String, ?> fields) throws DalException {
+	private Object getVersion(Map<String, ?> fields) throws DasException {
 		if(!hasVersion)
 			return null;
 
 		Object version = fields.get(parser.getVersionColumn());
 		if(version == null)
-			throw new DalException(ErrorCode.ValidateVersion);
+			throw new DasException(ErrorCode.ValidateVersion);
 
 		return version;
 	}
 	
-	private Map<String, ?> filterNullColumns(Hints hints, Map<String, ?> fields) throws DalException {
+	private Map<String, ?> filterNullColumns(Hints hints, Map<String, ?> fields) throws DasException {
 		Map<String, Object> filted = new LinkedHashMap<>();
 		
 		Set<String> updatableColumns = filterColumns(hints);
@@ -70,7 +70,7 @@ public class SingleUpdateTask<T> extends TaskAdapter<T> implements SingleTask<T>
 		return filted;
 	}
 	
-	private Map<String, ?> filterUpdatableEntity(Hints hints, Map<String, ?> fields, Set<String> updatedColumns) throws DalException {
+	private Map<String, ?> filterUpdatableEntity(Hints hints, Map<String, ?> fields, Set<String> updatedColumns) throws DasException {
 		Map<String, Object> filted = new LinkedHashMap<>();
 		Set<String> updatableColumns = filterColumns(hints);
 			
@@ -98,7 +98,7 @@ public class SingleUpdateTask<T> extends TaskAdapter<T> implements SingleTask<T>
 		return String.format(TMPL_SQL_UPDATE, tableName, columns, updateCriteriaTmpl);
 	}
 	
-	private void addVersion(List<Parameter> parameters, Object version) throws DalException {
+	private void addVersion(List<Parameter> parameters, Object version) throws DasException {
 		if(!hasVersion)
 			return;
 		

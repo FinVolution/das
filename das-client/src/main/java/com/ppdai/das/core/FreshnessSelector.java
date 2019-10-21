@@ -12,8 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.ppdai.das.core.exceptions.DalException;
-
 import static com.ppdai.das.core.enums.DatabaseCategory.MySql;
 
 public class FreshnessSelector implements DatabaseSelector {
@@ -210,7 +208,7 @@ public class FreshnessSelector implements DatabaseSelector {
     }
 
     @Override
-    public String select(SelectionContext context) throws DalException {
+    public String select(SelectionContext context) throws DasException {
         // Will check if already initialized
         initialize();
 

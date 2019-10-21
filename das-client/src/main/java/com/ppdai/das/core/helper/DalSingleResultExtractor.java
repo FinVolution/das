@@ -4,10 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.client.DalResultSetExtractor;
 import com.ppdai.das.core.client.DalRowMapper;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 public class DalSingleResultExtractor<T> implements DalResultSetExtractor<T>, HintsAwareExtractor<T> {
 	private DalRowMapper<T> mapper;
@@ -28,7 +28,7 @@ public class DalSingleResultExtractor<T> implements DalResultSetExtractor<T>, Hi
 		if(rs.next()) {
 			result = mapper.map(rs, 0);
 			if(rs.next() && requireSingle)
-				throw new DalException(ErrorCode.AssertSingle);
+				throw new DasException(ErrorCode.AssertSingle);
 		}
 		return result;
 	}

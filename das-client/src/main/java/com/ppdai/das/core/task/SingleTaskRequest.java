@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasVersionInfo;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.KeyHolder;
 import com.ppdai.das.core.ResultMerger;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 
 public class SingleTaskRequest<T> implements DalRequest<Integer> {
     private String appId;
@@ -40,10 +40,10 @@ public class SingleTaskRequest<T> implements DalRequest<Integer> {
     @Override
     public void validate() throws SQLException {
         if (rawPojo == null)
-            throw new DalException(ErrorCode.ValidatePojo);
+            throw new DasException(ErrorCode.ValidatePojo);
 
         if (task == null)
-            throw new DalException(ErrorCode.ValidateTask);
+            throw new DasException(ErrorCode.ValidateTask);
 
         daoPojo = task.getPojoFields(rawPojo);
 
@@ -78,7 +78,7 @@ public class SingleTaskRequest<T> implements DalRequest<Integer> {
 
     @Override
     public Map<String, Callable<Integer>> createTasks() throws SQLException {
-        throw new DalException(ErrorCode.NotSupported);
+        throw new DasException(ErrorCode.NotSupported);
     }
 
     @Override

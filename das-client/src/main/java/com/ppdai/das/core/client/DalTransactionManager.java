@@ -5,11 +5,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.EventEnum;
 import com.ppdai.das.client.Hints;
-//import com.ppdai.das.core.annotation.DalTransactional;
-import com.ppdai.das.core.exceptions.DalException;
-import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.core.markdown.MarkdownManager;
 
 import net.sf.cglib.proxy.Callback;
@@ -60,17 +59,17 @@ public class DalTransactionManager {
 		return transactionHolder.get() != null;
 	}
 	
-	private static void reqiresTransaction() throws DalException {
+	private static void reqiresTransaction() throws DasException {
 		if(!isInTransaction())
-			throw new DalException(ErrorCode.TransactionNoFound);
+			throw new DasException(ErrorCode.TransactionNoFound);
 	}
 	
-	public static List<DalTransactionListener> getCurrentListeners() throws DalException {
+	public static List<DalTransactionListener> getCurrentListeners() throws DasException {
 		reqiresTransaction();		
 		return transactionHolder.get().getListeners();
 	}
 	
-	public static void register(DalTransactionListener listener) throws DalException {
+	public static void register(DalTransactionListener listener) throws DasException {
 		reqiresTransaction();
 		Objects.requireNonNull(listener, "The listener should not be null");
 		
