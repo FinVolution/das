@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.UserMapper">
+    <!-- 自定义返回结果集 -->
+    <resultMap id="userMap" type="com.UserBean">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result column="username" jdbcType="VARCHAR" javaType="java.lang.String" property="username"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="active" jdbcType="BOOLEAN" property="active"/>
+    </resultMap>
+
+
+    <select id="testResultMap" resultMap="userMap">
+      select id, username, updateTime, updateTime, active
+      from T
+    </select>
+
+    <select id="testResultTypeInteger" resultType="java.lang.Integer">
+       SELECT count(id)
+       from T
+    </select>
+
+    <select id="testResultTypeUserBean" resultType="com.UserBean">
+       SELECT *
+       from T
+    </select>
+
+    <select id="testParameterTypeUserBean" parameterType="com.UserBean" resultMap="userMap">
+       SELECT *
+       from T
+       where id = #{id,jdbcType=INTEGER} AND name = #{name, jdbcType=VARCHAR}
+    </select>
+
+    <select id="testParameterTypeInt" parameterType="int" resultMap="userMap">
+       SELECT *
+       from T
+       where id = #{id}
+    </select>
+
+    <sql id="userColumns">name, id</sql>
+    <select id="testSQLInclude" resultType="com.UserBean">
+        select
+        <include refid="userColumns"/>
+        from T
+    </select>
+
+    <select id="testDirectParameter" parameterType="com.UserBean" resultMap="userMap">
+       SELECT top ${topSize}
+       from T
+    </select>
+
+    <select id="testIf" parameterType="com.UserBean" resultMap="userMap">
+        select *
+        from T
+        <if test="id != null">
+            WHERE id = #{id,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
+    <select id="testChoose" parameterType="com.UserBean" resultMap="userMap">
+        select *
+        from T
+        <choose>
+            <when test="title != null">
+                title like #{title, jdbcType=VARCHAR}
+            </when>
+            <when test="name != null">
+                AND name like #{name, jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND featured = 1
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="testWhereSet" parameterType="com.UserBean">
+        update T
+        <set>
+            name = #{name, jdbcType=VARCHAR}
+        </set>
+        <where>
+            id = #{id, jdbcType=INTEGER}
+        </where>
+    </update>
+
+
+    <select id="testBind" parameterType="com.UserBean" resultType="int">
+        <bind name="offset" value="(currentPage - 1)*pageSize"/>
+        select count(*)
+        from T
+        WHERE page = #{offset, jdbcType=INTEGER}
+    </select>
+
+
+    <select id="testForeach" parameterType="com.UserBean" resultType="com.UserBean">
+        select *
+        from T
+        WHERE id in
+        <foreach item="accountSetIDs" collection="accountSetIDs" open="(" separator="," close=")">
+            #{accountSetIDs}
+        </foreach>
+    </select>
+
+
+    <select id="testIfNested" parameterType="com.UserBean" resultMap="userMap">
+        select *
+        from T
+        <if test="id != null">
+            WHERE id = #{id,jdbcType=INTEGER}
+            <if test="name != null">
+                WHERE name like #{name,jdbcType=VARCHAR}
+            </if>
+        </if>
+    </select>
+
+
+    <select id="testChooseNested" parameterType="com.UserBean" resultMap="userMap">
+        select *
+        from T
+        <choose>
+            <when test="title != null">
+                <if test="number != null">
+                    WHERE number = #{number,jdbcType=INTEGER}
+                </if>
+                title like #{title, jdbcType=VARCHAR}
+            </when>
+            <when test="name != null">
+                AND name like #{name, jdbcType=VARCHAR}
+                <if test="code != null">
+                    WHERE code like #{name,jdbcType=VARCHAR}
+                </if>
+            </when>
+        </choose>
+    </select>
+
+    <select id="testImplicitParam" resultMap="userMap">
+      select * from T where id = #{id, jdbcType=INTEGER}
+    </select>
+
+</mapper>

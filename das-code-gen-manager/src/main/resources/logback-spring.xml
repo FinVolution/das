@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="600 seconds" debug="false">
+	<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+	<springProperty scope="context" name="logdir" source="logback.logdir"/>
+
+<!--	<appender name="kafka" class="com.ppdai.logclient.logback.KafkaAppender">
+		<layout>
+			<pattern>%date [%thread] %-5level %logger{36}- %msg%n</pattern>
+		</layout>
+		<topic>framework.log</topic>
+		<reportTopic>framework.metric</reportTopic>
+		<appId>1000002592</appId>
+		<bootstrapServers>logkafkafat01.ppdaicorp.com:9092,logkafkafat02.ppdaicorp.com:9092,logkafkafat03.ppdaicorp.com:9092,logkafkafat04.ppdaicorp.com:9092,logkafkafat05.ppdaicorp.com:9092</bootstrapServers>
+	</appender>-->
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<withJansi>true</withJansi>
+		<encoder>
+			<pattern>[%highlight(%-5level)][%d{MM-dd HH:mm:ss.SSS}][%t][%c:%L] - %highlight(%msg) %n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 按照每天生成日志文件 -->
+	<appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名-->
+			<FileNamePattern>${logdir}/dal.gen.log.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{50} - %msg%n
+			</pattern>
+		</layout>
+		<!--日志文件最大的大小-->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>30MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+
+	<root level="INFO">
+		<!--<appender-ref ref="kafka" />-->
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+</configuration>

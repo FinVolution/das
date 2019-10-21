@@ -1,0 +1,65 @@
+package com.ppdai.platform.das.codegen.service;
+
+import com.google.common.collect.Lists;
+import com.ppdai.platform.das.codegen.common.validates.chain.ValidatorChain;
+import com.ppdai.platform.das.codegen.constant.Message;
+import com.ppdai.platform.das.codegen.dao.LoginUserDao;
+import com.ppdai.platform.das.codegen.dao.PermissionDao;
+import com.ppdai.platform.das.codegen.dao.ServerConfigDao;
+import com.ppdai.platform.das.codegen.dto.entry.das.LoginUser;
+import com.ppdai.platform.das.codegen.dto.entry.das.ServerConfig;
+import com.ppdai.platform.das.codegen.dto.model.Paging;
+import com.ppdai.platform.das.codegen.dto.model.page.ListResult;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = {LoginUserDao.class, ServerConfigDao.class, Message.class, PermissionService.class, PermissionDao.class})
+public class ServerConfigServiceTest {
+
+    @Mock
+    private ServerConfigService serverConfigService;
+
+    @Before
+    public void setUp() throws Exception {
+        ValidatorChain chain = new ValidatorChain();
+        LoginUser user = LoginUser.builder().id(1L).build();
+        ServerConfig serverConfig = ServerConfig.builder().id(1L).build();
+        Errors errors = new BeanPropertyBindingResult(serverConfig, "serverConfig", true, 256);
+        when(serverConfigService.validatePermision(user, errors)).thenReturn(chain);
+
+        ListResult<ServerConfig> listResult = new ListResult<>();
+        List<ServerConfig> list = Lists.newArrayList(ServerConfig.builder().id(1L).build());
+        listResult.setList(list);
+        Paging<ServerConfig> paging = new Paging<>();
+        paging.setData(new ServerConfig());
+        when(serverConfigService.findServerAppConfigPageList(paging)).thenReturn(listResult);
+    }
+
+    @Test
+    public void validatePermisionTest() throws SQLException {
+        LoginUser user = LoginUser.builder().id(1L).build();
+        ServerConfig serverConfig = ServerConfig.builder().id(1L).build();
+        Errors errors = new BeanPropertyBindingResult(serverConfig, "serverConfig", true, 256);
+        Assert.assertTrue(serverConfigService.validatePermision(user, errors).validate().isValid());
+    }
+
+    @Test
+    public void findServerAppConfigPageListTest() throws SQLException {
+        Paging<ServerConfig> paging = new Paging<>();
+        paging.setData(new ServerConfig());
+        Assert.assertTrue(serverConfigService.findServerAppConfigPageList(paging).getList().size() > 0);
+    }
+}

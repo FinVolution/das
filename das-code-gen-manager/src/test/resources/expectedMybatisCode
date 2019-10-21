@@ -1,0 +1,173 @@
+import com.ppdai.das.client.SqlBuilder;
+import com.ppdai.das.client.Parameter;
+import com.ppdai.das.client.DasClientFactory;
+import com.ppdai.das.client.DasClient;
+import java.sql.SQLException;
+import com.UserBean;
+
+/**
+ * Mapper XML中每个SQL节点会转换成 UserMapper 中的一个方法
+ *
+ * <p>请用Das生成的实体类替代: com.UserBean;
+ *
+ * <p>此代码需要手工调试检查，以确保正确
+ */
+public class UserMapper {
+  /** 以下代码为id = "testImplicitParam"生成的代码片段 */
+  public List<UserBean> testImplicitParam(integer id) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select * from T where id = ? ", Parameter.integerOf("", id));
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testDirectParameter"生成的代码片段 */
+  public List<UserBean> testDirectParameter(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    // 此SQL包含${}操作,请用户自行处理
+    sqlBuilder.appendTemplate(" SELECT top ${topSize}       from T ");
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testChoose"生成的代码片段 */
+  public List<UserBean> testChoose(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select *        from T ");
+    sqlBuilder.appendTemplateWhen(
+        (title != null), " title like ? ", Parameter.varcharOf("", pUserBean.getTitle()));
+    sqlBuilder.appendTemplateWhen(
+        (name != null), " AND name like ? ", Parameter.varcharOf("", pUserBean.getName()));
+    sqlBuilder.appendTemplateWhen((otherwise), " AND featured = 1 ");
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testResultTypeUserBean"生成的代码片段 */
+  public List<UserBean> testResultTypeUserBean() throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" SELECT *       from T ");
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testChooseNested"生成的代码片段 */
+  public List<UserBean> testChooseNested(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select *        from T ");
+    sqlBuilder.appendTemplateWhen(
+        (title != null && number != null),
+        " WHERE number = ? ",
+        Parameter.integerOf("", pUserBean.getNumber()));
+    sqlBuilder.appendTemplateWhen(
+        (title != null), " title like ? ", Parameter.varcharOf("", pUserBean.getTitle()));
+    sqlBuilder.appendTemplateWhen(
+        (name != null), " AND name like ? ", Parameter.varcharOf("", pUserBean.getName()));
+    sqlBuilder.appendTemplateWhen(
+        (name != null && code != null),
+        " WHERE code like ? ",
+        Parameter.varcharOf("", pUserBean.getName()));
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testSQLInclude"生成的代码片段 */
+  public List<UserBean> testSQLInclude() throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select         name, id         from T ");
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testIf"生成的代码片段 */
+  public List<UserBean> testIf(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select *        from T ");
+    sqlBuilder.appendTemplateWhen(
+        (id != null), " WHERE id = ? ", Parameter.integerOf("", pUserBean.getId()));
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testWhereSet"生成的代码片段 */
+  public int testWhereSet(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" update T ");
+    sqlBuilder.appendTemplate(" SET ");
+    sqlBuilder.appendTemplate(" name = ? ", Parameter.varcharOf("", pUserBean.getName()));
+    sqlBuilder.appendTemplate(" WHERE ");
+    sqlBuilder.appendTemplate(" id = ? ", Parameter.integerOf("", pUserBean.getId()));
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.update(sqlBuilder);
+  }
+  /** 以下代码为id = "testParameterTypeInt"生成的代码片段 */
+  public List<UserBean> testParameterTypeInt(java.lang.Integer pInteger) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(
+        " SELECT *       from T       where id = ? ", Parameter.integerOf("", pInteger));
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testResultMap"生成的代码片段 */
+  public List<UserBean> testResultMap() throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select id, username, updateTime, updateTime, active      from T ");
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testParameterTypeUserBean"生成的代码片段 */
+  public List<UserBean> testParameterTypeUserBean(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(
+        " SELECT *       from T       where id = ? AND name = ? ",
+        Parameter.integerOf("", pUserBean.getId()),
+        Parameter.varcharOf("", pUserBean.getName()));
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testForeach"生成的代码片段 */
+  public List<UserBean> testForeach(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select *        from T        WHERE id in ");
+    // 请自行转换XML节点: <foreach item= "accountSetIDs" index="null" collection="accountSetIDs" ...>
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testIfNested"生成的代码片段 */
+  public List<UserBean> testIfNested(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" select *        from T ");
+    sqlBuilder.appendTemplateWhen(
+        (id != null), " WHERE id = ? ", Parameter.integerOf("", pUserBean.getId()));
+    sqlBuilder.appendTemplateWhen(
+        (id != null && name != null),
+        " WHERE name like ? ",
+        Parameter.varcharOf("", pUserBean.getName()));
+    sqlBuilder.into(UserBean.class);
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testBind"生成的代码片段 */
+  public Integer testBind(com.UserBean pUserBean) throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    BindObject offset = (currentPage - 1) * pageSize;
+    sqlBuilder.appendTemplate(
+        " select count(*)        from T        WHERE page = ? ",
+        Parameter.integerOf("", pUserBean.getOffset()));
+    sqlBuilder.intoObject();
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+  /** 以下代码为id = "testResultTypeInteger"生成的代码片段 */
+  public Integer testResultTypeInteger() throws SQLException {
+    SqlBuilder sqlBuilder = new SqlBuilder();
+    sqlBuilder.appendTemplate(" SELECT count(id)       from T ");
+    sqlBuilder.intoObject();
+    DasClient dao = DasClientFactory.getClient(logicDBName);
+    return dao.query(sqlBuilder);
+  }
+}

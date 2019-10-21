@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <link rel="stylesheet" href="../pages/err/404/css/main.css" type="text/css" media="screen, projection"/>
+    <!-- main stylesheet -->
+    <link rel="stylesheet" type="text/css" media="all" href="../pages/err/404/css/tipsy.css"/>
+    <!-- Tipsy implementation -->
+
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="../pages/err/404/css/ie8.css"/>
+    <![endif]-->
+
+    <script type="text/javascript" src="../pages/err/404/scripts/jquery-1.7.2.min.js"></script>
+    <!-- uiToTop implementation -->
+    <script type="text/javascript" src="../pages/err/404/scripts/custom-scripts.js"></script>
+    <script type="text/javascript" src="../pages/err/404/scripts/jquery.tipsy.js"></script> <!-- Tipsy -->
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            universalPreloader();
+
+            window.fetch('/api/linkInfo', {
+                method: 'GET'
+            }).then(res => res.text()).then(
+                data => {
+                    data = JSON.parse(data)
+                    if (data.code === 200) {
+                        window.console.log(data)
+                        $('#linkus').attr("href", data.msg.menuUrl).text(data.msg.menuName)
+                    }
+                }
+            )
+        });
+
+        $(window).load(function () {
+
+            //remove Universal Preloader
+            universalPreloaderRemove();
+
+            rotate();
+            dogRun();
+            dogTalk();
+
+            //Tipsy implementation
+            $('.with-tooltip').tipsy({gravity: $.fn.tipsy.autoNS});
+        });
+
+    </script>
+
+
+    <title>用户未登记</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+
+<body>
+
+<!-- Universal preloader -->
+<div id="universal-preloader">
+    <div class="preloader">
+        <img src="../pages/err/404/images/universal-preloader.gif" alt="universal-preloader"
+             class="universal-preloader-preloader"/>
+    </div>
+</div>
+<!-- Universal preloader -->
+
+<div id="wrapper">
+    <!-- 404 graphic -->
+    <div class="graphic"></div>
+    <!-- 404 graphic -->
+    <!-- Not found text -->
+    <div class="not-found-text">
+        <h1 class="not-found-text">亲！请先联系我们注册再登录!</h1>
+    </div>
+    <!-- Not found text -->
+
+    <!-- search form -->
+
+
+    <!-- search form -->
+
+    <!-- top menu -->
+    <div class="top-menu">
+        <a id="linkus" class="with-tooltip" target="_blank" title="查看用户手册">联系我们1111</a>
+    </div>
+    <!-- top menu -->
+
+    <div class="dog-wrapper">
+        <!-- dog running -->
+        <div class="dog"></div>
+        <!-- dog running -->
+
+        <!-- dog bubble talking -->
+        <div class="dog-bubble">
+
+        </div>
+
+        <!-- The dog bubble rotates these -->
+        <div class="bubble-options">
+            <p class="dog-bubble">
+                亲,找不到组织了吗?别担心，我是个优秀的导游!
+            </p>
+            <p class="dog-bubble">
+                <br/>
+                Arf! Arf! Anne！！！
+            </p>
+            <p class="dog-bubble">
+                <br/>
+                别担心!我正在连线!
+            </p>
+            <p class="dog-bubble">
+                我希望我有一块饼干<br/><img style="margin-top:8px" src="../pages/err/404/images/cookie.png" alt="cookie"/>
+            </p>
+            <p class="dog-bubble">
+                <br/>
+                天啊!这是很无聊的!
+            </p>
+            <p class="dog-bubble">
+                <br/>
+                我正在接近吗?
+            </p>
+            <p class="dog-bubble">
+                还是我只是在兜圈子?啊啊啊…
+            </p>
+            <p class="dog-bubble">
+                <br/>
+                好了，我现在正式迷路了……
+            </p>
+            <p class="dog-bubble">
+                我想我看到了<br/><img style="margin-top:8px" src="../pages/err/404/images/cat.png" alt="cat"/>
+            </p>
+            <p class="dog-bubble">
+                我们到底要找什么? @_@
+            </p>
+        </div>
+        <!-- The dog bubble rotates these -->
+        <!-- dog bubble talking -->
+    </div>
+
+    <!-- planet at the bottom -->
+    <div class="planet"></div>
+    <!-- planet at the bottom -->
+</div>
+
+
+</body>
+</html>

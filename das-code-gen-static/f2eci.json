@@ -1,0 +1,9 @@
+{
+  "scripts":{
+    "build":"cortex install --stable-only && gulp",
+    "postpublish":""
+  },
+  "dist": "./dist",
+  "env":"dev",
+  "urlPrefix":""
+}

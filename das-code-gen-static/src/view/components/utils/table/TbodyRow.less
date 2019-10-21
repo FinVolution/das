@@ -1,0 +1,181 @@
+@media screen and (max-width: 1710px) {
+  .tradeList {
+    overflow-x: auto;
+  }
+
+  .tradeList::-webkit-scrollbar { /*滚动条整体样式*/
+    width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 6px;
+  }
+
+  .tradeList::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .tradeList::-webkit-scrollbar-track { /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .eg-default {
+    width: 1500px;
+  }
+}
+
+.tradeList {
+  position: relative;
+  .text-align-center {
+    text-align: center;
+    font-size: 15px;
+    .cursor {
+      cursor: pointer;
+    }
+  }
+  .padding-top-20 {
+    padding-top: 14px;
+  }
+  .col-width {
+    width: 10%;
+  }
+  .col-lr {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  .col-div-width {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .col-color-hover:hover {
+    //background-color: rgba(141, 192, 219, 0.25);
+    cursor: pointer;
+  }
+  .col-color-select {
+    background-color: rgba(141, 192, 219, 0.25);
+    cursor: pointer;
+  }
+  .noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently not supported by any browser */
+  }
+
+  img {
+    width: 19px;
+    display: inline-block;
+    vertical-align: middle
+  }
+}
+
+.tbodyRow {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 11px;
+  a {
+    cursor: pointer;
+    color: #0699e0;
+  }
+  .row-color-odd {
+    background-color: #fff;
+    border-bottom: 1px solid #dddddd;
+  }
+  .row-color-odd:hover {
+    background-color: #ecf6fd;
+    cursor:pointer
+  }
+  .row-color-eve {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #dddddd;
+  }
+  .row-color-eve:hover {
+    background-color: #ecf6fd;
+    cursor:pointer
+  }
+  .row-color-checked {
+    color: #000 !important;
+    background-color: #dcecf9 !important;
+  }
+  .td-center {
+    text-align: center;
+  }
+  .col-width {
+    width: 10%;
+  }
+
+  .text-align-right {
+    padding-right: 0px;
+    text-align: right;
+    .eg-btn-sm {
+      padding-right: 0px;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+  }
+  .text-align-left {
+    padding-left: 0px;
+    text-align: left;
+    .eg-btn-sm {
+      padding-left: 0px;
+      font-size: 16px;
+      color: #ee5511;
+      margin-left: -10px;
+    }
+  }
+  .text-align-centert {
+    font-size: 13px;
+    text-align: center;
+    .eg-btn-sm {
+      font-size: 16px;
+      color: #ee5511;
+      margin-left: -10px;
+    }
+  }
+  .cursor {
+    cursor: pointer;
+  }
+  .eg-btn-link {
+    color: #ee5511;
+  }
+  .button-editor {
+    text-align: center;
+    margin: 2px;
+  }
+}
+
+.panelHeader {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.outerPanel {
+  //border: solid 1px #ddd;
+  background-color: white;
+  //padding-left: 10px;
+  //padding-right: 10px;
+  border-radius: 4px;
+}
+
+.marginTopSpace {
+  margin-top: 10px;
+  .eg-panel-padding {
+    padding-top: 0px
+  }
+}
+
+.marginSpacePanelHeader {
+  padding: 0px !important;
+}
+
+.paging-margin {
+  margin: 0px 30px 0px 0px !important;
+}
+
+.panelHeader {
+  background-color: #eee;
+  margin-left: 0px;
+  margin-right: 0px;
+}
