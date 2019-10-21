@@ -1,0 +1,27 @@
+.msg {
+  span {
+    cursor: pointer;
+  }
+  .msg-spin-body {
+    left: 0px;
+    top: 50px;
+  }
+  .msg-body {
+    position: absolute;
+    top: -150px;
+    left: 85px;
+    z-index: 1000;
+    margin-top: -1px;
+    width: 1100px;
+    height: 400px;
+    display: none;
+    border: 1px solid #f78080;
+    border-radius: 3px;
+    box-shadow: 5px 5px 4px #ffc3c3;
+  }
+  &:hover {
+    .msg-body {
+      display: block;
+    }
+  }
+}
