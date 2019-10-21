@@ -3,26 +3,12 @@ package com.ppdai.das.core.helper;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppdai.das.core.EventEnum;
 import com.ppdai.das.core.LogEntry;
 
 public class LoggerHelper {
 
 	public static final String SQLHIDDENString = "*";
-
-	private static class ObjectMapperHolder{
-		private static ObjectMapper objectMapperInstance=new ObjectMapper();
-		static {
-			objectMapperInstance.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-			objectMapperInstance.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		}
-	}
-
-	public static ObjectMapper getObjectMapperInstance(){
-		return ObjectMapperHolder.objectMapperInstance;
-	}
 
 	public static int getHashCode(String str) {
 		str = getCompactSql(str);
@@ -210,14 +196,5 @@ public class LoggerHelper {
 		}
 
 		return msg;
-	}
-
-	public static String toJson(Object object) {
-		try {
-			return getObjectMapperInstance().writeValueAsString(object);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "Error convert log value to json string!";
 	}
 }

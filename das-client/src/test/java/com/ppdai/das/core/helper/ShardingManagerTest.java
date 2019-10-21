@@ -33,6 +33,7 @@ import com.ppdai.das.client.Person;
 import com.ppdai.das.client.Person.PersonDefinition;
 import com.ppdai.das.client.SqlBuilder;
 import com.ppdai.das.client.delegate.local.PPDaiDalParser;
+import com.ppdai.das.core.ShardingManager;
 import com.ppdai.das.strategy.ConditionList;
 
 import oracle.sql.DATE;

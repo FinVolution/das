@@ -1,9 +1,9 @@
 package com.ppdai.das.core.task;
 
-import static com.ppdai.das.core.helper.ShardingManager.buildTableName;
-import static com.ppdai.das.core.helper.ShardingManager.getDatabaseSet;
-import static com.ppdai.das.core.helper.ShardingManager.isTableShardingEnabled;
-import static com.ppdai.das.core.helper.ShardingManager.locateTableShardId;
+import static com.ppdai.das.core.ShardingManager.buildTableName;
+import static com.ppdai.das.core.ShardingManager.getDatabaseSet;
+import static com.ppdai.das.core.ShardingManager.isTableShardingEnabled;
+import static com.ppdai.das.core.ShardingManager.locateTableShardId;
 
 import java.sql.JDBCType;
 import java.sql.SQLException;

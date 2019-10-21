@@ -1,8 +1,8 @@
 package com.ppdai.das.core.task;
 
-import static com.ppdai.das.core.helper.ShardingManager.detectDistributedTransaction;
-import static com.ppdai.das.core.helper.ShardingManager.isShardingEnabled;
-import static com.ppdai.das.core.helper.ShardingManager.locateShardId;
+import static com.ppdai.das.core.ShardingManager.detectDistributedTransaction;
+import static com.ppdai.das.core.ShardingManager.isShardingEnabled;
+import static com.ppdai.das.core.ShardingManager.locateShardId;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

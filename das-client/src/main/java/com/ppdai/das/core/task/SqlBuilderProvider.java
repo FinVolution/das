@@ -10,12 +10,12 @@ import com.ppdai.das.client.Segment;
 import com.ppdai.das.client.SqlBuilder;
 import com.ppdai.das.client.sqlbuilder.TableReference;
 import com.ppdai.das.core.ResultMerger;
+import com.ppdai.das.core.ShardingManager;
 import com.ppdai.das.core.client.DalResultSetExtractor;
 import com.ppdai.das.core.helper.DalListMerger;
 import com.ppdai.das.core.helper.DalRowMapperExtractor;
 import com.ppdai.das.core.helper.DalSingleResultExtractor;
 import com.ppdai.das.core.helper.DalSingleResultMerger;
-import com.ppdai.das.core.helper.ShardingManager;
 import com.ppdai.das.strategy.ConditionList;
 
 public class SqlBuilderProvider implements StatementConditionProvider {

@@ -2,13 +2,13 @@ package com.ppdai.das.core.task;
 
 import static com.ppdai.das.core.KeyHolder.mergePartial;
 import static com.ppdai.das.core.KeyHolder.prepareLocalHints;
-import static com.ppdai.das.core.helper.ShardingManager.detectDistributedTransaction;
-import static com.ppdai.das.core.helper.ShardingManager.isShardingEnabled;
-import static com.ppdai.das.core.helper.ShardingManager.isTableShardingEnabled;
-import static com.ppdai.das.core.helper.ShardingManager.locateShardId;
-import static com.ppdai.das.core.helper.ShardingManager.locateTableShardId;
-import static com.ppdai.das.core.helper.ShardingManager.shuffleByTable;
-import static com.ppdai.das.core.helper.ShardingManager.shuffleEntities;
+import static com.ppdai.das.core.ShardingManager.detectDistributedTransaction;
+import static com.ppdai.das.core.ShardingManager.isShardingEnabled;
+import static com.ppdai.das.core.ShardingManager.isTableShardingEnabled;
+import static com.ppdai.das.core.ShardingManager.locateShardId;
+import static com.ppdai.das.core.ShardingManager.locateTableShardId;
+import static com.ppdai.das.core.ShardingManager.shuffleByTable;
+import static com.ppdai.das.core.ShardingManager.shuffleEntities;
 
 import java.sql.SQLException;
 import java.util.HashMap;

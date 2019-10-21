@@ -1,10 +1,10 @@
 package com.ppdai.das.core.task;
 
-import static com.ppdai.das.core.helper.ShardingManager.detectDistributedTransaction;
-import static com.ppdai.das.core.helper.ShardingManager.isShardingEnabled;
-import static com.ppdai.das.core.helper.ShardingManager.isTableShardingEnabled;
-import static com.ppdai.das.core.helper.ShardingManager.locateShards;
-import static com.ppdai.das.core.helper.ShardingManager.locateTableShards;
+import static com.ppdai.das.core.ShardingManager.detectDistributedTransaction;
+import static com.ppdai.das.core.ShardingManager.isShardingEnabled;
+import static com.ppdai.das.core.ShardingManager.isTableShardingEnabled;
+import static com.ppdai.das.core.ShardingManager.locateShards;
+import static com.ppdai.das.core.ShardingManager.locateTableShards;
 
 import java.sql.SQLException;
 import java.util.HashMap;
