@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ppdai.das.core.DalHintEnum;
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DatabaseSet;
 import com.ppdai.das.core.client.DalTransactionManager;
-import com.ppdai.das.core.configure.DatabaseSet;
 import com.ppdai.das.strategy.ConditionList;
 import com.ppdai.das.strategy.ShardingContext;
 import com.ppdai.das.strategy.ShardingStrategy;
@@ -42,7 +42,7 @@ public class ShardingManager {
     }
     
     public static DatabaseSet getDatabaseSet(String appId, String logicDbName) {
-        return DasConfigureFactory.getDalConfigure(appId).getDatabaseSet(logicDbName);
+        return DasConfigureFactory.getConfigure(appId).getDatabaseSet(logicDbName);
     }
     
     /**
@@ -57,7 +57,7 @@ public class ShardingManager {
         
         String shardId = hints.getShard();
         if(shardId == null) {
-            if(hints.is(DalHintEnum.shardValue)) {
+            if(hints.is(HintEnum.shardValue)) {
                 Set<String> shards = dbSet.getStrategy().locateDbShards(new ShardingContext(appId, logicDbName, dbSet.getAllShards(), hints, ConditionList.andList()));
                 return validateId(shards, dbSet.getAllShards());
             }else
@@ -99,7 +99,7 @@ public class ShardingManager {
 
         String tableShardId = hints.getTableShard();
         if(tableShardId == null) {
-            if(hints.is(DalHintEnum.tableShardValue)) {
+            if(hints.is(HintEnum.tableShardValue)) {
                 Set<String> tableShards = strategy.locateTableShards(new TableShardingContext(appId, logicDbName, null, strategy.getAllTableShards(), hints, ConditionList.andList()));
                 return validateId(tableShards, strategy.getAllTableShards());
             }else
@@ -195,10 +195,10 @@ public class ShardingManager {
         if (!isShardingEnabled(appId, logicDbName))
             throw new IllegalArgumentException(String.format("Logic DB %s of App %s does not support DB shard", logicDbName, appId));
         
-        DatabaseSet dbSet = DasConfigureFactory.getDalConfigure(appId).getDatabaseSet(logicDbName);
+        DatabaseSet dbSet = DasConfigureFactory.getConfigure(appId).getDatabaseSet(logicDbName);
 
         Set<String> shards;
-        if(hints.is(DalHintEnum.shard)){
+        if(hints.is(HintEnum.shard)){
             shards = new HashSet<>();
             shards.add(hints.getShard());
         } else {

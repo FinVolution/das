@@ -10,7 +10,7 @@ import com.ppdai.das.client.Parameter;
 import com.ppdai.das.client.ParameterDefinition;
 import com.ppdai.das.client.delegate.local.DasBuilderContext;
 import com.ppdai.das.client.sqlbuilder.BuilderContext;
-import com.ppdai.das.core.DalClient;
+import com.ppdai.das.core.client.DalClient;
 
 public class BatchCallBuilderTask implements SqlBuilderTask<int[]>{
     private String appId;

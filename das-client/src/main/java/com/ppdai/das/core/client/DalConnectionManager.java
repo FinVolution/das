@@ -4,64 +4,67 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
 
-import com.ppdai.das.core.DalEventEnum;
-import com.ppdai.das.core.DalHintEnum;
+import com.ppdai.das.core.ConnectionLocator;
+import com.ppdai.das.core.HintEnum;
+import com.ppdai.das.core.EventEnum;
+import com.ppdai.das.core.DasConfigure;
+import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.DatabaseSet;
+import com.ppdai.das.core.HaContext;
+import com.ppdai.das.core.SelectionContext;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.configure.DalConfigure;
-import com.ppdai.das.core.configure.DatabaseSet;
-import com.ppdai.das.core.configure.SelectionContext;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.core.markdown.MarkdownManager;
-import com.ppdai.das.core.status.DalStatusManager;
+import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.strategy.ConditionList;
 import com.ppdai.das.strategy.ShardingContext;
 import com.ppdai.das.strategy.ShardingStrategy;
 
 public class DalConnectionManager {
-	private DalConfigure config;
+	private DasConfigure config;
 	private String logicDbName;
-	private DalLogger logger;
-	private DalConnectionLocator locator;
+	private DasLogger logger;
+	private ConnectionLocator locator;
 
-	public DalConnectionManager(String logicDbName, DalConfigure config) {
+	public DalConnectionManager(String logicDbName, DasConfigure config) {
 		this.logicDbName = logicDbName;
 		this.config = config;
-		this.logger = config.getDalLogger();
-		this.locator = config.getLocator();
+		this.logger = config.getDasLogger();
+		this.locator = config.getConnectionLocator();
 	}
 
 	public String getLogicDbName() {
 		return logicDbName;
 	}
 
-	public DalConfigure getConfig() {
+	public DasConfigure getConfig() {
 		return config;
 	}
 
-	public DalLogger getLogger() {
+	public DasLogger getLogger() {
 		return logger;
 	}
 
-	public DalConnection getNewConnection(Hints hints, boolean useMaster, DalEventEnum operation)
+	public DalConnection getNewConnection(Hints hints, boolean useMaster, EventEnum operation)
 			throws SQLException {
 		DalConnection connHolder = null;
 		String realDbName = logicDbName;
 		try
 		{
-			if(DalStatusManager.getDatabaseSetStatus(config.getAppId(), logicDbName).isMarkdown())
+			if(StatusManager.getDatabaseSetStatus(config.getAppId(), logicDbName).isMarkdown())
 				throw new DalException(ErrorCode.MarkdownLogicDb, logicDbName);
 
-			boolean isMaster = hints.is(DalHintEnum.masterOnly) || useMaster;
-			boolean isSelect = operation == DalEventEnum.QUERY;
+			boolean isMaster = hints.is(HintEnum.masterOnly) || useMaster;
+			boolean isSelect = operation == EventEnum.QUERY;
 
 			connHolder = getConnectionFromDSLocator(hints, isMaster, isSelect);
 
 			connHolder.setAutoCommit(true);
 			connHolder.applyHints(hints);
 
-			if(hints.getHA() != null){
-				hints.getHA().setDatabaseCategory(connHolder.getMeta().getDatabaseCategory());
+			if(hints.getHaContext() != null){
+				hints.getHaContext().setDatabaseCategory(connHolder.getMeta().getDatabaseCategory());
 			}
 
 			realDbName = connHolder.getDatabaseName();
@@ -145,7 +148,7 @@ public class DalConnectionManager {
             context.setSlaves(dbSet.getSlaveDbs(shard));	        
 	    }
 	    
-	    return config.getSelector().select(context);
+	    return config.getDatabaseSelector().select(context);
 	}
 	
 	public <T> T doInConnection(ConnectionAction<T> action, Hints hints)
@@ -153,11 +156,11 @@ public class DalConnectionManager {
 	    action.config = config;
 	    // If HA disabled or not query, we just directly call _doInConnnection
 
-		if(!DalStatusManager.getHaStatus().isEnabled()
-				|| action.operation != DalEventEnum.QUERY)
+		if(!StatusManager.getHaStatus().isEnabled()
+				|| action.operation != EventEnum.QUERY)
 			return _doInConnection(action, hints);
 
-		DalHA highAvalible = new DalHA();
+		HaContext highAvalible = new HaContext();
 		hints.setHA(highAvalible);
 		do{
 			try {

@@ -3,7 +3,6 @@ package com.ppdai.das.strategy;
 import java.util.Set;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalHintEnum;
 
 public class TableShardingContext extends ShardingContext {
     //Optional table name, only used when tableShardValue is set.
@@ -28,10 +27,10 @@ public class TableShardingContext extends ShardingContext {
     }
 
     public boolean hasTableShardValue() {
-        return getHints().is(DalHintEnum.tableShardValue);
+        return getHints().hasTableShardValue();
     }
 
     public Object getTableShardValue() {
-        return getHints().get(DalHintEnum.tableShardValue);
+        return getHints().getTableShardValue();
     }
 }

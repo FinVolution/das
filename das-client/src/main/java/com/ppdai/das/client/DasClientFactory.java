@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.ppdai.das.client.delegate.datasync.DataSyncDasDelegate;
-import com.ppdai.das.core.configure.DasServerInstance;
+
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +16,12 @@ import org.slf4j.LoggerFactory;
 import com.ppdai.das.client.delegate.DasDelegate;
 import com.ppdai.das.client.delegate.local.ClientDasDelegate;
 import com.ppdai.das.client.delegate.remote.DasRemoteDelegate;
+import com.ppdai.das.core.ClientConfigureLoader;
+import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.DasConfigureContext;
 import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.DasCoreVersion;
-import com.ppdai.das.core.configure.ClientConfigureLoader;
-import com.ppdai.das.core.configure.DalConfigure;
+import com.ppdai.das.core.DasServerInstance;
 import com.ppdai.das.core.helper.ServiceLoaderHelper;
 
 public class DasClientFactory {
@@ -43,7 +44,7 @@ public class DasClientFactory {
         try {
             if(proxyModeRef.get()){
                 List<DasServerInstance> servers = clientLoaderRef.get().getServerInstances();
-                return new DasRemoteDelegate(appId, logicDbName, customerClientVersion, servers, clientLoaderRef.get().getDalLogger());
+                return new DasRemoteDelegate(appId, logicDbName, customerClientVersion, servers, clientLoaderRef.get().getDasLogger());
             } else {
                 ClientDasDelegate dasDelegate = new ClientDasDelegate(appId, logicDbName, customerClientVersion);
                 return new DataSyncDasDelegate(dasDelegate);
@@ -81,12 +82,12 @@ public class DasClientFactory {
                 
                 DasConfigureContext configContext;                
                 if(loader.isProxyEnabled()) {
-                    configContext = new DasConfigureContext(loader.getDalLogger());
+                    configContext = new DasConfigureContext(loader.getDasLogger());
                 }else {
-                    Map<String, DalConfigure> configureMap = new HashMap<>();
-                    DalConfigure config = loader.load();
+                    Map<String, DasConfigure> configureMap = new HashMap<>();
+                    DasConfigure config = loader.load();
                     configureMap.put(loader.getAppId(), config);
-                    configContext = new DasConfigureContext(configureMap, config.getDalLogger(), config.getFacory(), config.getLocator(), config.getSelector());
+                    configContext = new DasConfigureContext(configureMap, config.getDasLogger(), config.getTaskFacory(), config.getConnectionLocator(), config.getDatabaseSelector());
                     logger.info("Successfully load local DAS confiure");
                 }
 

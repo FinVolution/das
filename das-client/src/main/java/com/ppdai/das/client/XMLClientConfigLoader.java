@@ -1,16 +1,17 @@
 package com.ppdai.das.client;
 
-import com.ppdai.das.core.client.DalConnectionLocator;
-import com.ppdai.das.core.client.DalLogger;
-import com.ppdai.das.core.configure.*;
-import com.ppdai.das.core.task.DalTaskFactory;
-
 import java.util.Collections;
 import java.util.List;
 
+import com.ppdai.das.core.ClientConfigureLoader;
+import com.ppdai.das.core.DasConfigure;
+import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.DasServerInstance;
+import com.ppdai.das.core.configure.DalConfigureFactory;
+
 public class XMLClientConfigLoader implements ClientConfigureLoader {
 
-    private DalConfigure dalConfigure = null;
+    private DasConfigure dalConfigure = null;
 
     public XMLClientConfigLoader() throws Exception {
         try {
@@ -36,28 +37,13 @@ public class XMLClientConfigLoader implements ClientConfigureLoader {
     }
 
     @Override
-    public DalConfigure load() throws Exception {
+    public DasConfigure load() throws Exception {
         return dalConfigure;
     }
 
     @Override
-    public DalLogger getDalLogger() throws Exception {
-        return dalConfigure.getDalLogger();
-    }
-
-    @Override
-    public DalTaskFactory getDalTaskFactory() throws Exception {
-        return dalConfigure.getFacory();
-    }
-
-    @Override
-    public DalConnectionLocator getDalConnectionLocator() throws Exception {
-        return dalConfigure.getLocator();
-    }
-
-    @Override
-    public DatabaseSelector getDatabaseSelector() throws Exception {
-        return dalConfigure.getSelector();
+    public DasLogger getDasLogger() throws Exception {
+        return dalConfigure.getDasLogger();
     }
 
     @Override

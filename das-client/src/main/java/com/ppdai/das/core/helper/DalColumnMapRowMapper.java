@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalRowMapper;
+import com.ppdai.das.core.client.DalRowMapper;
 
 /**
  * IMPORTANT NOTE:

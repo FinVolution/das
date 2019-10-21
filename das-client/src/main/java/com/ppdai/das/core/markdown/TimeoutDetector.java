@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.ppdai.das.core.DasCoreVersion;
-import com.ppdai.das.core.status.DalStatusManager;
+import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.core.status.TimeoutMarkdown;
 
 public class TimeoutDetector implements ErrorDetector{
@@ -15,7 +15,7 @@ public class TimeoutDetector implements ErrorDetector{
 	 */
 	@Override
 	public void detect(ErrorContext ctx) {	
-		TimeoutMarkdown tmb = DalStatusManager.getTimeoutMarkdown();
+		TimeoutMarkdown tmb = StatusManager.getTimeoutMarkdown();
 
 		if(!tmb.isEnabled())
 			return;

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.helper.ConnectionStringKeyHelper;
 
 public class PropertyFileConfigureProvider implements DataSourceConfigureProvider {
@@ -98,7 +99,7 @@ public class PropertyFileConfigureProvider implements DataSourceConfigureProvide
     public void register(String dbName, DataSourceConfigureChangeListener listener) {}
 
     @Override
-    public void onConfigChanged(DalConfigure.DataSourceConfigureEvent event) {
+    public void onConfigChanged(DasConfigure.DataSourceConfigureEvent event) {
 
     }
 

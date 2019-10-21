@@ -15,16 +15,16 @@ import java.util.concurrent.Callable;
 
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.DalClient;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.DasVersionInfo;
 import com.ppdai.das.core.ResultMerger;
-import com.ppdai.das.core.client.DalLogger;
+import com.ppdai.das.core.client.DalClient;
 import com.ppdai.das.strategy.ConditionList;
 
 public class SqlBuilderRequest<T> implements DalRequest<T>{
     private String appId;
-    private DalLogger logger;
+    private DasLogger logger;
     private String logicDbName;
     private StatementConditionProvider provider;
     private Hints hints;
@@ -35,7 +35,7 @@ public class SqlBuilderRequest<T> implements DalRequest<T>{
     public SqlBuilderRequest(String appId, String logicDbName, StatementConditionProvider provider)
              throws SQLException {
         this.appId = appId;
-        logger = DasConfigureFactory.getDalLogger();
+        logger = DasConfigureFactory.getLogger();
         this.logicDbName = logicDbName;
         this.provider = provider;
         this.hints = provider.getHints();

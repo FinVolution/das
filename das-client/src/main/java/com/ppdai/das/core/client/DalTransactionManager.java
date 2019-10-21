@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-import com.ppdai.das.core.DalEventEnum;
+import com.ppdai.das.core.EventEnum;
 import com.ppdai.das.client.Hints;
 //import com.ppdai.das.core.annotation.DalTransactional;
 import com.ppdai.das.core.exceptions.DalException;
@@ -26,7 +26,7 @@ public class DalTransactionManager {
 		this.connManager = connManager;
 	}
 
-    static void setCurrentTransaction(DalTransaction transaction) {
+    public static void setCurrentTransaction(DalTransaction transaction) {
         transactionHolder.set(transaction);
     }
 
@@ -87,7 +87,7 @@ public class DalTransactionManager {
 		transaction.rollbackTransaction();
 	}
 	
-	public DalConnection getConnection(Hints hints, DalEventEnum operation) throws SQLException {
+	public DalConnection getConnection(Hints hints, EventEnum operation) throws SQLException {
 		return getConnection(hints, false, operation);
 	}
 	
@@ -109,7 +109,7 @@ public class DalTransactionManager {
 					null;
 	}
 	
-	private DalConnection getConnection(Hints hints, boolean useMaster, DalEventEnum operation) throws SQLException {
+	private DalConnection getConnection(Hints hints, boolean useMaster, EventEnum operation) throws SQLException {
 		DalTransaction transaction = transactionHolder.get();
 		
 		if(transaction == null) {

@@ -17,11 +17,11 @@ import com.ppdai.das.client.DasClientFactory;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.Parameter;
 import com.ppdai.das.client.SqlBuilder;
+import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.DasVersionInfo;
-import com.ppdai.das.core.configure.DalConfigure;
-import com.ppdai.das.core.configure.DatabaseSelector;
-import com.ppdai.das.core.configure.FreshnessSelector;
+import com.ppdai.das.core.DatabaseSelector;
+import com.ppdai.das.core.FreshnessSelector;
 
 public class SlaveFreshnessScannerMysqlTest {
     private static final String GET_DB_NAME = "select DATABASE() as id";
@@ -60,8 +60,8 @@ public class SlaveFreshnessScannerMysqlTest {
         freshnessShardMap.put(1, shardMap);
 
         //Setup FreshnessSelector, backup defaultDatabaseSelector
-        DalConfigure freshDalConfigure = DasConfigureFactory.getDalConfigure("das-test");
-        defaultDatabaseSelector = DasConfigureFactory.getDalConfigure("das-test").getSelector();
+        DasConfigure freshDalConfigure = DasConfigureFactory.getConfigure("das-test");
+        defaultDatabaseSelector = DasConfigureFactory.getConfigure("das-test").getDatabaseSelector();
 
         Field selectorField = freshDalConfigure.getClass().getDeclaredField("selector");
         selectorField.setAccessible(true);
@@ -81,7 +81,7 @@ public class SlaveFreshnessScannerMysqlTest {
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
         //restore defaultDatabaseSelector
-        DalConfigure freshDalConfigure = DasConfigureFactory.getDalConfigure("das-test");
+        DasConfigure freshDalConfigure = DasConfigureFactory.getConfigure("das-test");
         Field selectorField = freshDalConfigure.getClass().getDeclaredField("selector");
         selectorField.setAccessible(true);
         selectorField.set(freshDalConfigure, defaultDatabaseSelector);

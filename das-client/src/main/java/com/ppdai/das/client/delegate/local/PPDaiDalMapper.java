@@ -12,10 +12,10 @@ import java.util.Set;
 
 import com.ppdai.das.client.delegate.EntityMeta;
 import com.ppdai.das.client.delegate.EntityMetaManager;
-import com.ppdai.das.core.DalHintEnum;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalRowMapper;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.UpdatableEntity;
+import com.ppdai.das.core.client.DalRowMapper;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.core.helper.CustomizableMapper;
@@ -147,12 +147,12 @@ public class PPDaiDalMapper<T> implements DalRowMapper<T>, CustomizableMapper<T>
     private PPDaiDalMapper(PPDaiDalMapper<T> rawMapper, ResultSet rs, Hints hints) throws SQLException {
         this.clazz = rawMapper.clazz;
         this.fieldsMap = rawMapper.fieldsMap;
-        this.ignorMissingFields = hints.is(DalHintEnum.ignoreMissingFields);
+        this.ignorMissingFields = hints.is(HintEnum.ignoreMissingFields);
 
         // User user defined columns if it is partial query case
-        this.columnNames = hints.is(DalHintEnum.partialQuery) ? hints.getPartialQueryColumns() : rawMapper.columnNames;
+        this.columnNames = hints.is(HintEnum.partialQuery) ? hints.getPartialQueryColumns() : rawMapper.columnNames;
 
-        if (hints.is(DalHintEnum.allowPartial) == false)
+        if (hints.is(HintEnum.allowPartial) == false)
             return;
 
         Set<String> preDefinedColumns = toSet(columnNames);

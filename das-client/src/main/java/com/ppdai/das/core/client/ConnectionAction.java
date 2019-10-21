@@ -11,17 +11,18 @@ import java.util.List;
 import java.util.Set;
 
 import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.DalCommand;
-import com.ppdai.das.core.DalEventEnum;
-import com.ppdai.das.core.DalHintEnum;
+import com.ppdai.das.core.EventEnum;
+import com.ppdai.das.core.HintEnum;
+import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.DasCoreVersion;
-import com.ppdai.das.core.configure.DalConfigure;
+import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.LogEntry;
 import com.ppdai.das.core.exceptions.DalException;
 
 public abstract class ConnectionAction<T> {
-    public DalConfigure config;
-	public DalEventEnum operation;
+    public DasConfigure config;
+	public EventEnum operation;
 	public String sql;
 	public String callString;
 	public String[] sqls;
@@ -38,46 +39,46 @@ public abstract class ConnectionAction<T> {
 	public ResultSet rs;
 	public long start;
 
-	public DalLogger logger;
+	public DasLogger logger;
 	public LogEntry entry;
 	public Throwable e;
 
 	private static final String SQLHIDDENString = "*";
-	void populate(DalEventEnum operation, String sql, List<Parameter> parameters) {
+	void populate(EventEnum operation, String sql, List<Parameter> parameters) {
 		this.operation = operation;
 		this.sql = sql;
 		this.parameters = parameters;
 	}
 
 	void populate(String[] sqls) {
-		this.operation = DalEventEnum.BATCH_UPDATE;
+		this.operation = EventEnum.BATCH_UPDATE;
 		this.sqls = sqls;
 	}
 
 	void populate(String sql, List<Parameter>[] parametersList) {
-		this.operation = DalEventEnum.BATCH_UPDATE_PARAM;
+		this.operation = EventEnum.BATCH_UPDATE_PARAM;
 		this.sql = sql;
 		this.parametersList = parametersList;
 	}
 
 	void populate(DalCommand command) {
-		this.operation = DalEventEnum.EXECUTE;
+		this.operation = EventEnum.EXECUTE;
 		this.command = command;
 	}
 
 	void populate(List<DalCommand> commands) {
-		this.operation = DalEventEnum.EXECUTE;
+		this.operation = EventEnum.EXECUTE;
 		this.commands = commands;
 	}
 
 	void populateSp(String callString, List<Parameter> parameters) {
-		this.operation = DalEventEnum.CALL;
+		this.operation = EventEnum.CALL;
 		this.callString = callString;
 		this.parameters = parameters;
 	}
 
 	void populateSp(String callString, List<Parameter> []parametersList) {
-		this.operation = DalEventEnum.BATCH_CALL;
+		this.operation = EventEnum.BATCH_CALL;
 		this.callString = callString;
 		this.parametersList = parametersList;
 	}
@@ -106,12 +107,12 @@ public abstract class ConnectionAction<T> {
 	}
 
 	public void initLogEntry(String logicDbName, Hints hints) {
-	    logger = config.getDalLogger();
+	    logger = config.getDasLogger();
 		entry = logger.createLogEntry();
 		entry.setLogicDbName(logicDbName);
 		entry.setDbCategory(config.getDatabaseSet(logicDbName).getDatabaseCategory());
 		entry.setCoreVersion(DasCoreVersion.getVersion());
-		entry.setSensitive(hints.is(DalHintEnum.sensitive));
+		entry.setSensitive(hints.is(HintEnum.sensitive));
 		entry.setEvent(operation);
 
 		wrapSql();

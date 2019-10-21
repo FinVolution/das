@@ -5,9 +5,10 @@ import java.sql.SQLException;
 
 import org.apache.tomcat.jdbc.pool.PooledConnection;
 
-import com.ppdai.das.core.DalHintEnum;
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.exceptions.DalException;
 
 public class DalConnection {
@@ -17,7 +18,7 @@ public class DalConnection {
 	private boolean master;
 	private String shardId;
 	private DbMeta meta;
-	private DalLogger logger;
+	private DasLogger logger;
 	private boolean needDiscard;;
 
 	public DalConnection(Connection conn, boolean master, String shardId, DbMeta meta) throws SQLException {
@@ -26,7 +27,7 @@ public class DalConnection {
 		this.master = master;
 		this.shardId = shardId;
 		this.meta = meta;
-		this.logger = DasConfigureFactory.getDalLogger();
+		this.logger = DasConfigureFactory.getLogger();
 	}
 
 	public Connection getConn() {
@@ -55,7 +56,7 @@ public class DalConnection {
 	}
 
 	public void applyHints(Hints hints) throws SQLException {
-		Integer level = hints.getInt(DalHintEnum.isolationLevel);
+		Integer level = hints.getInt(HintEnum.isolationLevel);
 
 		if(level == null || oldIsolationLevel.equals(level))
 			return;

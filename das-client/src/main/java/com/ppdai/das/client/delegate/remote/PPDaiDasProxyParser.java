@@ -2,7 +2,7 @@ package com.ppdai.das.client.delegate.remote;
 
 import com.google.gson.Gson;
 import com.ppdai.das.client.sqlbuilder.SqlBuilderSerializer;
-import com.ppdai.das.core.DalParser;
+import com.ppdai.das.core.client.DalParser;
 import com.ppdai.das.service.Entity;
 import com.ppdai.das.service.EntityMeta;
 

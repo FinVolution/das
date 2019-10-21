@@ -37,14 +37,14 @@ public class DasBuilderContext implements BuilderContext {
 
     public DasBuilderContext(String appId, String logicDbName, Hints ctripHints, List<Parameter> parameters) {
         this(appId, logicDbName);
-        this.dbCategory = DasConfigureFactory.getDalConfigure(appId).getDatabaseSet(logicDbName).getDatabaseCategory();
+        this.dbCategory = DasConfigureFactory.getConfigure(appId).getDatabaseSet(logicDbName).getDatabaseCategory();
         this.ctripHints = ctripHints;
         this.parameters = parameters;
     }
 
     public DasBuilderContext(String appId, String logicDbName, Hints ctripHints, List<Parameter> parameters, ConditionList conditions) {
         this(appId, logicDbName);
-        this.dbCategory = DasConfigureFactory.getDalConfigure(appId).getDatabaseSet(logicDbName).getDatabaseCategory();
+        this.dbCategory = DasConfigureFactory.getConfigure(appId).getDatabaseSet(logicDbName).getDatabaseCategory();
         this.ctripHints = ctripHints;
         this.parameters = parameters;
         this.conditions = conditions;

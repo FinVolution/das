@@ -21,11 +21,11 @@ import java.util.Set;
 
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.DalClient;
-import com.ppdai.das.core.DalHintEnum;
-import com.ppdai.das.core.DalParser;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.UpdatableEntity;
+import com.ppdai.das.core.client.DalClient;
+import com.ppdai.das.core.client.DalParser;
 import com.ppdai.das.core.enums.DatabaseCategory;
 
 public class TaskAdapter<T> implements DaoTask<T> {
@@ -214,10 +214,10 @@ public class TaskAdapter<T> implements DaoTask<T> {
 
 	public Set<String> filterColumns(Hints hints) {
 		Set<String> qulifiedColumns = new HashSet<>(defaultUpdateColumnNames);
-		if(hints.is(DalHintEnum.includedColumns))
+		if(hints.is(HintEnum.includedColumns))
 			qulifiedColumns.retainAll(hints.getIncluded());
 			
-		if(hints.is(DalHintEnum.excludedColumns))
+		if(hints.is(HintEnum.excludedColumns))
 			qulifiedColumns.removeAll(hints.getExcluded());
 			
 		return qulifiedColumns;

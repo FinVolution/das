@@ -3,8 +3,7 @@ package com.ppdai.das.strategy;
 import java.util.Set;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalHintEnum;
-import com.ppdai.das.core.configure.DalConfigure;
+import com.ppdai.das.core.DasConfigure;
 
 //Subclass with DbShardingContext and TableShardingContext?
 public class ShardingContext {
@@ -22,7 +21,7 @@ public class ShardingContext {
         this.conditions = conditions;
     }
     
-    public ShardingContext(DalConfigure config, String logicDbName, Hints hints, ConditionList conditions) {
+    public ShardingContext(DasConfigure config, String logicDbName, Hints hints, ConditionList conditions) {
         this(config.getAppId(), logicDbName, config.getDatabaseSet(logicDbName).getAllShards(), hints, conditions);
     }
 
@@ -43,11 +42,11 @@ public class ShardingContext {
     }
 
     public boolean hasShardValue() {
-        return hints.is(DalHintEnum.shardValue);
+        return hints.hasShardValue();
     }
 
     public Object getShardValue() {
-        return hints.get(DalHintEnum.shardValue);
+        return hints.getShardValue();
     }
 
     public ConditionList getConditions() {

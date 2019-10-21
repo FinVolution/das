@@ -2,7 +2,7 @@ package com.ppdai.das.core.helper;
 
 import java.sql.JDBCType;
 
-import com.ppdai.das.core.DalParser;
+import com.ppdai.das.core.client.DalParser;
 
 public abstract class AbstractDalParser<T> implements DalParser<T> {
 	protected String dataBaseName;

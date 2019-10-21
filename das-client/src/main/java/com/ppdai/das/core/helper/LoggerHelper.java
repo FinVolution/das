@@ -5,8 +5,8 @@ import java.io.StringWriter;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ppdai.das.core.DalEventEnum;
-import com.ppdai.das.core.client.LogEntry;
+import com.ppdai.das.core.EventEnum;
+import com.ppdai.das.core.LogEntry;
 
 public class LoggerHelper {
 
@@ -125,16 +125,16 @@ public class LoggerHelper {
 	public static String getSqlTpl(LogEntry entry) {
 		if ( entry.isSensitive() )
 			return SQLHIDDENString;
-		DalEventEnum event = entry.getEvent();
+		EventEnum event = entry.getEvent();
 		
-		if(event == DalEventEnum.QUERY ||  event == DalEventEnum.UPDATE_SIMPLE ||
-				event == DalEventEnum.UPDATE_KH || event == DalEventEnum.BATCH_UPDATE_PARAM){
+		if(event == EventEnum.QUERY ||  event == EventEnum.UPDATE_SIMPLE ||
+				event == EventEnum.UPDATE_KH || event == EventEnum.BATCH_UPDATE_PARAM){
 			return entry.getSqls() != null && entry.getSqls().length > 0 ? entry.getSqls()[0] : "";
 		}
-		if(event == DalEventEnum.BATCH_UPDATE){
+		if(event == EventEnum.BATCH_UPDATE){
 			return join(entry.getSqls(), ";");
 		}
-		if(event == DalEventEnum.CALL || event == DalEventEnum.BATCH_CALL){
+		if(event == EventEnum.CALL || event == EventEnum.BATCH_CALL){
 			return entry.getCallString();
 		}
 		
@@ -142,21 +142,21 @@ public class LoggerHelper {
 	}
 	
 	public static String getParams(LogEntry entry) {
-		DalEventEnum event = entry.getEvent();
+		EventEnum event = entry.getEvent();
 		String[] pramemters = entry.getPramemters();
 		
 		StringBuilder sbout = new StringBuilder();
 		if(pramemters == null || pramemters.length <= 0){
 			return sbout.toString();
 		}
-		if(event == DalEventEnum.QUERY || 
-				event == DalEventEnum.UPDATE_SIMPLE ||
-				event == DalEventEnum.UPDATE_KH ||
-				event == DalEventEnum.CALL){
+		if(event == EventEnum.QUERY || 
+				event == EventEnum.UPDATE_SIMPLE ||
+				event == EventEnum.UPDATE_KH ||
+				event == EventEnum.CALL){
 			return null != pramemters && pramemters.length > 0 ? pramemters[0] : "";
 		}
-		if(event == DalEventEnum.BATCH_UPDATE_PARAM ||
-				event == DalEventEnum.BATCH_CALL){
+		if(event == EventEnum.BATCH_UPDATE_PARAM ||
+				event == EventEnum.BATCH_CALL){
 			for(String param : pramemters){
 				sbout.append(param + ";");
 			}

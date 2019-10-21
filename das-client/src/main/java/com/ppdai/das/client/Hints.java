@@ -1,13 +1,13 @@
 package com.ppdai.das.client;
 
 import com.google.common.base.Preconditions;
-import com.ppdai.das.core.DalHintEnum;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.DasCoreVersion;
 import com.ppdai.das.core.DasDiagnose;
 import com.ppdai.das.core.DasVersionInfo;
+import com.ppdai.das.core.HaContext;
 import com.ppdai.das.core.KeyHolder;
-import com.ppdai.das.core.client.DalHA;
 import com.ppdai.das.core.exceptions.DalException;
 
 import java.sql.SQLException;
@@ -40,7 +40,7 @@ public class Hints {
     /**
      * Following fields are moved from DalHints
      */
-    private Map<DalHintEnum, Object> hints = new ConcurrentHashMap<>();
+    private Map<HintEnum, Object> hints = new ConcurrentHashMap<>();
     // It is not so nice to put keyholder here, but to make Task stateless, I have no other choice
     private KeyHolder keyHolder;
     private DasVersionInfo versionInfo;
@@ -66,7 +66,7 @@ public class Hints {
         diagnoseMode = true;
         try {
             dasDiagnose = new DasDiagnose("diagnose", 1);
-            set(DalHintEnum.userDefined1, dasDiagnose);
+            set(HintEnum.userDefined1, dasDiagnose);
         } catch (Exception ignored) {
         }
         return this;
@@ -87,7 +87,7 @@ public class Hints {
      * @return this {@code Hints}
      */
     public Hints setIdBack() {
-        set(DalHintEnum.setIdentityBack);
+        set(HintEnum.setIdentityBack);
         prepareInsert();
         return this;
     }
@@ -98,7 +98,7 @@ public class Hints {
      * @return this {@code Hints}
      */
     public Hints insertWithId() {
-        return set(DalHintEnum.enableIdentityInsert);
+        return set(HintEnum.enableIdentityInsert);
     }
 
 //    public Hints inShards(String... shardIds) {
@@ -111,10 +111,10 @@ public class Hints {
      *
      * @param shardId
      * @return this {@code Hints}
-     * @see DalHintEnum#shard
+     * @see HintEnum#shard
      */
     public Hints inShard(String shardId) {
-        hints.put(DalHintEnum.shard, shardId);
+        hints.put(HintEnum.shard, shardId);
         return this;
     }
 
@@ -123,10 +123,10 @@ public class Hints {
      *
      * @param shardId
      * @return this {@code Hints}
-     * @see DalHintEnum#shard
+     * @see HintEnum#shard
      */
     public Hints inShard(Integer shardId) {
-        hints.put(DalHintEnum.shard, shardId);
+        hints.put(HintEnum.shard, shardId);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class Hints {
      *
      * @param tableShardId
      * @return this {@code Hints}
-     * @see DalHintEnum#tableShard
+     * @see HintEnum#tableShard
      */
     public Hints inTableShard(String tableShardId) {
-        hints.put(DalHintEnum.tableShard, tableShardId);
+        hints.put(HintEnum.tableShard, tableShardId);
         return this;
     }
 
@@ -147,10 +147,10 @@ public class Hints {
      *
      * @param tableShardId
      * @return this {@code Hints}
-     * @see DalHintEnum#tableShard
+     * @see HintEnum#tableShard
      */
     public Hints inTableShard(Integer tableShardId) {
-        hints.put(DalHintEnum.tableShard, tableShardId);
+        hints.put(HintEnum.tableShard, tableShardId);
         return this;
     }
     
@@ -159,10 +159,14 @@ public class Hints {
      *
      * @param value
      * @return this {@code Hints}
-     * @see DalHintEnum#shardValue
+     * @see HintEnum#shardValue
      */
     public Hints shardValue(Object shardValue) {
-        return set(DalHintEnum.shardValue, shardValue);
+        return set(HintEnum.shardValue, shardValue);
+    }
+    
+    public boolean hasShardValue() {
+        return is(HintEnum.shardValue);
     }
 
     /**
@@ -170,11 +174,15 @@ public class Hints {
      *
      * @param tableShardValue
      * @return this {@code Hints}
-     * @see DalHintEnum#tableShardValue
+     * @see HintEnum#tableShardValue
      */
     public Hints tableShardValue(Object tableShardValue) {
         this.setTableShardValue(tableShardValue);
         return this;
+    }
+
+    public boolean hasTableShardValue() {
+        return is(HintEnum.tableShardValue);
     }
 
     /**
@@ -182,11 +190,11 @@ public class Hints {
      *
      * @param fetchSize
      * @return this {@code Hints}
-     * @see DalHintEnum#fetchSize
+     * @see HintEnum#fetchSize
      */
     public Hints fetchSize(Integer fetchSize) {
         Preconditions.checkArgument(fetchSize > 0, "Please input valid fetchSize > 0, fetchSize: " + fetchSize);
-        set(DalHintEnum.fetchSize, fetchSize);
+        set(HintEnum.fetchSize, fetchSize);
         return this;
     }
     /**
@@ -194,11 +202,11 @@ public class Hints {
      *
      * @param maxRows
      * @return this {@code Hints}
-     * @see DalHintEnum#maxRows
+     * @see HintEnum#maxRows
      */
     public Hints maxRows(Integer maxRows) {
         Preconditions.checkArgument(maxRows > 0, "Please input valid maxRows > 0, maxRows: " + maxRows);
-        set(DalHintEnum.maxRows, maxRows);
+        set(HintEnum.maxRows, maxRows);
         return this;
     }
 
@@ -207,10 +215,10 @@ public class Hints {
      *
      * @param seconds
      * @return this {@code Hints}
-     * @see DalHintEnum#timeout
+     * @see HintEnum#timeout
      */
     public Hints timeout(int seconds) {
-        set(DalHintEnum.timeout, seconds);
+        set(HintEnum.timeout, seconds);
         return this;
     }
 
@@ -219,10 +227,10 @@ public class Hints {
      *
      * @param seconds
      * @return this {@code Hints}
-     * @see DalHintEnum#freshness
+     * @see HintEnum#freshness
      */
     public Hints freshness(int seconds) {
-        set(DalHintEnum.freshness, seconds);
+        set(HintEnum.freshness, seconds);
         return this;
     }
 
@@ -231,11 +239,11 @@ public class Hints {
      *
      * @param masterOnly
      * @return this {@code Hints}
-     * @see DalHintEnum#masterOnly
+     * @see HintEnum#masterOnly
      */
     public Hints masterOnly() {
-        set(DalHintEnum.masterOnly, Boolean.TRUE);
-        hints.remove(DalHintEnum.slaveOnly);
+        set(HintEnum.masterOnly, Boolean.TRUE);
+        hints.remove(HintEnum.slaveOnly);
         return this;
     }
 
@@ -244,11 +252,11 @@ public class Hints {
      *
      * @param slaveOnly
      * @return this {@code Hints}
-     * @see DalHintEnum#slaveOnly
+     * @see HintEnum#slaveOnly
      */
     public Hints slaveOnly() {
-        set(DalHintEnum.slaveOnly, Boolean.TRUE);
-        hints.remove(DalHintEnum.masterOnly);
+        set(HintEnum.slaveOnly, Boolean.TRUE);
+        hints.remove(HintEnum.masterOnly);
         return this;
     }
 
@@ -259,7 +267,7 @@ public class Hints {
      * @return this {@code Hints}
      */
     public Hints inDatabase(String databaseName) {
-        hints.put(DalHintEnum.designatedDatabase, databaseName);
+        hints.put(HintEnum.designatedDatabase, databaseName);
         return this;
     }
 
@@ -321,7 +329,7 @@ public class Hints {
         newHints.hints.putAll(hints);
 
         // Make sure we do deep copy for Map
-        Map fields = (Map)newHints.get(DalHintEnum.fields);
+        Map fields = (Map)newHints.get(HintEnum.fields);
         if(fields != null)
             newHints.setFields(new LinkedHashMap<String, Object>(fields));
 
@@ -348,8 +356,8 @@ public class Hints {
      * Make sure only shardId, tableShardId, shardValue, shardColValue will be used to locate shard Id.
      */
     public Hints cleanUp() {
-        hints.remove(DalHintEnum.fields);
-        hints.remove(DalHintEnum.parameters);
+        hints.remove(HintEnum.fields);
+        hints.remove(HintEnum.parameters);
         return this;
     }
 
@@ -359,7 +367,7 @@ public class Hints {
      * @param hint
      * @return <tt>true</tt> if given {@code DalHintEnum} is used
      */
-    public boolean is(DalHintEnum hint) {
+    public boolean is(HintEnum hint) {
         return hints.containsKey(hint);
     }
 
@@ -369,7 +377,7 @@ public class Hints {
      * @param hint
      * @return object associated with given {@code DalHintEnum}.
      */
-    public Object get(DalHintEnum hint) {
+    public Object get(HintEnum hint) {
         return hints.get(hint);
     }
 
@@ -377,10 +385,10 @@ public class Hints {
      * Returns {@code DalHA}.
      *
      * @return {@code DalHA}
-     * @see DalHintEnum#heighAvaliable
+     * @see HintEnum#heighAvaliable
      */
-    public DalHA getHA(){
-        return (DalHA)hints.get(DalHintEnum.heighAvaliable);
+    public HaContext getHaContext(){
+        return (HaContext)hints.get(HintEnum.heighAvaliable);
     }
 
     /**
@@ -389,8 +397,8 @@ public class Hints {
      * @param ha
      * @return {@code Hints}
      */
-    public Hints setHA(DalHA ha){
-        hints.put(DalHintEnum.heighAvaliable, ha);
+    public Hints setHA(HaContext ha){
+        hints.put(HintEnum.heighAvaliable, ha);
         return this;
     }
 
@@ -401,7 +409,7 @@ public class Hints {
      * @param defaultValue if null is associated
      * @return integer associated with given {@code DalHintEnum}, defaultValue if null is associated
      */
-    public Integer getInt(DalHintEnum hint, int defaultValue) {
+    public Integer getInt(HintEnum hint, int defaultValue) {
         Object value = hints.get(hint);
         if(value == null)
             return defaultValue;
@@ -414,7 +422,7 @@ public class Hints {
      * @param hint
      * @return integer associated with given {@code DalHintEnum}.
      */
-    public Integer getInt(DalHintEnum hint) {
+    public Integer getInt(HintEnum hint) {
         return (Integer)hints.get(hint);
     }
 
@@ -424,7 +432,7 @@ public class Hints {
      * @param hint
      * @return string associated with given {@code DalHintEnum}
      */
-    public String getString(DalHintEnum hint) {
+    public String getString(HintEnum hint) {
         Object value = hints.get(hint);
         if(value == null)
             return null;
@@ -441,7 +449,7 @@ public class Hints {
      * @param hint
      * @return {@code Set<String>} associated with given {@code DalHintEnum} as {@code Set<String>}
      */
-    public Set<String> getStringSet(DalHintEnum hint) {
+    public Set<String> getStringSet(HintEnum hint) {
         return (Set<String>)hints.get(hint);
     }
 
@@ -451,7 +459,7 @@ public class Hints {
      * @param hint
      * @return {@code Hints}
      */
-    private Hints set(DalHintEnum hint) {
+    private Hints set(HintEnum hint) {
         set(hint, NULL);
         return this;
     }
@@ -463,7 +471,7 @@ public class Hints {
      * @param value
      * @return this {@code Hints}
      */
-    private Hints set(DalHintEnum hint, Object value) {
+    private Hints set(HintEnum hint, Object value) {
         hints.put(hint, value);
         return this;
     }
@@ -473,10 +481,10 @@ public class Hints {
      *
      * @param tableShardValue
      * @return this {@code Hints}
-     * @see DalHintEnum#shardColValues
+     * @see HintEnum#shardColValues
      */
     public Hints setTableShardValue(Object tableShardValue) {
-        return set(DalHintEnum.tableShardValue, tableShardValue);
+        return set(HintEnum.tableShardValue, tableShardValue);
     }
 
     /**
@@ -484,13 +492,13 @@ public class Hints {
      *
      * @param fields
      * @return this {@code Hints}
-     * @see DalHintEnum#fields
+     * @see HintEnum#fields
      */
     public Hints setFields(Map<String, ?> fields) {
         if(fields == null)
             return this;
 
-        return set(DalHintEnum.fields, fields);
+        return set(HintEnum.fields, fields);
     }
 
     /**
@@ -498,13 +506,13 @@ public class Hints {
      *
      * @param parameters
      * @return this {@code Hints}
-     * @see DalHintEnum#parameters
+     * @see HintEnum#parameters
      */
     public Hints setParameters(List<Parameter> parameters) {
         if(parameters == null)
             return this;
 
-        return set(DalHintEnum.parameters, parameters);
+        return set(HintEnum.parameters, parameters);
     }
 
     /**
@@ -519,7 +527,7 @@ public class Hints {
             return;
 
         // Just make sure error is not swallowed by us
-        DasConfigureFactory.getDalLogger().error(msg, e);
+        DasConfigureFactory.getLogger().error(msg, e);
         throw DalException.wrap(e);
     }
 
@@ -527,80 +535,80 @@ public class Hints {
      * Returns if insert incremental id is disabled or not.
      *
      * @return insert incremental id is disabled
-     * @see DalHintEnum#enableIdentityInsert
+     * @see HintEnum#enableIdentityInsert
      */
     public boolean isIdentityInsertDisabled() {
-        return !is(DalHintEnum.enableIdentityInsert);
+        return !is(HintEnum.enableIdentityInsert);
     }
 
     /**
      * Returns if the update field can be null value or not
      *
      * @return if the update field can be null value or not
-     * @see DalHintEnum#updateNullField
+     * @see HintEnum#updateNullField
      */
     public boolean isUpdateNullField() {
-        return is(DalHintEnum.updateNullField);
+        return is(HintEnum.updateNullField);
     }
 
     /**
      * Returns if set the update field can be unchanged value after select from DB or not
      *
      * @return if set the update field can be unchanged value after select from DB or not
-     * @see DalHintEnum#updateUnchangedField
+     * @see HintEnum#updateUnchangedField
      */
     public boolean isUpdateUnchangedField() {
-        return is(DalHintEnum.updateUnchangedField);
+        return is(HintEnum.updateUnchangedField);
     }
 
     /**
      * Returns if insert field can be null value or not.
      *
      * @return if insert field can be null value or not
-     * @see DalHintEnum#insertNullField
+     * @see HintEnum#insertNullField
      */
     public boolean isInsertNullField() {
-        return is(DalHintEnum.insertNullField);
+        return is(HintEnum.insertNullField);
     }
 
     /**
      * Returns columns that will be included for update
      *
      * @return columns that will be included for update
-     * @see DalHintEnum#includedColumns
+     * @see HintEnum#includedColumns
      */
     public Set<String> getIncluded() {
-        return getStringSet(DalHintEnum.includedColumns);
+        return getStringSet(HintEnum.includedColumns);
     }
 
     /**
      * Returns columns that will be excluded for update.
      *
      * @return columns that will be excluded for update
-     * @see DalHintEnum#excludedColumns
+     * @see HintEnum#excludedColumns
      */
     public Set<String> getExcluded() {
-        return getStringSet(DalHintEnum.excludedColumns);
+        return getStringSet(HintEnum.excludedColumns);
     }
 
     /**
      * Returns columns that will be included for query.
      *
      * @return columns that will be included for query
-     * @see DalHintEnum#partialQuery
+     * @see HintEnum#partialQuery
      */
     public String[] getPartialQueryColumns() {
-        return getStringSet(DalHintEnum.partialQuery).toArray(new String[getStringSet(DalHintEnum.partialQuery).size()]);
+        return getStringSet(HintEnum.partialQuery).toArray(new String[getStringSet(HintEnum.partialQuery).size()]);
     }
 
     /**
      * Returns columns that will be included for query.
      *
      * @return this {@code Hints}
-     * @see DalHintEnum#partialQuery
+     * @see HintEnum#partialQuery
      */
     public Hints allowPartial() {
-        return set(DalHintEnum.allowPartial);
+        return set(HintEnum.allowPartial);
     }
     // For internal use
     
@@ -635,7 +643,7 @@ public class Hints {
     }
 
     private KeyHolder vaidateKeyHolder() {
-        if (is(DalHintEnum.setIdentityBack))
+        if (is(HintEnum.setIdentityBack))
             keyHolder = keyHolder == null ? new KeyHolder() : keyHolder;
         return keyHolder;
     }
@@ -646,7 +654,7 @@ public class Hints {
      * @return <tt>true</tt> if {@code setIdBack} is called
      */
     public boolean isSetIdBack() {
-        return is(DalHintEnum.setIdentityBack);
+        return is(HintEnum.setIdentityBack);
     }
 
     /**
@@ -664,47 +672,47 @@ public class Hints {
      * @return <tt>true</tt> if {@code insertWithId} is called
      */
     public boolean isInsertWithId() {
-        return is(DalHintEnum.enableIdentityInsert);
+        return is(HintEnum.enableIdentityInsert);
     }
     
     /**
      * Returns which shard the operation will be performed.
      *
      * @return which shard the operation will be performed
-     * @see DalHintEnum#shard
+     * @see HintEnum#shard
      */
     public String getShard() {
-        return getString(DalHintEnum.shard);
+        return getString(HintEnum.shard);
     }
 
     /**
      * Returns value used to help sharding strategy locate DB shard.
      *
      * @return value used to help sharding strategy locate DB shard.
-     * @see DalHintEnum#shardValue
+     * @see HintEnum#shardValue
      */
     public Object getShardValue() {
-        return this.getString(DalHintEnum.shardValue);
+        return this.getString(HintEnum.shardValue);
     }
 
     /**
      * Returns value used to help sharding strategy locate table shard.
      *
      * @return value used to help sharding strategy locate table shard
-     * @see DalHintEnum#tableShardValue
+     * @see HintEnum#tableShardValue
      */
     public Object getTableShardValue() {
-        return getString(DalHintEnum.tableShardValue);
+        return getString(HintEnum.tableShardValue);
     }
 
     /**
      * Returns which table shard the operation will be performed.
      *
      * @return which table shard the operation will be performed
-     * @see DalHintEnum#tableShard
+     * @see HintEnum#tableShard
      */
     public String getTableShard() {
-        return getString(DalHintEnum.tableShard);
+        return getString(HintEnum.tableShard);
     }
 
     //The following are methods to be tested and opened

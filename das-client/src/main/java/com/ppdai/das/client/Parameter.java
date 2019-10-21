@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import com.ppdai.das.client.sqlbuilder.AbstractColumn;
 import com.ppdai.das.client.sqlbuilder.ParameterProvider;
-import com.ppdai.das.core.DalResultSetExtractor;
+import com.ppdai.das.core.client.DalResultSetExtractor;
 import com.ppdai.das.core.enums.ParameterDirection;
 import com.ppdai.das.strategy.ColumnCondition;
 import com.ppdai.das.strategy.Condition;

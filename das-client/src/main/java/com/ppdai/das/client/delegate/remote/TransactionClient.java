@@ -6,7 +6,7 @@ import com.ppdai.das.client.CallableTransaction;
 import com.ppdai.das.client.DasClientFactory;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.DasConfigureFactory;
-import com.ppdai.das.core.client.DalLogger;
+import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.service.DasHints;
@@ -14,7 +14,7 @@ import com.ppdai.das.service.DasTransactionId;
 
 public class TransactionClient {
     private String logicDbName;
-    private DalLogger logger;
+    private DasLogger logger;
     private ServerSelector serverSelector;
 
     private static final ThreadLocal<DasTransactionId> transactionHolder = new ThreadLocal<>();
@@ -22,7 +22,7 @@ public class TransactionClient {
     public TransactionClient(String logicDbName, ServerSelector serverSelector) {
         this.logicDbName = logicDbName;
         this.serverSelector = serverSelector;
-        logger = DasConfigureFactory.getDalLogger();
+        logger = DasConfigureFactory.getLogger();
     }
     
     public static DasTransactionId getCurrentTransaction() {

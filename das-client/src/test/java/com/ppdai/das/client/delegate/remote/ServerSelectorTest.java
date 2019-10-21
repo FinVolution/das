@@ -1,6 +1,6 @@
 package com.ppdai.das.client.delegate.remote;
 
-import com.ppdai.das.core.configure.DasServerInstance;
+import com.ppdai.das.core.DasServerInstance;
 import com.ppdai.das.service.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;

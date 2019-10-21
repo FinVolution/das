@@ -2,11 +2,11 @@ package com.ppdai.das.core.task;
 
 import java.util.Map;
 
-import com.ppdai.das.core.DalParser;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.client.DalParser;
 import com.ppdai.das.core.enums.DatabaseCategory;
 
-public class DefaultTaskFactory implements DalTaskFactory {
+public class DefaultTaskFactory implements TaskFactory {
 	private Map<String, String> settings;
 	
 	@Override
@@ -20,7 +20,7 @@ public class DefaultTaskFactory implements DalTaskFactory {
 	}
 	
 	public static <T> DatabaseCategory getDbCategory(DalParser<T> parser) {
-		return DasConfigureFactory.getDalConfigure(parser.getAppId()).getDatabaseSet(parser.getDatabaseName()).getDatabaseCategory();
+		return DasConfigureFactory.getConfigure(parser.getAppId()).getDatabaseSet(parser.getDatabaseName()).getDatabaseCategory();
 	}
 	
 	@Override

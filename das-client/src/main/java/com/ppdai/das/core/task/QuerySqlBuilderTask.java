@@ -7,9 +7,9 @@ import java.util.List;
 import com.ppdai.das.client.Parameter;
 import com.ppdai.das.client.SqlBuilder;
 import com.ppdai.das.client.delegate.local.DasBuilderContext;
-import com.ppdai.das.core.DalClient;
+import com.ppdai.das.core.client.DalClient;
+import com.ppdai.das.core.client.DalResultSetExtractor;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalResultSetExtractor;
 
 public class QuerySqlBuilderTask<T> implements SqlBuilderTask<T>{
     private String appId;

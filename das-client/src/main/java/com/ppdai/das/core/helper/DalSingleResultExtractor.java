@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalResultSetExtractor;
-import com.ppdai.das.core.DalRowMapper;
+import com.ppdai.das.core.client.DalResultSetExtractor;
+import com.ppdai.das.core.client.DalRowMapper;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.exceptions.ErrorCode;
 

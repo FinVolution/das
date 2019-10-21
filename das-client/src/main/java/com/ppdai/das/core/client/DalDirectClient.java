@@ -13,15 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import com.ppdai.das.core.DalClient;
-import com.ppdai.das.core.DalCommand;
-import com.ppdai.das.core.DalEventEnum;
-import com.ppdai.das.core.DalHintEnum;
+import com.ppdai.das.core.EventEnum;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalResultSetExtractor;
+import com.ppdai.das.core.HintEnum;
+import com.ppdai.das.core.DasConfigure;
+import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.KeyHolder;
+import com.ppdai.das.core.LogEntry;
 import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.configure.DalConfigure;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.helper.DalColumnMapRowMapper;
 import com.ppdai.das.core.helper.DalRowMapperExtractor;
@@ -36,13 +35,13 @@ public class DalDirectClient implements DalClient {
     private DalStatementCreator stmtCreator;
     private DalConnectionManager connManager;
     private DalTransactionManager transManager;
-    private DalLogger logger;
+    private DasLogger logger;
 
-    public DalDirectClient(DalConfigure config, String logicDbName) {
+    public DalDirectClient(DasConfigure config, String logicDbName) {
         connManager = new DalConnectionManager(logicDbName, config);
         transManager = new DalTransactionManager(connManager);
         stmtCreator = new DalStatementCreator(config.getDatabaseSet(logicDbName).getDatabaseCategory());
-        logger = config.getDalLogger();
+        logger = config.getDasLogger();
     }
 
     @Override
@@ -71,7 +70,7 @@ public class DalDirectClient implements DalClient {
                 return result;
             }
         };
-        action.populate(DalEventEnum.QUERY, sql, parameters);
+        action.populate(EventEnum.QUERY, sql, parameters);
 
         return doInConnection(action, hints);
     }
@@ -113,7 +112,7 @@ public class DalDirectClient implements DalClient {
                 return result;
             }
         };
-        action.populate(DalEventEnum.QUERY, sql, parameters);
+        action.populate(EventEnum.QUERY, sql, parameters);
 
         return doInConnection(action, hints);
     }
@@ -154,7 +153,7 @@ public class DalDirectClient implements DalClient {
                 return rows;
             }
         };
-        action.populate(generatedKeyHolder == null ? DalEventEnum.UPDATE_SIMPLE : DalEventEnum.UPDATE_KH, sql,
+        action.populate(generatedKeyHolder == null ? EventEnum.UPDATE_SIMPLE : EventEnum.UPDATE_KH, sql,
                 parameters);
 
         return doInConnection(action, hints);
@@ -255,7 +254,7 @@ public class DalDirectClient implements DalClient {
                     }
                 }
 
-                if (hints.is(DalHintEnum.retrieveAllSpResults) && resultParameters.size() > 0)
+                if (hints.is(HintEnum.retrieveAllSpResults) && resultParameters.size() > 0)
                     throw new DalException(
                             "Dal hint 'autoRetrieveAllResults' should only be used when there is no special result parameter specified");
 
@@ -340,10 +339,10 @@ public class DalDirectClient implements DalClient {
     private Map<String, Object> extractReturnedResults(CallableStatement statement,
             List<Parameter> resultParameters, int updateCount, Hints hints) throws SQLException {
         Map<String, Object> returnedResults = new LinkedHashMap<String, Object>();
-        if (hints.is(DalHintEnum.skipResultsProcessing))
+        if (hints.is(HintEnum.skipResultsProcessing))
             return returnedResults;
 
-        if (hints.is(DalHintEnum.retrieveAllSpResults))
+        if (hints.is(HintEnum.retrieveAllSpResults))
             return autoExtractReturnedResults(statement, updateCount);
 
         if (resultParameters.size() == 0)
@@ -406,7 +405,7 @@ public class DalDirectClient implements DalClient {
     }
 
     private <T> T executeBatch(ConnectionAction<T> action, Hints hints) throws SQLException {
-        if (hints.is(DalHintEnum.forceAutoCommit)) {
+        if (hints.is(HintEnum.forceAutoCommit)) {
             return doInConnection(action, hints);
         } else {
             return doInTransaction(action, hints);

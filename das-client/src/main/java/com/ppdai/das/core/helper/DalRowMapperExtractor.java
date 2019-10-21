@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalResultSetExtractor;
-import com.ppdai.das.core.DalRowMapper;
+import com.ppdai.das.core.client.DalResultSetExtractor;
+import com.ppdai.das.core.client.DalRowMapper;
 
 public class DalRowMapperExtractor <T> implements DalResultSetExtractor<List<T>>, HintsAwareExtractor<List<T>> {
 	private DalRowMapper<T> mapper;

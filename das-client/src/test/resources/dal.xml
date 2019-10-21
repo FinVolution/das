@@ -63,7 +63,7 @@
 
   </databaseSets>
   <LogListener enabled="true">
-  	  <logger>com.ppdai.das.core.client.DefaultLogger</logger>
+  	  <logger>com.ppdai.das.core.DefaultLogger</logger>
       <settings>
         <encrypt>false</encrypt>
         <secretKey>dalctripcn</secretKey>
@@ -92,9 +92,9 @@
 	  </settings>
   </TaskFactory>
   <DatabaseSelector>
-      <selector>com.ppdai.das.core.configure.FreshnessSelector</selector>
+      <selector>com.ppdai.das.core.FreshnessSelector</selector>
       <settings>
-         <freshnessReader>com.ppdai.das.core.configure.SlaveStatusFreshnessReader</freshnessReader>
+         <freshnessReader>com.ppdai.das.core.SlaveStatusFreshnessReader</freshnessReader>
          <updateInterval>2</updateInterval>
          <querySQL>select 0 as r</querySQL>
          <selectField>r</selectField>

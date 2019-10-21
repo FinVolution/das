@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ppdai.das.client.delegate.local.PPDaiDalParser;
-import com.ppdai.das.core.DalParser;
+import com.ppdai.das.core.client.DalParser;
 
 /**
  * Table DAO that supports logic delete.

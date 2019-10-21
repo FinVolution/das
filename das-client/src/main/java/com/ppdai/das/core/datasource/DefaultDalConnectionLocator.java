@@ -6,12 +6,12 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import com.ppdai.das.core.client.DalConnectionLocator;
+import com.ppdai.das.core.ConnectionLocator;
 import com.ppdai.das.core.configure.DataSourceConfigureProvider;
 import com.ppdai.das.core.configure.DefaultDataSourceConfigureProvider;
 import com.ppdai.das.core.helper.ConnectionStringKeyHelper;
 
-public class DefaultDalConnectionLocator implements DalConnectionLocator {
+public class DefaultDalConnectionLocator implements ConnectionLocator {
     public static final String DATASOURCE_CONFIG_PROVIDER = "dataSourceConfigureProvider";
 
     private DataSourceLocator locator;

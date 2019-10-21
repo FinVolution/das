@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.ppdai.das.core.DalRowMapper;
+import com.ppdai.das.core.client.DalRowMapper;
 
 /**
  * In case you need get Short cloumn value from Db, use ShortRowMapper 

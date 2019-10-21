@@ -3,8 +3,8 @@ package com.ppdai.das.core.status;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ppdai.das.core.DalHintEnum;
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.HintEnum;
 
 public class TimeoutMarkdown extends BaseStatus implements TimeoutMarkdownMBean {
 	private volatile boolean enableTimeoutMarkDown;

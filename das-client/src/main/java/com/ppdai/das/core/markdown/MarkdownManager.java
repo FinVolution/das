@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.DasCoreVersion;
 import com.ppdai.das.core.client.DalConnection;
-import com.ppdai.das.core.status.DalStatusManager;
+import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.core.status.DataSourceStatus;
 import com.ppdai.das.core.status.MarkdownStatus;
 
@@ -63,25 +63,25 @@ public class MarkdownManager {
 	}
 	
 	public static void autoMarkdown(MarkDownInfo info) {
-		DalStatusManager.getDataSourceStatus(info.getDbKey()).setAutoMarkdown(true);
+		StatusManager.getDataSourceStatus(info.getDbKey()).setAutoMarkdown(true);
 
-		DasConfigureFactory.getDalLogger().info(String.format("Database %s has been marked down automatically", info.getDbKey()));
-		DasConfigureFactory.getDalLogger().markdown(info);
+		DasConfigureFactory.getLogger().info(String.format("Database %s has been marked down automatically", info.getDbKey()));
+		DasConfigureFactory.getLogger().markdown(info);
 	}
 
 	public static void autoMarkup(MarkupInfo info) {
-		DalStatusManager.getDataSourceStatus(info.getDbKey()).setAutoMarkdown(false);
+		StatusManager.getDataSourceStatus(info.getDbKey()).setAutoMarkdown(false);
 		
-		DasConfigureFactory.getDalLogger().info(String.format("Database %s has been marked up automatically", info.getDbKey()));
-		DasConfigureFactory.getDalLogger().markup(info);
+		DasConfigureFactory.getLogger().info(String.format("Database %s has been marked up automatically", info.getDbKey()));
+		DasConfigureFactory.getLogger().markup(info);
 	}
 
 	public static boolean isMarkdown(String key) {
-		MarkdownStatus mcb = DalStatusManager.getMarkdownStatus();
+		MarkdownStatus mcb = StatusManager.getMarkdownStatus();
 		if (mcb.isAppMarkdown())
 			return true;
 		
-		DataSourceStatus item = DalStatusManager.getDataSourceStatus(key);
+		DataSourceStatus item = StatusManager.getDataSourceStatus(key);
 
 		// Manual markdown can only be markup manually.
 		if (item.isManualMarkdown())
@@ -106,8 +106,8 @@ public class MarkdownManager {
 	 * Clear all auto markdown
 	 */
 	public static void resetAutoMarkdowns() {
-		for(String dbName: DalStatusManager.getDataSourceNames())
-			DalStatusManager.getDataSourceStatus(dbName).setAutoMarkdown(false);
+		for(String dbName: StatusManager.getDataSourceNames())
+			StatusManager.getDataSourceStatus(dbName).setAutoMarkdown(false);
 	}
 
 	public static void detect(DalConnection conn, long start, Throwable e) {
@@ -129,7 +129,7 @@ public class MarkdownManager {
 			try {
 				ErrorContext ctx = exqueue.poll();
 				while (ctx != null) {
-					if(DalStatusManager.getMarkdownStatus().isEnableAutoMarkdown()) {
+					if(StatusManager.getMarkdownStatus().isEnableAutoMarkdown()) {
 						if (!isMarkdown(ctx.getName())) {
 							for (ErrorDetector mk : detectorsRef.get()) {
 								mk.detect(ctx);

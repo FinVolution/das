@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.delegate.EntityMeta;
 import com.ppdai.das.client.delegate.EntityMetaManager;
-import com.ppdai.das.core.client.DalLogger;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.exceptions.ErrorCode;
 import com.ppdai.das.core.task.DaoTask;
@@ -40,10 +39,10 @@ public class KeyHolder {
 
     private AtomicBoolean merged = new AtomicBoolean(false);
 
-    private DalLogger logger;
+    private DasLogger logger;
 
     public KeyHolder() {
-        logger = DasConfigureFactory.getDalLogger();
+        logger = DasConfigureFactory.getLogger();
     }
 
     static {
@@ -315,7 +314,7 @@ public class KeyHolder {
         if (keyHolder == null || rawPojos == null || rawPojos.isEmpty())
             return;
 
-        if (!(hints.is(DalHintEnum.setIdentityBack) && hints.isIdentityInsertDisabled()))
+        if (!(hints.is(HintEnum.setIdentityBack) && hints.isIdentityInsertDisabled()))
             return;
 
         //Handle remote Entities

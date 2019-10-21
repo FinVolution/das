@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
+import com.ppdai.das.core.TransactionIdGenerator;
+
 public class TransactionIdGeneratorTest {
 
     @Test

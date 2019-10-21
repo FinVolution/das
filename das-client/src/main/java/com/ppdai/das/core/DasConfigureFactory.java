@@ -7,15 +7,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ppdai.das.core.client.DalConnectionLocator;
+import com.ppdai.das.core.client.DalClient;
 import com.ppdai.das.core.client.DalDirectClient;
-import com.ppdai.das.core.client.DalLogger;
-import com.ppdai.das.core.client.LogEntry;
-import com.ppdai.das.core.configure.DalConfigure;
-import com.ppdai.das.core.configure.DatabaseSelector;
-import com.ppdai.das.core.status.DalStatusManager;
+import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.core.task.DalRequestExecutor;
-import com.ppdai.das.core.task.DalTaskFactory;
+import com.ppdai.das.core.task.TaskFactory;
 
 public class DasConfigureFactory {
     public static AtomicReference<DasConfigureContext> configContextRef = new AtomicReference<>();
@@ -45,12 +41,12 @@ public class DasConfigureFactory {
             try {
                 if(configContext.isLocalMode()) {
                     DalRequestExecutor.init(
-                            configContext.getDalTaskFactory().getProperty(DalRequestExecutor.MAX_POOL_SIZE),
-                            configContext.getDalTaskFactory().getProperty(DalRequestExecutor.KEEP_ALIVE_TIME));
+                            configContext.getTaskFactory().getProperty(DalRequestExecutor.MAX_POOL_SIZE),
+                            configContext.getTaskFactory().getProperty(DalRequestExecutor.KEEP_ALIVE_TIME));
             
-                    DalStatusManager.initializeGlobal();
+                    StatusManager.initializeGlobal();
                     for(String appId: configContext.getAppIds())
-                        DalStatusManager.registerApplication(appId, configContext.getConfigure(appId));
+                        StatusManager.registerApplication(appId, configContext.getConfigure(appId));
                 }
                 
                 LogEntry.init();
@@ -74,16 +70,16 @@ public class DasConfigureFactory {
         return getContext().getAppIds();
     }
     
-    public static DalLogger getDalLogger() {
-        return getContext().getDalLogger();
+    public static DasLogger getLogger() {
+        return getContext().getLogger();
     }
 
-    public static DalTaskFactory getDalTaskFactory() {
-        return getContext().getDalTaskFactory();
+    public static TaskFactory getTaskFactory() {
+        return getContext().getTaskFactory();
     }
 
-    public static DalConnectionLocator getDalConnectionLocator() {
-        return getContext().getDalConnectionLocator();
+    public static ConnectionLocator getConnectionLocator() {
+        return getContext().getConnectionLocator();
     }
 
     public static DatabaseSelector getDatabaseSelector() {
@@ -96,7 +92,7 @@ public class DasConfigureFactory {
         }
     }
     
-    public static DalConfigure getDalConfigure(String appId) {
+    public static DasConfigure getConfigure(String appId) {
         return getContext().getConfigure(appId);
     }
 
@@ -111,7 +107,7 @@ public class DasConfigureFactory {
         if (logicDbName == null)
             throw new NullPointerException("Database Set name can not be null");
 
-        DalConfigure config = getContext().getConfigure(appId);
+        DasConfigure config = getContext().getConfigure(appId);
 
         // Verify if it is existed
         config.getDatabaseSet(logicDbName);
@@ -136,13 +132,13 @@ public class DasConfigureFactory {
             try {
                 logger.info("Start shutdown Dal Java Client Factory");
                 
-                getDalLogger().shutdown();
+                getLogger().shutdown();
                 logger.info("Dal Logger is shutdown");
 
                 DalRequestExecutor.shutdown();
                 logger.info("Dal Java Client Factory is shutdown");
 
-                DalStatusManager.shutdown();
+                StatusManager.shutdown();
 
                 LogEntry.shutdown();
                 logger.info("DalWatcher has been destoryed");

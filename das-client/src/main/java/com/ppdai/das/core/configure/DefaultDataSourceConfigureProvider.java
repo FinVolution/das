@@ -3,6 +3,8 @@ package com.ppdai.das.core.configure;
 import java.util.Map;
 import java.util.Set;
 
+import com.ppdai.das.core.DasConfigure;
+
 public class DefaultDataSourceConfigureProvider implements DataSourceConfigureProvider {
 
     @Override
@@ -27,7 +29,7 @@ public class DefaultDataSourceConfigureProvider implements DataSourceConfigurePr
     public void register(String dbName, DataSourceConfigureChangeListener listener) {}
 
     @Override
-    public void onConfigChanged(DalConfigure.DataSourceConfigureEvent event) {
+    public void onConfigChanged(DasConfigure.DataSourceConfigureEvent event) {
 
     }
 

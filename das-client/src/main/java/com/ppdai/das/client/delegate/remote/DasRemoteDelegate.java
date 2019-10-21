@@ -33,9 +33,9 @@ import com.google.common.primitives.Ints;
 import com.ppdai.das.client.delegate.DasDelegate;
 import com.ppdai.das.client.delegate.EntityMetaManager;
 import com.ppdai.das.core.DasDiagnose;
-import com.ppdai.das.core.client.DalLogger;
-import com.ppdai.das.core.client.LogContext;
-import com.ppdai.das.core.configure.DasServerInstance;
+import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.DasServerInstance;
+import com.ppdai.das.core.LogContext;
 
 public class DasRemoteDelegate implements DasDelegate {
 
@@ -48,9 +48,9 @@ public class DasRemoteDelegate implements DasDelegate {
 
     private List<DasServerInstance> servers = new ArrayList<>();
 
-    private DalLogger dalLogger;
+    private DasLogger dalLogger;
 
-    public DasRemoteDelegate(String appId, String logicDbName, String customerClientVersion, List<DasServerInstance> servers, DalLogger dalLogger) throws TTransportException, UnknownHostException {
+    public DasRemoteDelegate(String appId, String logicDbName, String customerClientVersion, List<DasServerInstance> servers, DasLogger dalLogger) throws TTransportException, UnknownHostException {
         this.servers.addAll(servers);
         serverSelector = new ServerSelector(appId, this.servers,  DasClientVersion.getVersion(), customerClientVersion, InetAddress.getLocalHost().getHostAddress());
         this.appId = appId;

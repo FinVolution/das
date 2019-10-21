@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalParser;
+import com.ppdai.das.core.client.DalParser;
 
 public class InsertTaskAdapter<T> extends TaskAdapter<T> {
 	public static final String TMPL_SQL_INSERT = "INSERT INTO %s (%s) VALUES(%s)";

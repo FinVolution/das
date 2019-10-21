@@ -1,9 +1,9 @@
 package com.ppdai.das.configure;
 
-import com.ppdai.das.core.configure.FreshnessReader;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.ppdai.das.core.FreshnessReader;
 
 
 /**

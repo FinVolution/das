@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.exceptions.ErrorCode;
 
@@ -20,7 +21,7 @@ public class DalTransaction  {
 	private AtomicInteger level = new AtomicInteger(0);
 	private AtomicBoolean rolledBack = new AtomicBoolean(false);
 	private AtomicBoolean completed = new AtomicBoolean(false);
-	private DalLogger logger;
+	private DasLogger logger;
 	
 	/**
 	 * For Das Server transaction
@@ -33,7 +34,7 @@ public class DalTransaction  {
 		this.logicDbName = logicDbName;
 		this.connHolder = connHolder;
 		connHolder.getConn().setAutoCommit(false);
-		this.logger = DasConfigureFactory.getDalLogger();
+		this.logger = DasConfigureFactory.getLogger();
 		startTime = System.currentTimeMillis();
 		this.timeout = timeout;
 	}

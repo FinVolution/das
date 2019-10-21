@@ -3,7 +3,7 @@ package com.ppdai.das.core.task;
 import java.util.List;
 import java.util.Map;
 
-import com.ppdai.das.core.DalParser;
+import com.ppdai.das.core.client.DalParser;
 
 public interface DaoTask<T> {
 	void initialize(DalParser<T> parser);

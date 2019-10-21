@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import com.ppdai.das.core.DalHintEnum;
 import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.KeyHolder;
 import com.ppdai.das.client.Parameter;
 import com.ppdai.das.core.enums.DatabaseCategory;
-import com.ppdai.das.core.status.DalStatusManager;
+import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.core.status.TimeoutMarkdown;
 
 public class DalStatementCreator {
@@ -113,28 +113,28 @@ public class DalStatementCreator {
 	}
 	
 	private void applyHints(Statement statement, Hints hints) throws SQLException {
-		Integer fetchSize = (Integer)hints.get(DalHintEnum.fetchSize);
+		Integer fetchSize = (Integer)hints.get(HintEnum.fetchSize);
 		
 		if(fetchSize != null && fetchSize > 0)
 			statement.setFetchSize(fetchSize);
 
-		Integer maxRows = (Integer)hints.get(DalHintEnum.maxRows);
+		Integer maxRows = (Integer)hints.get(HintEnum.maxRows);
 		if (maxRows != null && maxRows > 0)
 			statement.setMaxRows(maxRows);
 
-        Integer timeout = (Integer)hints.get(DalHintEnum.timeout);
+        Integer timeout = (Integer)hints.get(HintEnum.timeout);
         if (timeout == null || timeout < 0)
-            timeout = DalStatusManager.getTimeoutMarkdown().getTimeoutThreshold();
+            timeout = StatusManager.getTimeoutMarkdown().getTimeoutThreshold();
 
 		statement.setQueryTimeout(timeout);
 	}
 	
 	private int getResultSetType(Hints hints) {
-		return hints.getInt(DalHintEnum.resultSetType, DEFAULT_RESULT_SET_TYPE);
+		return hints.getInt(HintEnum.resultSetType, DEFAULT_RESULT_SET_TYPE);
 	}
 
 	private int getResultSetConcurrency(Hints hints) {
-		return hints.getInt(DalHintEnum.resultSetConcurrency, DEFAULT_RESULT_SET_CONCURRENCY);
+		return hints.getInt(HintEnum.resultSetConcurrency, DEFAULT_RESULT_SET_CONCURRENCY);
 	}
 
 	private int getSqlType(Parameter parameter) {

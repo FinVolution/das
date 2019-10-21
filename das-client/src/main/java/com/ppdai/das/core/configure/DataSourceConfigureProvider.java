@@ -2,6 +2,9 @@ package com.ppdai.das.core.configure;
 
 import java.util.Set;
 
+import com.ppdai.das.core.DasComponent;
+import com.ppdai.das.core.DasConfigure;
+
 
 /**
  * This interface is used by connection locator to provide connection configure. The assumption is different company may
@@ -11,7 +14,7 @@ import java.util.Set;
  * @author jhhe
  *
  */
-public interface DataSourceConfigureProvider extends DalComponent {
+public interface DataSourceConfigureProvider extends DasComponent {
 
     /**
      * Declare which databases we want to use.
@@ -41,5 +44,5 @@ public interface DataSourceConfigureProvider extends DalComponent {
      * DataSourceConfigure changed event
      * @param event
      */
-    void onConfigChanged(DalConfigure.DataSourceConfigureEvent event);
+    void onConfigChanged(DasConfigure.DataSourceConfigureEvent event);
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 import com.ppdai.das.client.delegate.EntityMeta;
 import com.ppdai.das.client.delegate.EntityMetaManager;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalRowMapper;
+import com.ppdai.das.core.client.DalRowMapper;
 import com.ppdai.das.core.helper.AbstractDalParser;
 import com.ppdai.das.core.helper.CustomizableMapper;
 

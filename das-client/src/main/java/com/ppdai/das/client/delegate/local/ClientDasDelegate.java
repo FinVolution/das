@@ -18,15 +18,15 @@ import com.ppdai.das.client.SqlBuilder;
 import com.ppdai.das.client.TableDefinition;
 import com.ppdai.das.client.delegate.DasDelegate;
 import com.ppdai.das.client.delegate.EntityMetaManager;
-import com.ppdai.das.core.DalParser;
 import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.ResultMerger;
+import com.ppdai.das.core.client.DalParser;
 import com.ppdai.das.core.task.BatchQueryBuilderProvider;
 import com.ppdai.das.core.task.BulkTask;
 import com.ppdai.das.core.task.BulkTaskRequest;
 import com.ppdai.das.core.task.DalRequest;
 import com.ppdai.das.core.task.DalRequestExecutor;
-import com.ppdai.das.core.task.DalTaskFactory;
+import com.ppdai.das.core.task.TaskFactory;
 import com.ppdai.das.core.task.SingleShardProvider;
 import com.ppdai.das.core.task.SingleTask;
 import com.ppdai.das.core.task.SingleTaskRequest;
@@ -41,7 +41,7 @@ public class ClientDasDelegate implements DasDelegate {
     private final int DEFAULT = 0;
     private final int[] BATCH_DEFAULT = new int[0];
     private DalRequestExecutor executor = new DalRequestExecutor();
-    private DalTaskFactory taskFactory = DasConfigureFactory.getDalTaskFactory();
+    private TaskFactory taskFactory = DasConfigureFactory.getTaskFactory();
 
 
     public ClientDasDelegate(String appId, String logicDbName, String customerClientVersion) {

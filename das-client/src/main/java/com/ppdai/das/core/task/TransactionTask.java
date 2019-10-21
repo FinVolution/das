@@ -6,8 +6,8 @@ import java.util.List;
 import com.ppdai.das.client.CallableTransaction;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.DalClient;
-import com.ppdai.das.core.DalCommand;
+import com.ppdai.das.core.client.DalClient;
+import com.ppdai.das.core.client.DalCommand;
 
 
 public class TransactionTask<T> implements SqlBuilderTask<T>{

@@ -20,11 +20,17 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.ppdai.das.core.client.DalConnectionLocator;
-import com.ppdai.das.core.client.DalLogger;
-import com.ppdai.das.core.client.DefaultLogger;
+import com.ppdai.das.core.ConnectionLocator;
+import com.ppdai.das.core.DasComponent;
+import com.ppdai.das.core.DasConfigure;
+import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.DataBase;
+import com.ppdai.das.core.DatabaseSelector;
+import com.ppdai.das.core.DatabaseSet;
+import com.ppdai.das.core.DefaultDatabaseSelector;
+import com.ppdai.das.core.DefaultLogger;
 import com.ppdai.das.core.datasource.DefaultDalConnectionLocator;
-import com.ppdai.das.core.task.DalTaskFactory;
+import com.ppdai.das.core.task.TaskFactory;
 import com.ppdai.das.core.task.DefaultTaskFactory;
 
 public class DalConfigureFactory implements DalConfigConstants {
@@ -42,7 +48,7 @@ public class DalConfigureFactory implements DalConfigConstants {
      * @return
      * @throws Exception
      */
-    public static DalConfigure load() throws Exception {
+    public static DasConfigure load() throws Exception {
         URL dalconfigUrl = dalConfigUrl == null ? getDalConfigUrl() : dalConfigUrl.toURL() ;
         if (dalconfigUrl == null)
             throw new IllegalStateException(
@@ -51,22 +57,22 @@ public class DalConfigureFactory implements DalConfigConstants {
         return load(dalconfigUrl);
     }
 
-    public static DalConfigure load(URL url) throws Exception {
+    public static DasConfigure load(URL url) throws Exception {
         return load(url.openStream());
     }
 
-    public static DalConfigure load(String path) throws Exception {
+    public static DasConfigure load(String path) throws Exception {
         return load(new File(path));
     }
 
-    public static DalConfigure load(File model) throws Exception {
+    public static DasConfigure load(File model) throws Exception {
         return load(new FileInputStream(model));
     }
 
-    public static DalConfigure load(InputStream in) throws Exception {
+    public static DasConfigure load(InputStream in) throws Exception {
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-            DalConfigure def = factory.getFromDocument(doc);
+            DasConfigure def = factory.getFromDocument(doc);
             in.close();
             return def;
         } finally {
@@ -79,18 +85,18 @@ public class DalConfigureFactory implements DalConfigConstants {
         }
     }
 
-    public DalConfigure getFromDocument(Document doc) throws Exception {
+    public DasConfigure getFromDocument(Document doc) throws Exception {
         Element root = doc.getDocumentElement();
 
         String name = getAttribute(root, NAME);
 
-        DalLogger logger = readComponent(root, LOG_LISTENER, new DefaultLogger(), LOGGER);
+        DasLogger logger = readComponent(root, LOG_LISTENER, new DefaultLogger(), LOGGER);
         // To wrap with a sandbox logger
         // logger = new DalSafeLogger(logger);
 
-        DalTaskFactory factory = readComponent(root, TASK_FACTORY, new DefaultTaskFactory(), FACTORY);
+        TaskFactory factory = readComponent(root, TASK_FACTORY, new DefaultTaskFactory(), FACTORY);
 
-        DalConnectionLocator locator =
+        ConnectionLocator locator =
                 readComponent(root, CONNECTION_LOCATOR, new DefaultDalConnectionLocator(), LOCATOR);
 
         Map<String, DatabaseSet> databaseSets = readDatabaseSets(getChildNode(root, DATABASE_SETS));
@@ -100,7 +106,7 @@ public class DalConfigureFactory implements DalConfigConstants {
         DatabaseSelector selector =
                 readComponent(root, DATABASE_SELECTOR, new DefaultDatabaseSelector(), SELECTOR);
 
-        return new DalConfigure(name, databaseSets, logger, locator, factory, selector);
+        return new DasConfigure(name, databaseSets, logger, locator, factory, selector);
     }
 
     private Set<String> getAllDbNames(Map<String, DatabaseSet> databaseSets) {
@@ -113,7 +119,7 @@ public class DalConfigureFactory implements DalConfigConstants {
         return dbNames;
     }
 
-    private <T extends DalComponent> T readComponent(Node root, String componentName, T defaultImpl,
+    private <T extends DasComponent> T readComponent(Node root, String componentName, T defaultImpl,
             String implNodeName) throws Exception {
         Node node = getChildNode(root, componentName);
         T component = defaultImpl;

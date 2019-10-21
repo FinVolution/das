@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalRowMapper;
+import com.ppdai.das.core.client.DalRowMapper;
 
 public interface CustomizableMapper<T> {
     /**

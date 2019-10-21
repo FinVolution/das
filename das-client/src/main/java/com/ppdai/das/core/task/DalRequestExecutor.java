@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.ppdai.das.core.DalHintEnum;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DalResultCallback;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.LogContext;
 import com.ppdai.das.core.ResultMerger;
-import com.ppdai.das.core.client.DalLogger;
-import com.ppdai.das.core.client.LogContext;
+import com.ppdai.das.core.client.DalResultCallback;
 import com.ppdai.das.core.exceptions.DalException;
 import com.ppdai.das.core.exceptions.ErrorCode;
 
@@ -40,7 +40,7 @@ public class DalRequestExecutor {
 
 	public static final int DEFAULT_KEEP_ALIVE_TIME = 10;
 	
-	private DalLogger logger = DasConfigureFactory.getDalLogger();
+	private DasLogger logger = DasConfigureFactory.getLogger();
 	
 	private final static String NA = "N/A";
 	        
@@ -136,7 +136,7 @@ public class DalRequestExecutor {
         Map<String, Callable<T>> tasks = request.createTasks();
         logContext.setShards(tasks.keySet());
 
-        boolean isSequentialExecution = hints.is(DalHintEnum.sequentialExecution);
+        boolean isSequentialExecution = hints.is(HintEnum.sequentialExecution);
         logContext.setSeqencialExecution(isSequentialExecution);
         
         ResultMerger<T> merger = request.getMerger();
@@ -165,7 +165,7 @@ public class DalRequestExecutor {
 	}
 
 	private <T> void handleCallback(final Hints hints, T result, Throwable error) {
-		DalResultCallback qc = (DalResultCallback)hints.get(DalHintEnum.resultCallback);
+		DalResultCallback qc = (DalResultCallback)hints.get(HintEnum.resultCallback);
 		if (qc == null)
 			return;
 		
