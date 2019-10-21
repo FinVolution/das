@@ -1,24 +1,20 @@
 package com.ppdai.das.client;
 
-import com.google.common.base.Preconditions;
-import com.ppdai.das.core.HintEnum;
-import com.ppdai.das.core.DasConfigureFactory;
-import com.ppdai.das.core.DasCoreVersion;
-import com.ppdai.das.core.DasDiagnose;
-import com.ppdai.das.core.DasException;
-import com.ppdai.das.core.DasVersionInfo;
-import com.ppdai.das.core.HaContext;
-import com.ppdai.das.core.KeyHolder;
-
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
+
+import com.google.common.base.Preconditions;
+import com.ppdai.das.core.DasConfigureFactory;
+import com.ppdai.das.core.DasDiagnose;
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.DasVersionInfo;
+import com.ppdai.das.core.HaContext;
+import com.ppdai.das.core.HintEnum;
+import com.ppdai.das.core.KeyHolder;
 
 /**
  * Additional parameters for operation.
@@ -346,7 +342,6 @@ public class Hints {
     public Hints() {
         DasVersionInfo versionInfo = new DasVersionInfo();
         versionInfo.setDasClientVersion(DasClientVersion.getVersion());
-        versionInfo.setDasCoreVersion(DasCoreVersion.getVersion());
 
         setVersionInfo(versionInfo);
         allowPartial();

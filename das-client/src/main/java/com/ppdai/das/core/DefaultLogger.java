@@ -1,23 +1,23 @@
 package com.ppdai.das.core;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.ppdai.das.client.DasClient;
-import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.*;
-import com.ppdai.das.service.DasRequest;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.ppdai.das.client.DasClient;
+import com.ppdai.das.client.DasClientVersion;
+import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.helper.DalBase64;
 import com.ppdai.das.core.helper.LoggerHelper;
 import com.ppdai.das.core.markdown.MarkDownInfo;
 import com.ppdai.das.core.markdown.MarkupInfo;
 import com.ppdai.das.core.task.DalRequest;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import com.ppdai.das.service.DasRequest;
 
 /**
  * logger that is based on log4j. It is useful when you want to quick start your DAL project without
@@ -27,7 +27,7 @@ import java.util.Set;
  */
 public class DefaultLogger extends LoggerAdapter implements DasLogger {
 	
-	private Logger logger = LoggerFactory.getLogger(DasCoreVersion.getLoggerName());
+	private Logger logger = LoggerFactory.getLogger(DasClientVersion.getLoggerName());
 	
 	private static final String LINESEPARATOR = System.lineSeparator();
 
@@ -150,7 +150,7 @@ public class DefaultLogger extends LoggerAdapter implements DasLogger {
 	private void recordSuccess(final LogEntry entry, final int count) {
 		try {
 			StringBuilder msg = new StringBuilder("success info \n");
-			msg.append("\t").append("DAS.Core.version : java-").append(entry.getCoreVersion()).append(LINESEPARATOR);
+			msg.append("\t").append("DAS.Client.version : java-").append(entry.getClientVersion()).append(LINESEPARATOR);
 			msg.append("\t").append("source : ").append(entry.getSource()).append(LINESEPARATOR);
 			String sql = "*";
 			if (!entry.isSensitive()) {

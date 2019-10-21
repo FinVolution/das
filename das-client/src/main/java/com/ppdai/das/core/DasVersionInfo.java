@@ -1,18 +1,11 @@
 package com.ppdai.das.core;
 
 public class DasVersionInfo {
-    private String dasCoreVersion;
     private String dasClientVersion;
     private String dasServerVersion;
     private String customerClientVersion;
     private String customerServerVersion;
     
-    public String getDasCoreVersion() {
-        return dasCoreVersion;
-    }
-    public void setDasCoreVersion(String dasCoreVersion) {
-        this.dasCoreVersion = dasCoreVersion;
-    }
     public String getDasClientVersion() {
         return dasClientVersion;
     }

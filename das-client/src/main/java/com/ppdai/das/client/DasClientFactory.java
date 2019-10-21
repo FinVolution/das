@@ -7,25 +7,22 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.ppdai.das.client.delegate.datasync.DataSyncDasDelegate;
-
-import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ppdai.das.client.delegate.DasDelegate;
+import com.ppdai.das.client.delegate.datasync.DataSyncDasDelegate;
 import com.ppdai.das.client.delegate.local.ClientDasDelegate;
 import com.ppdai.das.client.delegate.remote.DasRemoteDelegate;
 import com.ppdai.das.core.ClientConfigureLoader;
 import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.DasConfigureContext;
 import com.ppdai.das.core.DasConfigureFactory;
-import com.ppdai.das.core.DasCoreVersion;
 import com.ppdai.das.core.DasServerInstance;
 import com.ppdai.das.core.helper.ServiceLoaderHelper;
 
 public class DasClientFactory {
-    private static final Logger logger = LoggerFactory.getLogger(DasCoreVersion.getLoggerName());
+    private static final Logger logger = LoggerFactory.getLogger(DasClientVersion.getLoggerName());
     
     private static final AtomicReference<String> customerClientVersionRef = new AtomicReference<>();
     private static final AtomicReference<String> appIdRef = new AtomicReference<>();
