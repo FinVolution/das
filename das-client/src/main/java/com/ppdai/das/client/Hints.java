@@ -12,7 +12,6 @@ import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.DasDiagnose;
 import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasVersionInfo;
-import com.ppdai.das.core.HaContext;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.KeyHolder;
 
@@ -374,27 +373,6 @@ public class Hints {
      */
     public Object get(HintEnum hint) {
         return hints.get(hint);
-    }
-
-    /**
-     * Returns {@code DalHA}.
-     *
-     * @return {@code DalHA}
-     * @see HintEnum#heighAvaliable
-     */
-    public HaContext getHaContext(){
-        return (HaContext)hints.get(HintEnum.heighAvaliable);
-    }
-
-    /**
-     * Set given {@code DalHA}.
-     *
-     * @param ha
-     * @return {@code Hints}
-     */
-    public Hints setHA(HaContext ha){
-        hints.put(HintEnum.heighAvaliable, ha);
-        return this;
     }
 
     /**

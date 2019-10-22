@@ -83,7 +83,8 @@ public class TransactionServer implements DataSourceConfigureConstants {
     public TransactionId start(String appId, String logicDb, Hints hints) throws SQLException {
         DalConnectionManager connManager = locateConnectionManager(appId, logicDb, hints);
         
-        DalConnection conn = connManager.getNewConnection(hints, true, EventEnum.EXECUTE);
+        //TODO check how HA work under this case
+        DalConnection conn = connManager.getNewConnection(hints, true, EventEnum.EXECUTE, null);
         long timeout = DataSourceLocator.getDataSourceConfigure(conn.getMeta().getDataBaseKeyName().toLowerCase()).getIntProperty(REMOVEABANDONEDTIMEOUT, DEFAULT_REMOVEABANDONEDTIMEOUT) * SECOND;
         timeout = (long)(timeout * REMOVE_SCALE);
         

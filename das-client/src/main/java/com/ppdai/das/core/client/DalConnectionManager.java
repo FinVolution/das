@@ -46,7 +46,7 @@ public class DalConnectionManager {
 		return logger;
 	}
 
-	public DalConnection getNewConnection(Hints hints, boolean useMaster, EventEnum operation)
+	public DalConnection getNewConnection(Hints hints, boolean useMaster, EventEnum operation, HaContext ha)
 			throws SQLException {
 		DalConnection connHolder = null;
 		String realDbName = logicDbName;
@@ -58,14 +58,10 @@ public class DalConnectionManager {
 			boolean isMaster = hints.is(HintEnum.masterOnly) || useMaster;
 			boolean isSelect = operation == EventEnum.QUERY;
 
-			connHolder = getConnectionFromDSLocator(hints, isMaster, isSelect);
+			connHolder = getConnectionFromDSLocator(hints, isMaster, isSelect, ha);
 
 			connHolder.setAutoCommit(true);
 			connHolder.applyHints(hints);
-
-			if(hints.getHaContext() != null){
-				hints.getHaContext().setDatabaseCategory(connHolder.getMeta().getDatabaseCategory());
-			}
 
 			realDbName = connHolder.getDatabaseName();
 		}
@@ -109,15 +105,13 @@ public class DalConnectionManager {
 	}
 
 	private DalConnection getConnectionFromDSLocator(Hints hints,
-													 boolean isMaster, boolean isSelect) throws SQLException {
+													 boolean isMaster, boolean isSelect, HaContext ha) throws SQLException {
 		Connection conn;
 		String allInOneKey;
 		DatabaseSet dbSet = config.getDatabaseSet(logicDbName);
 		String shardId = null;
 
 		if(dbSet.isShardingSupported()){
-			ShardingStrategy strategy = dbSet.getStrategy();
-
 			shardId = hints.getShard();
 			if(shardId == null)
 				shardId = getShardId(hints);
@@ -126,7 +120,7 @@ public class DalConnectionManager {
 			dbSet.validate(shardId);
 		}
 
-		allInOneKey = select(logicDbName, dbSet, hints, shardId, isMaster, isSelect);
+		allInOneKey = select(logicDbName, dbSet, hints, shardId, isMaster, isSelect, ha);
 		
 		try {	
 			conn = locator.getConnection(allInOneKey);
@@ -137,8 +131,8 @@ public class DalConnectionManager {
 		}
 	}
 	
-	private String select(String logicDbName, DatabaseSet dbSet, Hints hints, String shard, boolean isMaster, boolean isSelect) throws DasException {
-	    SelectionContext context = new SelectionContext(config.getAppId(), logicDbName, hints, shard, isMaster, isSelect);
+	private String select(String logicDbName, DatabaseSet dbSet, Hints hints, String shard, boolean isMaster, boolean isSelect, HaContext ha) throws DasException {
+	    SelectionContext context = new SelectionContext(config.getAppId(), logicDbName, hints, shard, isMaster, isSelect, ha);
 	    
 	    if(shard == null) {
 	        context.setMasters(dbSet.getMasterDbs());
@@ -161,7 +155,8 @@ public class DalConnectionManager {
 			return _doInConnection(action, hints);
 
 		HaContext highAvalible = new HaContext();
-		hints.setHA(highAvalible);
+		highAvalible.setDatabaseCategory(config.getDatabaseSet(logicDbName).getDatabaseCategory());
+		action.highAvalible = highAvalible;
 		do{
 			try {
 				return _doInConnection(action, hints);

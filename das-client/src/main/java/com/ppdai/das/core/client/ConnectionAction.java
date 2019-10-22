@@ -17,6 +17,7 @@ import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.EventEnum;
+import com.ppdai.das.core.HaContext;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.LogEntry;
 
@@ -42,7 +43,8 @@ public abstract class ConnectionAction<T> {
 	public DasLogger logger;
 	public LogEntry entry;
 	public Throwable e;
-
+	public HaContext highAvalible;
+    
 	private static final String SQLHIDDENString = "*";
 	void populate(EventEnum operation, String sql, List<Parameter> parameters) {
 		this.operation = operation;
