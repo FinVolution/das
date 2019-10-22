@@ -2,7 +2,7 @@ package com.ppdai.das.core;
 
 import com.ppdai.das.core.markdown.MarkDownInfo;
 import com.ppdai.das.core.markdown.MarkupInfo;
-import com.ppdai.das.core.task.DalRequest;
+import com.ppdai.das.core.task.SqlRequest;
 import com.ppdai.das.service.DasRequest;
 
 /**
@@ -54,7 +54,7 @@ public interface DasLogger extends DasComponent {
 	 * @param request
 	 * @return log context. It can be null
 	 */
-	<T> LogContext start(DalRequest<T> request);
+	<T> LogContext start(SqlRequest<T> request);
 	
     /**
      * End request processing

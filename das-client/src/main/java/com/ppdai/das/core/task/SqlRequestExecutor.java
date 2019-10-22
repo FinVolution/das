@@ -29,7 +29,7 @@ import com.ppdai.das.core.client.DalResultCallback;
  * 
  * @author jhhe
  */
-public class DalRequestExecutor {
+public class SqlRequestExecutor {
 	private static AtomicReference<ExecutorService> serviceRef = new AtomicReference<>();
 	
 	public static final String MAX_POOL_SIZE = "maxPoolSize";
@@ -48,7 +48,7 @@ public class DalRequestExecutor {
 		if(serviceRef.get() != null)
 			return;
 		
-		synchronized (DalRequestExecutor.class) {
+		synchronized (SqlRequestExecutor.class) {
 			if(serviceRef.get() != null)
 				return;
 			
@@ -77,7 +77,7 @@ public class DalRequestExecutor {
 		if (serviceRef.get() == null)
 			return;
 		
-		synchronized (DalRequestExecutor.class) {
+		synchronized (SqlRequestExecutor.class) {
 			if (serviceRef.get() == null)
 				return;
 			
@@ -86,16 +86,16 @@ public class DalRequestExecutor {
 		}
 	}
 
-	public <T> T execute(final Hints hints, final DalRequest<T> request) throws SQLException {
+	public <T> T execute(final Hints hints, final SqlRequest<T> request) throws SQLException {
 		return execute(hints, request, false);
 	}
 	
-	public <T> T execute(final Hints hints, final DalRequest<T> request, final boolean nullable) throws SQLException {
+	public <T> T execute(final Hints hints, final SqlRequest<T> request, final boolean nullable) throws SQLException {
 	    // We don't support asynchronized execution
 		return internalExecute(hints, request, nullable);
 	}
 
-	private <T> T internalExecute(Hints hints, DalRequest<T> request, boolean nullable) throws SQLException {
+	private <T> T internalExecute(Hints hints, SqlRequest<T> request, boolean nullable) throws SQLException {
 		T result = null;
 		Throwable error = null;
 		
@@ -126,13 +126,13 @@ public class DalRequestExecutor {
 		return result;
 	}
 
-	private <T> T nonCrossShardExecute(LogContext logContext, Hints hints, DalRequest<T> request) throws Exception {
+	private <T> T nonCrossShardExecute(LogContext logContext, Hints hints, SqlRequest<T> request) throws Exception {
         logContext.setSingleTask(true);
 	    Callable<T> task = new RequestTaskWrapper<T>(NA, request.createTask(), logContext);
 		return task.call();
 	}
 	
-	private <T> T crossShardExecute(LogContext logContext, Hints hints, DalRequest<T> request) throws Exception {
+	private <T> T crossShardExecute(LogContext logContext, Hints hints, SqlRequest<T> request) throws Exception {
         Map<String, Callable<T>> tasks = request.createTasks();
         logContext.setShards(tasks.keySet());
 

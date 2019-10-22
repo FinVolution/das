@@ -16,7 +16,7 @@ import com.ppdai.das.core.helper.DalBase64;
 import com.ppdai.das.core.helper.LoggerHelper;
 import com.ppdai.das.core.markdown.MarkDownInfo;
 import com.ppdai.das.core.markdown.MarkupInfo;
-import com.ppdai.das.core.task.DalRequest;
+import com.ppdai.das.core.task.SqlRequest;
 import com.ppdai.das.service.DasRequest;
 
 /**
@@ -259,7 +259,7 @@ public class DefaultLogger extends LoggerAdapter implements DasLogger {
 	}
 
 	@Override
-    public <T> LogContext start(DalRequest<T> request) {
+    public <T> LogContext start(SqlRequest<T> request) {
         logger.info("start request");
 		LogContext logContext = new LogContext();
 		logContext.setAppId(request.getAppId());
