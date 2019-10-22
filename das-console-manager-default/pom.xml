@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ppdai.das</groupId>
+    <artifactId>das-console-manager-default</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>das-console-manager-default</name>
+    <description>das-console-manager-default-sample</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.4.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <file_encoding>UTF-8</file_encoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <mybatis-spring-boot>1.2.0</mybatis-spring-boot>
+        <compile.plugin.version>3.5.1</compile.plugin.version>
+
+        <lombok.version>1.16.16</lombok.version>
+        <okhttp.version>3.4.1</okhttp.version>
+        <guava.version>23.0</guava.version>
+        <javax-servlet-version>3.1.0</javax-servlet-version>
+        <httpclient-version>4.5.3</httpclient-version>
+        <ws-rs-version>2.0.1</ws-rs-version>
+        <jersey-version>2.25.1</jersey-version>
+        <guava-version>21.0</guava-version>
+        <tomcat-jdbc-version>7.0.76</tomcat-jdbc-version>
+        <mysql-connector-version>5.1.41</mysql-connector-version>
+        <commons-email-version>1.4</commons-email-version>
+        <commons-io-version>2.5</commons-io-version>
+        <jcl-over-slf4j>1.7.21</jcl-over-slf4j>
+        <logback-version>1.2.2</logback-version>
+        <fastjson-version>1.2.56</fastjson-version>
+        <gson-version>2.8.5</gson-version>
+        <jackson-version>2.8.7</jackson-version>
+        <jsqlparser-version>0.9.7</jsqlparser-version>
+        <junit-version>4.12</junit-version>
+        <poi-version>3.16</poi-version>
+        <dom4j-version>2.0.1</dom4j-version>
+        <ppdai-das-client-version>2.1.8</ppdai-das-client-version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi-version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.xmlbeans</groupId>
+                        <artifactId>xmlbeans</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ppdai.das</groupId>
+            <artifactId>das-console-manager-open-source</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.ppdai.platform.das.codegen.CodeGenManagerApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compile.plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.16.16.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
