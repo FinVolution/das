@@ -5,17 +5,21 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
-import com.ppdai.das.client.Parameter;
+import com.ppdai.das.client.BatchUpdateBuilder;
 import com.ppdai.das.client.Segment;
 import com.ppdai.das.client.SqlBuilder;
+import com.ppdai.das.core.DasDiagnose;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 
@@ -37,6 +41,8 @@ public class SqlBuilderSerializer implements Serializer {
         serializeFactory.add(new TemplateSerializer());
         serializeFactory.add(new PageSerializer());
         serializeFactory.add(new ParameterSerializer());
+        serializeFactory.add(new ParameterDefinitionSerializer());
+        serializeFactory.add(new BatchUpdateBuilderSerializer());
         serializeFactory.add(this);
     }
 
@@ -48,13 +54,12 @@ public class SqlBuilderSerializer implements Serializer {
         return instance.outGson.fromJson(json, SqlBuilder.class);
     }
 
-
-    public static String serializeParameter(Parameter parameter) {
-        return instance.outGson.toJson(parameter);
+    public static String serializeBatchUpdateBuilder(BatchUpdateBuilder segment) {
+        return instance.outGson.toJson(segment);
     }
 
-    public static Parameter deserializeParameter(String json) {
-        return instance.outGson.fromJson(json, Parameter.class);
+    public static BatchUpdateBuilder deserializeBatchUpdateBuilder(String json) {
+        return instance.outGson.fromJson(json, BatchUpdateBuilder.class);
     }
 
     public static String serializePrimitive(Object primitive) {
@@ -62,6 +67,9 @@ public class SqlBuilderSerializer implements Serializer {
     }
 
     public static <T> T deserializePrimitive(String json) {
+        if(json == null) {
+            return null;
+        }
         return (T) instance.primitiveGson.fromJson(json, Supplier.class).get();
     }
 
@@ -72,6 +80,8 @@ public class SqlBuilderSerializer implements Serializer {
         for(JsonElement seg: segs){
             sqlBuilder.getSegments().add(getSerializeFactory().deserialize(seg));
         }
+        boolean selectCount = ((JsonObject)jo).getAsJsonPrimitive("selectCount").getAsBoolean();
+        writeField(sqlBuilder, "selectCount", selectCount);
         return sqlBuilder;
     }
 
@@ -83,6 +93,7 @@ public class SqlBuilderSerializer implements Serializer {
         sqlBuilder.getSegments().forEach(seg-> segs.add(getSerializeFactory().serialize(seg, seg.getClass())));
 
         root.add("segments", segs);
+        root.addProperty("selectCount", sqlBuilder.isSelectCount());
         return addBuildType(root);
     }
 
@@ -100,6 +111,9 @@ public class SqlBuilderSerializer implements Serializer {
             .create();
 
     final Gson primitiveGson = new GsonBuilder()
+            .registerTypeHierarchyAdapter(DasDiagnose.class, (JsonSerializer<DasDiagnose>) (str, typeOfSrc, context) -> {
+                return JsonNull.INSTANCE;
+            })
             .registerTypeHierarchyAdapter(String.class, (JsonSerializer<String>) (str, typeOfSrc, context) -> {
                 JsonObject root = new JsonObject();
                 root.addProperty("type", String.class.getSimpleName());
@@ -145,11 +159,24 @@ public class SqlBuilderSerializer implements Serializer {
                     }
                     return () -> list;
                 }
+
                 return toPrimitive((JsonObject)json);
+
+            })
+            .registerTypeHierarchyAdapter(Map.class, (JsonDeserializer<Map>) (json, typeOfT, context) -> {
+                LinkedHashMap<String, Object> map = new LinkedHashMap();
+                ((JsonObject)json).entrySet().forEach(e->{
+                    map.put(e.getKey(), toPrimitive((JsonObject)e.getValue()).get());
+                });
+              return map;
+
             })
             .create();
 
     Supplier toPrimitive(JsonObject obj){
+        if(!obj.has("type")){
+            return ()-> new Object();
+        }
         String type = obj.get("type").getAsString();
         JsonElement primitive = obj.get("value");
         if(type.equals(String.class.getSimpleName())){

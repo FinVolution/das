@@ -1,5 +1,7 @@
 package com.ppdai.das.client.delegate;
 
+import com.ppdai.das.client.TableDefinition;
+
 import java.lang.reflect.Field;
 import java.sql.JDBCType;
 import java.util.ArrayList;
@@ -10,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.ppdai.das.client.TableDefinition;
 
 public class EntityMeta {
     private final String tableName;
@@ -34,7 +34,7 @@ public class EntityMeta {
         this.identityField = identityField;
         
         columnNames = new String[columns.length];
-        columnTypes = new JDBCType[columns.length];
+        List<JDBCType> columnTypeList = new ArrayList<>();
         List<String> primaryKeys = new ArrayList<>();
         List<String> updatableColumns = new ArrayList<>();
         List<String> insertableColumns = new ArrayList<>();
@@ -51,7 +51,9 @@ public class EntityMeta {
             
             metaMap.put(name, meta);
             columnNames[i] = name;
-            columnTypes[i] = meta.getType();
+            if(meta.getType() != null) {
+                columnTypeList.add(meta.getType());
+            }
             
             if(meta.isAutoIncremental())
                 autoInc = true;
@@ -77,6 +79,7 @@ public class EntityMeta {
         insertableColumnNames = insertableColumns.toArray(new String[0]);
         versionColumn = version;
         autoIncremental = autoInc;
+        columnTypes = columnTypeList.toArray(new JDBCType[0]);
     }
 
     public TableDefinition getTableDefinition() {

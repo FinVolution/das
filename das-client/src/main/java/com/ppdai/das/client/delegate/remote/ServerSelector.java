@@ -1,16 +1,30 @@
 package com.ppdai.das.client.delegate.remote;
 
-import com.google.common.cache.*;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
 import com.ppdai.das.core.DasServerInstance;
-import com.ppdai.das.service.*;
+import com.ppdai.das.service.DasCheckRequest;
+import com.ppdai.das.service.DasHints;
+import com.ppdai.das.service.DasRequest;
+import com.ppdai.das.service.DasResult;
+import com.ppdai.das.service.DasServerStatus;
+import com.ppdai.das.service.DasService;
+import com.ppdai.das.service.DasTransactionId;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransportException;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ppdai.das.client.delegate.remote.DasServerInstanceWithStatus.asKey;
@@ -89,7 +103,7 @@ public class ServerSelector {
                     try {
                         servers.get(chosen).invalidate(Thread.currentThread().getName());
                     } catch (ExecutionException ee) {}
-                    throw new RuntimeException(e);
+                    throw new TException(e);
                 }
             }
         }

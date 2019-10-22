@@ -1,10 +1,43 @@
 package com.ppdai.das.client.delegate.remote;
 
-import static com.google.common.collect.Iterables.getFirst;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.ppdai.das.client.delegate.remote.BuilderUtils.toList;
-import static com.ppdai.das.util.ConvertUtils.entity2POJO;
-import static com.ppdai.das.util.ConvertUtils.pojo2Entity;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
+import com.google.common.primitives.Ints;
+import com.ppdai.das.client.BatchCallBuilder;
+import com.ppdai.das.client.BatchQueryBuilder;
+import com.ppdai.das.client.BatchUpdateBuilder;
+import com.ppdai.das.client.CallBuilder;
+import com.ppdai.das.client.CallableTransaction;
+import com.ppdai.das.client.DasClientVersion;
+import com.ppdai.das.client.Hints;
+import com.ppdai.das.client.PageRange;
+import com.ppdai.das.client.Parameter;
+import com.ppdai.das.client.ParameterDefinition;
+import com.ppdai.das.client.SegmentConstants;
+import com.ppdai.das.client.SqlBuilder;
+import com.ppdai.das.client.TableDefinition;
+import com.ppdai.das.client.delegate.DasDelegate;
+import com.ppdai.das.client.delegate.EntityMetaManager;
+import com.ppdai.das.client.sqlbuilder.SqlBuilderSerializer;
+import com.ppdai.das.core.DasDiagnose;
+import com.ppdai.das.core.DasException;
+import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.ErrorCode;
+import com.ppdai.das.service.ColumnMeta;
+import com.ppdai.das.service.DasBatchUpdateBuilder;
+import com.ppdai.das.service.DasDiagInfo;
+import com.ppdai.das.service.DasHintEnum;
+import com.ppdai.das.service.DasHints;
+import com.ppdai.das.service.DasOperation;
+import com.ppdai.das.service.DasRequest;
+import com.ppdai.das.service.DasResult;
+import com.ppdai.das.service.Entity;
+import com.ppdai.das.service.EntityList;
+import com.ppdai.das.service.EntityMeta;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.thrift.TException;
+import org.apache.thrift.transport.TTransportException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
@@ -13,27 +46,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.google.gson.Gson;
-import com.ppdai.das.client.*;
-import com.ppdai.das.client.sqlbuilder.SqlBuilderSerializer;
-import com.ppdai.das.service.*;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.thrift.TException;
-import org.apache.thrift.transport.TTransportException;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.primitives.Ints;
-import com.ppdai.das.client.delegate.DasDelegate;
-import com.ppdai.das.client.delegate.EntityMetaManager;
-import com.ppdai.das.core.DasDiagnose;
-import com.ppdai.das.core.DasLogger;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.ppdai.das.client.delegate.remote.BuilderUtils.toList;
+import static com.ppdai.das.util.ConvertUtils.entity2POJOs;
+import static com.ppdai.das.util.ConvertUtils.pojo2Entity;
 import com.ppdai.das.core.DasServerInstance;
 import com.ppdai.das.core.LogContext;
 
@@ -71,14 +95,21 @@ public class DasRemoteDelegate implements DasDelegate {
         try {
             return serverSelector.execute(dasRequest);
         } catch (TException e) {
+            e.printStackTrace();
             ex = e;
-            throw new SQLException(e);
+            Throwable cause = e.getCause();
+            if(cause instanceof com.ppdai.das.service.DasException){
+                Optional<ErrorCode> eCode = Arrays.stream(ErrorCode.values()).filter(ec -> ("" + ec.getCode()).equals(((com.ppdai.das.service.DasException)cause).getCode())).findFirst();
+                throw eCode.isPresent() ? new com.ppdai.das.core.DasException(eCode.get()) : new com.ppdai.das.core.DasException(cause.getMessage(), cause);
+            } else {
+                throw new DasException(cause.getMessage(), cause);
+            }
         } finally {
             dalLogger.completeRemoteRequest(logContext, ex);
         }
     }
 
-    public static DasHints translateHints(Hints hints) {
+    public static DasHints toDasHints(Hints hints) {
         Map<DasHintEnum, String> map = ImmutableMap.<DasHintEnum, String>builder()
                 .put(DasHintEnum.dbShard, Objects.toString(hints.getShard(), ""))
                 .put(DasHintEnum.tableShard, Objects.toString(hints.getTableShard(), ""))
@@ -92,6 +123,11 @@ public class DasRemoteDelegate implements DasDelegate {
     }
 
     public static EntityMeta extract(Class clz) {
+        if(clz == Map.class) {
+            return new EntityMeta().setMapType(true);
+        } else if(isSimpleType(clz)) {
+            return null;
+        }
         com.ppdai.das.client.delegate.EntityMeta meta = EntityMetaManager.extract(clz);
 
         Map<String, String> fieldMap = Maps.transformEntries(meta.getFieldMap(), (key, value) -> value.getName());
@@ -99,7 +135,7 @@ public class DasRemoteDelegate implements DasDelegate {
         Map<String, ColumnMeta> metaMap = Maps.transformEntries(meta.getMetaMap(), (key, value) -> {
                 return new ColumnMeta()
                         .setName(value.getName())
-                        .setType(value.getType().getName())
+                        .setType(value.getType() == null ? null : value.getType().getName())
                         .setAutoIncremental(value.isAutoIncremental())
                         .setPrimaryKey(value.isPrimaryKey())
                         .setInsertable(value.isInsertable())
@@ -108,13 +144,13 @@ public class DasRemoteDelegate implements DasDelegate {
         });
 
         List<String> columnTypes = Arrays.stream(meta.getColumnTypes()).map(
-                t -> t.getName()
+                t -> t == null ? null : t.getName()
         ).collect(Collectors.toList());
 
         return new EntityMeta()
                 .setAutoIncremental(meta.isAutoIncremental())
                 .setColumnNames(newArrayList(meta.getColumnNames()))
-                .setIdentityField(meta.getIdentityField().getName())
+                .setIdentityField(meta.getIdentityField() == null ? null : meta.getIdentityField().getName())
                 .setInsertableColumnNames(newArrayList(meta.getInsertableColumnNames()))
                 .setPrimaryKeyNames(newArrayList(meta.getPrimaryKeyNames()))
                 .setTableName(meta.getTableName())
@@ -122,14 +158,7 @@ public class DasRemoteDelegate implements DasDelegate {
                 .setUpdatableColumnNames(newArrayList(meta.getUpdatableColumnNames()))
                 .setColumnTypes(columnTypes)
                 .setFieldMap(fieldMap)
-                .setMetaMap(metaMap);
-    }
-
-    private <T> DasRequest create(DasOperation operation, T pojo, Hints hints) {
-        EntityMeta meta = extract(pojo.getClass());
-        Entity entity = pojo2Entity(pojo, meta);
-
-        return create(operation, hints).setEntityList(new EntityList().setEntityMeta(meta).setRows(Arrays.asList(entity)));
+                .setMetaMap(new HashMap<>(metaMap));
     }
 
     private <T> DasRequest create(DasOperation operation, List<T> pojos, Hints hints) {
@@ -147,7 +176,7 @@ public class DasRemoteDelegate implements DasDelegate {
         if(obj instanceof List) {
             dasRequest = create(operation, (List) obj, hints);
         } else {
-            dasRequest = create(operation, obj, hints);
+            dasRequest = create(operation, Arrays.asList(obj), hints);
         }
         DasResult dasResult = callRemote(dasRequest);
         EntityMeta meta = dasRequest.getEntityList().getEntityMeta();
@@ -155,12 +184,13 @@ public class DasRemoteDelegate implements DasDelegate {
         hints.setDasDiagnose(dasDiagnose);
 
         List<Entity> entities = dasResult.getRows();
-        if(hints.isSetIdBack()) {
-            setBackId(obj, entity2POJO(entities.subList(1, entities.size()), meta,
-                    obj instanceof List ? ((List)obj).get(0).getClass() : obj.getClass()));
-            return (List<T>) entity2POJO(entities.subList(0, 1), meta, returnClass);
+        if((operation == DasOperation.Insert || operation == DasOperation.InsertList) && hints.isSetIdBack()) {
+            List results = entity2POJOs(entities.subList(1, entities.size()), meta,
+                    obj instanceof List ? ((List)obj).get(0).getClass() : obj.getClass());
+            setBackId(obj, results);
+            return entity2POJOs(entities.subList(0, 1), meta, returnClass);
         } else {
-            return (List<T>) entity2POJO(entities, meta, returnClass);
+            return entity2POJOs(entities, meta, returnClass);
         }
     }
 
@@ -192,7 +222,7 @@ public class DasRemoteDelegate implements DasDelegate {
 
     private DasRequest create(DasOperation operation, Hints hints) {
         return new DasRequest()
-                .setHints(translateHints(hints))
+                .setHints(toDasHints(hints))
                 .setLogicDbName(logicDbName)
                 .setDasClientVersion(DasClientVersion.getVersion())
                 .setPpdaiClientVersion(customerClientVersion)
@@ -249,26 +279,14 @@ public class DasRemoteDelegate implements DasDelegate {
         builder.setHints(hints);
 
         //Fill EntityMeta
-        EntityMeta meta = null;
-        if(builder.getEntityType() == Map.class) { //Result in Map
-            builder.setEntityMeta(new EntityMeta().setMapType(true));
-        }else if(builder.getEntityType() != Object.class) {//Normal
-            meta = extract(builder.getEntityType());
-            builder.setEntityMeta(meta);
-        }
+        EntityMeta meta = extract(builder.getEntityType());
+        builder.setEntityMeta(meta);
 
         DasRequest dasRequest = create(DasOperation.QueryBySampleWithRange, builder.hints(), builder);
         DasResult dasResult = callRemote(dasRequest);
         builder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
 
-        if(builder.getEntityType() == Map.class) { //Result in Map
-            //EntityMeta mapMeta = dasResult.getEntityMeta();
-            return (List<T>) dasResult.getRows().stream().map(r-> new Gson().fromJson(r.getValue(), Map.class)).collect(Collectors.toList());
-        } else if(builder.getEntityType() != Object.class) {//Normal POJO mode
-            return  (List<T>)entity2POJO(dasResult.getRows(), meta, builder.getEntityType());
-        } else { //Simple Object mode
-            return  (List<T>)entity2POJO(dasResult.getRows(), null, Object.class);
-        }
+        return entity2POJOs(dasResult.getRows(), meta, builder.getEntityType());
     }
 
     @Override
@@ -321,7 +339,7 @@ public class DasRemoteDelegate implements DasDelegate {
         DasRequest dasRequest = create(DasOperation.UpdateWithSqlBuilder, builder.hints(), builder);
         DasResult dasResult = callRemote(dasRequest);
         builder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
-        return (int)getFirst(entity2POJO(dasResult.getRows(), null, int.class), 0);
+        return (int)getFirst(entity2POJOs(dasResult.getRows(), null, int.class), 0);
     }
 
     @Override
@@ -329,21 +347,22 @@ public class DasRemoteDelegate implements DasDelegate {
         DasRequest dasRequest = create(DasOperation.BatchUpdateWithSqlBuilder, batchUpdateBuilder.hints(), batchUpdateBuilder.getBuilder());
 
         //Set ParameterDefinition only for batchUpdate case
-        if(batchUpdateBuilder.getBuilder() != null){//TODO
+        if(batchUpdateBuilder.getBuilder() != null){
             List<ParameterDefinition> pds = batchUpdateBuilder.getBuilder().buildDefinitions();
             Iterables.getOnlyElement(dasRequest.getSqlBuilders()).setDefinitions(BuilderUtils.buildParameterDefinition(pds));
         }
 
-        List<String> bs = toList(batchUpdateBuilder.getValuesList(), v -> new Gson().toJson(v));
+        List<String> bs = toList(batchUpdateBuilder.getValuesList(), v -> SqlBuilderSerializer.serializePrimitive(v));
         List<String> statements = batchUpdateBuilder.getStatements() == null ? Collections.emptyList() : newArrayList(batchUpdateBuilder.getStatements());
         dasRequest.setBatchUpdateBuilder(
                 new DasBatchUpdateBuilder()
                         .setStatements(statements)
-                        .setValuesList(bs));
+                        .setValuesList(bs)
+                        .setHints(SqlBuilderSerializer.serializeBatchUpdateBuilder(batchUpdateBuilder)));
 
         DasResult dasResult = callRemote(dasRequest);
         batchUpdateBuilder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
-        return Ints.toArray(BuilderUtils.toList(dasResult.getRows(), r-> new Gson().fromJson(r.getValue(), Integer.class)));
+        return Ints.toArray(entity2POJOs(dasResult.getRows(), null, int.class));
     }
 
     @Override
@@ -367,8 +386,9 @@ public class DasRemoteDelegate implements DasDelegate {
         DasResult dasResult = callRemote(dasRequest);
 
         builder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
-        return null;
-       // return Ints.toArray((List<Number>) entity2POJO(dasResult.getRows(), null, int.class));
+
+        List l = entity2POJOs(dasResult.getRows(), null, int.class);
+        return Ints.toArray(l);
     }
 
     @Override
@@ -382,26 +402,18 @@ public class DasRemoteDelegate implements DasDelegate {
     }
 
     private <T> T doQueryObject(SqlBuilder builder, boolean isNullable) throws SQLException {
-        EntityMeta meta = null;
-        if(!isSimpleType(builder.getEntityType())) {//Normal
-            meta = extract(builder.getEntityType());
-            builder.setEntityMeta(meta);
-        }
+        EntityMeta meta = extract(builder.getEntityType());
+        builder.setEntityMeta(meta);
 
         DasRequest dasRequest = create(DasOperation.QueryObject, builder.hints(), builder);
         dasRequest.getSqlBuilders().get(0).setNullable(isNullable);
         DasResult dasResult = callRemote(dasRequest);
         builder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
 
-        if(!isSimpleType(builder.getEntityType())) {//Normal POJO mode
-            return (T) getFirst(entity2POJO(dasResult.getRows(), meta, builder.getEntityType()), null);
-        } else { //Simple Object mode
-            return (T)SqlBuilderSerializer.deserializePrimitive(dasResult.getRows().get(0).getValue());
-        }
+        return (T) getFirst(entity2POJOs(dasResult.getRows(), meta, builder.getEntityType()), null);
     }
 
-
-    private boolean isSimpleType(Class clz){
+    private static boolean isSimpleType(Class clz){
         return clz == Object.class || clz == String.class || clz == Long.class
                 || clz == Integer.class;
     }
@@ -409,42 +421,23 @@ public class DasRemoteDelegate implements DasDelegate {
     @Override
     public <T> List<T> query(SqlBuilder builder) throws SQLException {
         //Fill EntityMeta
-        EntityMeta meta = null;
-        if(builder.getEntityType() == Map.class) { //Result in Map
-            builder.setEntityMeta(new EntityMeta().setMapType(true));
-        }else if(builder.getEntityType() != Object.class) {//Normal
-            meta = extract(builder.getEntityType());
-            builder.setEntityMeta(meta);
-        }
+        EntityMeta meta = extract(builder.getEntityType());
+        builder.setEntityMeta(meta);
 
         DasRequest dasRequest = create(DasOperation.Query, builder.hints(), builder);
         DasResult dasResult = callRemote(dasRequest);
         builder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
 
-        if(builder.getEntityType() == Map.class) { //Result in Map
-           // EntityMeta mapMeta = dasResult.getEntityMeta();
-            return (List<T>) dasResult.getRows().stream().map(r-> new Gson().fromJson(r.getValue(), Map.class)).collect(Collectors.toList());
-    } else if(builder.getEntityType() != Object.class) {//Normal POJO mode
-            return  (List<T>)entity2POJO(dasResult.getRows(), meta, builder.getEntityType());
-        } else { //Simple Object mode
-
-            return  (List<T>)  dasResult.getRows().stream().map(v->{
-                return SqlBuilderSerializer.deserializePrimitive(v.getValue());
-            }).collect(Collectors.toList());
-            //return  (List<T>) entity2POJO(dasResult.getRows(), null, Object.class);
-        }
+        return entity2POJOs(dasResult.getRows(), meta, builder.getEntityType());
     }
 
     @Override
     public List<?> batchQuery(BatchQueryBuilder builder) throws SQLException {
         //Fill EntityMeta
         SqlBuilder firstBuilder = builder.getQueries().get(0);
-        EntityMeta meta = null;
-        if(firstBuilder.getEntityType() != Object.class) {//Normal
-            meta = extract(firstBuilder.getEntityType());
-            for(SqlBuilder sqlBuilder : builder.getQueries()){
-                sqlBuilder.setEntityMeta(meta);
-            }
+        EntityMeta meta = extract(firstBuilder.getEntityType());
+        for(SqlBuilder sqlBuilder : builder.getQueries()){
+            sqlBuilder.setEntityMeta(meta);
         }
 
         DasRequest dasRequest = create(DasOperation.BatchQuery, builder.hints())
@@ -452,12 +445,7 @@ public class DasRemoteDelegate implements DasDelegate {
         DasResult dasResult = callRemote(dasRequest);
 
         builder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
-        List flatList;
-        if(firstBuilder.getEntityType() != Object.class) {//Normal POJO mode
-            flatList = entity2POJO(dasResult.getRows(), meta, firstBuilder.getEntityType());
-        } else {
-            flatList = entity2POJO(dasResult.getRows(), null, Object.class);
-        }
+        List flatList = entity2POJOs(dasResult.getRows(), meta, firstBuilder.getEntityType());;
         return toListOfList(flatList, dasResult.getBatchRowsIndex());
     }
 

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ppdai.das.client.ColumnDefinition;
 import com.ppdai.das.client.Segment;
 import com.ppdai.das.strategy.OperatorEnum;
 
@@ -19,7 +18,8 @@ public class ExpressionSerializers {
                 new BetweenExpressionSerializer(),
                 new ColumnValueExpressionSerializer(),
                 new InterColumnExpressionSerializer(),
-                new InExpressionSerializer());
+                new InExpressionSerializer(),
+                new ColumnDefinitionExpressionSerializer());
     }
 
     abstract static class ExpressionSerializer implements Serializer {
@@ -67,6 +67,19 @@ public class ExpressionSerializers {
         protected void deserializeOther(JsonObject jo) {
             template = jo.get("template").getAsString();
             rightColumn = getSerializeFactory().deserialize(jo.getAsJsonObject("rightColumn"));
+        }
+    }
+
+    static class ColumnDefinitionExpressionSerializer extends ColumnExpressionSerializer {
+
+        @Override
+        protected Expression createExpression() {
+            return new ColumnDefinitionExpression(template, rightColumn);
+        }
+
+        @Override
+        public Class getBuildType() {
+            return ColumnDefinitionExpression.class;
         }
     }
 

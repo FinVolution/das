@@ -1,15 +1,29 @@
 package com.ppdai.das.client.delegate.remote;
 
 import com.google.common.base.Function;
-import com.ppdai.das.client.*;
+import com.ppdai.das.client.BatchCallBuilder;
+import com.ppdai.das.client.CallBuilder;
+import com.ppdai.das.client.Parameter;
+import com.ppdai.das.client.ParameterDefinition;
+import com.ppdai.das.client.SqlBuilder;
 import com.ppdai.das.client.sqlbuilder.SqlBuilderSerializer;
 import com.ppdai.das.client.sqlbuilder.Table;
 import com.ppdai.das.core.enums.ParameterDirection;
-import com.ppdai.das.service.*;
-import com.ppdai.das.util.ConvertUtils;
-import java.nio.ByteBuffer;
+import com.ppdai.das.service.DasBatchCallBuilder;
+import com.ppdai.das.service.DasCallBuilder;
+import com.ppdai.das.service.DasParameter;
+import com.ppdai.das.service.DasParameterDefinition;
+import com.ppdai.das.service.DasParameterDirection;
+import com.ppdai.das.service.DasParameters;
+import com.ppdai.das.service.DasSqlBuilder;
+
 import java.sql.JDBCType;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BuilderUtils {
@@ -23,7 +37,8 @@ public class BuilderUtils {
                 .setPartials(SqlBuilderSerializer.serializeSegment(builder))
                 .setParameters(new DasParameters().setParameters(buildParameters(builder.buildParameters())))
                 .setDefinitions(Collections.emptyList())
-                .setEntityMeta(builder.getEntityMeta());
+                .setEntityMeta(builder.getEntityMeta())
+                .setEntityType(builder.getEntityType() == null ? null : builder.getEntityType().getName());
     }
 
     public static SqlBuilder fromSqlBuilder(DasSqlBuilder builder) {
@@ -144,7 +159,7 @@ public class BuilderUtils {
                         : (direction == ParameterDirection.Output ? DasParameterDirection.output : DasParameterDirection.inputOutput);
     }
 
-    static ParameterDirection  fromDasParameterDirection(DasParameterDirection direction) {
+    static ParameterDirection fromDasParameterDirection(DasParameterDirection direction) {
         return direction == DasParameterDirection.input ? ParameterDirection.Input
                 : (direction == DasParameterDirection.output ?  ParameterDirection.Output : ParameterDirection.InputOutput);
     }

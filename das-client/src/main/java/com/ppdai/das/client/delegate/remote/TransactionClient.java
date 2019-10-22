@@ -1,7 +1,5 @@
 package com.ppdai.das.client.delegate.remote;
 
-import java.sql.SQLException;
-
 import com.ppdai.das.client.CallableTransaction;
 import com.ppdai.das.client.DasClientFactory;
 import com.ppdai.das.client.Hints;
@@ -11,6 +9,8 @@ import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.service.DasHints;
 import com.ppdai.das.service.DasTransactionId;
+
+import java.sql.SQLException;
 
 public class TransactionClient {
     private String logicDbName;
@@ -49,7 +49,7 @@ public class TransactionClient {
     }
     
     private DasHints convert(Hints hints) {
-        return DasRemoteDelegate.translateHints(hints);
+        return DasRemoteDelegate.toDasHints(hints);
     }
 
     private <T> int startTransaction(Hints hints) throws Exception {

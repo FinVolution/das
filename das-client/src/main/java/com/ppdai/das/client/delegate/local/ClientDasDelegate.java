@@ -1,6 +1,8 @@
 package com.ppdai.das.client.delegate.local;
 
+import java.sql.JDBCType;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -11,6 +13,7 @@ import com.ppdai.das.client.BatchQueryBuilder;
 import com.ppdai.das.client.BatchUpdateBuilder;
 import com.ppdai.das.client.CallBuilder;
 import com.ppdai.das.client.CallableTransaction;
+import com.ppdai.das.client.ColumnDefinition;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.PageRange;
 import com.ppdai.das.client.SegmentConstants;
@@ -26,13 +29,15 @@ import com.ppdai.das.core.task.BulkTask;
 import com.ppdai.das.core.task.BulkTaskRequest;
 import com.ppdai.das.core.task.DalRequest;
 import com.ppdai.das.core.task.DalRequestExecutor;
-import com.ppdai.das.core.task.TaskFactory;
 import com.ppdai.das.core.task.SingleShardProvider;
 import com.ppdai.das.core.task.SingleTask;
 import com.ppdai.das.core.task.SingleTaskRequest;
 import com.ppdai.das.core.task.SqlBuilderProvider;
 import com.ppdai.das.core.task.SqlBuilderRequest;
 import com.ppdai.das.core.task.StatementConditionProvider;
+import com.ppdai.das.core.task.TaskFactory;
+import com.ppdai.das.service.Entity;
+import com.ppdai.das.service.EntityMeta;
 
 public class ClientDasDelegate implements DasDelegate {
     private String appId;
@@ -60,20 +65,28 @@ public class ClientDasDelegate implements DasDelegate {
         return logicDbName;
     }
 
+    protected <T> SqlBuilder queryByPkSqlBuilder(TableDefinition table, T id, Hints hints) throws SQLException {
+        return SqlBuilder.selectAllFrom(table).where(SegmentConstants.match(table, id, getParser(id))).into(id.getClass()).setHints(hints);
+    }
+
     @Override
     public <T> T queryByPk(T id, Hints hints) throws SQLException {
         validatePk(id);
 
         TableDefinition table = getTableDefinition(id);
-        SqlBuilder builder = SqlBuilder.selectAllFrom(table).where(SegmentConstants.match(table, id)).into(id.getClass()).setHints(hints);
+        SqlBuilder builder = queryByPkSqlBuilder(table, id, hints);
 
         return executeQuery(builder, true, null);
+    }
+
+    protected <T> SqlBuilder queryBySampleSqlBuilder(TableDefinition table, T sample) throws SQLException {
+        return SqlBuilder.selectAllFrom(table).where(SegmentConstants.match(table, sample, getParser(sample))).into(sample.getClass());
     }
 
     @Override
     public <T> List<T> queryBySample(T sample, Hints hints) throws SQLException {
         TableDefinition table = getTableDefinition(sample);
-        SqlBuilder builder = SqlBuilder.selectAllFrom(table).where(SegmentConstants.match(table, sample)).into(sample.getClass());
+        SqlBuilder builder = queryBySampleSqlBuilder(table, sample);
 
         return query(builder.setHints(hints));
     }
@@ -90,11 +103,17 @@ public class ClientDasDelegate implements DasDelegate {
         return query(builder.setHints(hints));
     }
 
+    protected <T> SqlBuilder countBySampleSqlBuilder(TableDefinition table, T sample) throws SQLException {
+        return SqlBuilder.selectCount().from(table).where(SegmentConstants.match(table, sample, getParser(sample)));
+    }
+
     @Override
     public <T> long countBySample(T sample, Hints hints) throws SQLException {
         TableDefinition table = getTableDefinition(sample);
-        SqlBuilder builder = SqlBuilder.selectCount().from(table).where(SegmentConstants.match(table, sample));
-        return ((Number)queryObject(builder.setHints(hints))).longValue();
+        SqlBuilder builder = countBySampleSqlBuilder(table, sample);
+        Object result = queryObject(builder.setHints(hints));
+        return ((Number) result).longValue();
+
     }
 
     @Override
@@ -114,8 +133,8 @@ public class ClientDasDelegate implements DasDelegate {
 
     @Override
     public <T> int deleteBySample(T sample, Hints hints) throws SQLException {
-        TableDefinition table = EntityMetaManager.extract(sample.getClass()).getTableDefinition();
-        SqlBuilder deleteBuilder = SqlBuilder.deleteFrom(table).where(SegmentConstants.match(table, sample));
+        TableDefinition table = getTableDefinition(sample);
+        SqlBuilder deleteBuilder = SqlBuilder.deleteFrom(table).where(SegmentConstants.match(table, sample, getParser(sample)));
         return update(deleteBuilder.setHints(hints));
     }
 
@@ -212,10 +231,10 @@ public class ClientDasDelegate implements DasDelegate {
         Hints dalHints = getHints(request);
         return executor.execute(dalHints, request);
     }
-    
+
     private <T> boolean isInvalid(List<T> entities) {
         Objects.requireNonNull(entities);
-        
+
         return entities.size() == 0;
     }
 
@@ -235,23 +254,30 @@ public class ClientDasDelegate implements DasDelegate {
 
     private <T> void validatePk(T pk) throws SQLException {
         Map<String, ?> pkFields = getParser(pk).getPrimaryKeys(pk);
-        
+
         for(Map.Entry<String, ?> keyEntry: pkFields.entrySet())
             if(keyEntry.getValue() == null)
                 throw new IllegalArgumentException(String.format("Primary key field %s is null", keyEntry.getKey()));
     }
-    
+
     private <T> TableDefinition getTableDefinition(T sample) {
+        if(sample.getClass() == Entity.class){
+            EntityMeta meta =((Entity)sample).getEntityMeta();
+            TableDefinition tableDefinition = new TableDefinition(meta.getTableName());
+            List<ColumnDefinition> cds= new ArrayList<>();
+            meta.getMetaMap().entrySet().stream().forEach(e ->{
+
+                ColumnDefinition cd = new ColumnDefinition(tableDefinition, e.getValue().getName(), JDBCType.valueOf(e.getValue().getType()));
+                cds.add(cd);
+            });
+            tableDefinition.setColumnDefinitions(cds.toArray(new ColumnDefinition[cds.size()]));
+            return tableDefinition;
+        }
         return EntityMetaManager.extract(sample.getClass()).getTableDefinition();
     }
-    
+
     private <T> Hints getHints(DalRequest<T> request) {
         Hints hints = request.getHints();
-        hints.getVersionInfo().setCustomerClientVersion(customerClientVersion);
-        return hints;
-    }
-
-    private Hints translateHints(Hints hints) {
         hints.getVersionInfo().setCustomerClientVersion(customerClientVersion);
         return hints;
     }

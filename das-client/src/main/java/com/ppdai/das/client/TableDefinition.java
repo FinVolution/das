@@ -1,13 +1,13 @@
 package com.ppdai.das.client;
 
+import com.ppdai.das.client.sqlbuilder.BuilderContext;
+import com.ppdai.das.client.sqlbuilder.DefaultBuilderContext;
+import com.ppdai.das.client.sqlbuilder.TableReference;
+
 import java.sql.JDBCType;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.ppdai.das.client.sqlbuilder.BuilderContext;
-import com.ppdai.das.client.sqlbuilder.DefaultBuilderContext;
-import com.ppdai.das.client.sqlbuilder.TableReference;
 
 /**
  * Immutable definition of table. 
@@ -34,8 +34,8 @@ public class TableDefinition implements TableReference, Segment {
     public TableDefinition(String name) {
         this.name = name;
     }
-    
-    protected void setColumnDefinitions(ColumnDefinition...columnDefinitions) {
+
+    public void setColumnDefinitions(ColumnDefinition...columnDefinitions) {
         this.columnDefinitions = columnDefinitions;
         columnDefinitionMap.clear();
         for(ColumnDefinition def: columnDefinitions)

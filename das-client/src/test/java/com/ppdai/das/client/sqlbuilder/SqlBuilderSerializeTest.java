@@ -2,6 +2,7 @@ package com.ppdai.das.client.sqlbuilder;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.ppdai.das.client.BatchUpdateBuilder;
 import com.ppdai.das.client.ColumnDefinition;
 import com.ppdai.das.client.Parameter;
 import com.ppdai.das.client.SegmentConstants;
@@ -14,12 +15,13 @@ import org.junit.Test;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.ppdai.das.client.SegmentConstants.SELECT;
 import static com.ppdai.das.strategy.OperatorEnum.BEWTEEN;
 import static com.ppdai.das.strategy.OperatorEnum.EQUAL;
 import static com.ppdai.das.strategy.OperatorEnum.IN;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -48,8 +50,7 @@ public class SqlBuilderSerializeTest {
 
         String gs3 = outGson.toJson(SegmentConstants.AND);
         Text ad = outGson.fromJson(gs3, Text.class);
-        assertEquals(ad.getClass(), Operator.class);
-        assertEquals("AND", ad.getText());
+        assertSame(SegmentConstants.AND, ad);
     }
 
     @Test
@@ -180,10 +181,10 @@ public class SqlBuilderSerializeTest {
         String gs = SqlBuilderSerializer.serializeSegment(sqlBuilder);
         SqlBuilder sqlBuilder2 = SqlBuilderSerializer.deserializeSegment(gs);
 
+        assertTrue(sqlBuilder.isSelectCount());
         assertEquals(sqlBuilder.getSegments().size(), sqlBuilder2.getSegments().size());
         assertEquals(sqlBuilder.build(new DefaultBuilderContext()), sqlBuilder2.build(new DefaultBuilderContext()));
     }
-
 
     @Test
     public void testTemplate() {
@@ -258,5 +259,27 @@ public class SqlBuilderSerializeTest {
         String gs = SqlBuilderSerializer.serializePrimitive(Arrays.asList("A", "B"));
         Object s1 = SqlBuilderSerializer.deserializePrimitive(gs);
         assertEquals(Arrays.asList("A", "B"), s1);
+    }
+
+    @Test
+    public void testBatchBuilder() {
+        SqlBuilder innerBuilder = null;
+        BatchUpdateBuilder batchUpdateBuilder = new BatchUpdateBuilder(innerBuilder);
+        batchUpdateBuilder.hints().inShard("1").inTableShard(2);
+        String s = SqlBuilderSerializer.serializeBatchUpdateBuilder(batchUpdateBuilder);
+        BatchUpdateBuilder batchUpdateBuilder2 = SqlBuilderSerializer.deserializeBatchUpdateBuilder(s);
+        assertEquals("1", batchUpdateBuilder2.hints().getShard());
+        assertEquals("2", batchUpdateBuilder2.hints().getTableShard());
+    }
+
+    @Test
+    public void testSerial() {
+        long i= 2;
+        Map m = new HashMap();
+        m.put("A", 2);
+        String s = new Gson().toJson(m);
+        s.isEmpty();
+        Map m2 = new Gson().fromJson(s, Map.class);
+        m2.entrySet();
     }
 }
