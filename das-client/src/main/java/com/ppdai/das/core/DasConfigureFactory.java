@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ppdai.das.client.DasClientVersion;
 import com.ppdai.das.core.client.DalClient;
 import com.ppdai.das.core.client.DalDirectClient;
 import com.ppdai.das.core.status.StatusManager;
@@ -16,7 +17,7 @@ import com.ppdai.das.core.task.TaskFactory;
 public class DasConfigureFactory {
     public static AtomicReference<DasConfigureContext> configContextRef = new AtomicReference<>();
     
-    private static Logger logger = LoggerFactory.getLogger(DasCoreVersion.getLoggerName());
+    private static Logger logger = LoggerFactory.getLogger(DasClientVersion.getLoggerName());
     private static final AtomicBoolean initialzed = new AtomicBoolean(false);
     
     private static final String THREAD_NAME = "DAS-Server-Configure-Factory-ShutdownHook";

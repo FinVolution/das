@@ -10,14 +10,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.EventEnum;
-import com.ppdai.das.core.HintEnum;
-import com.ppdai.das.core.DasConfigure;
+import com.ppdai.das.client.DasClientVersion;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.DasCoreVersion;
+import com.ppdai.das.client.Parameter;
+import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.EventEnum;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.LogEntry;
 
 public abstract class ConnectionAction<T> {
@@ -111,7 +111,7 @@ public abstract class ConnectionAction<T> {
 		entry = logger.createLogEntry();
 		entry.setLogicDbName(logicDbName);
 		entry.setDbCategory(config.getDatabaseSet(logicDbName).getDatabaseCategory());
-		entry.setCoreVersion(DasCoreVersion.getVersion());
+		entry.setClientVersion(DasClientVersion.getVersion());
 		entry.setSensitive(hints.is(HintEnum.sensitive));
 		entry.setEvent(operation);
 

@@ -3,7 +3,7 @@ package com.ppdai.das.core.markdown;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.ppdai.das.core.DasCoreVersion;
+import com.ppdai.das.client.DasClientVersion;
 import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.core.status.TimeoutMarkdown;
 
@@ -43,7 +43,7 @@ public class TimeoutDetector implements ErrorDetector{
 	}
 	
 	private void markdown(String key, DetectorCounter dc, MarkDownReason reason){
-		MarkDownInfo info = new MarkDownInfo(key, DasCoreVersion.getVersion(), MarkDownPolicy.TIMEOUT, dc.getDuration());
+		MarkDownInfo info = new MarkDownInfo(key, DasClientVersion.getVersion(), MarkDownPolicy.TIMEOUT, dc.getDuration());
 		
 		info.setReason(reason);	
 		info.setTotal(dc.getRequestTimes());

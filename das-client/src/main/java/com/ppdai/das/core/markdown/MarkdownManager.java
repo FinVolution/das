@@ -12,12 +12,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ppdai.das.client.DasClientVersion;
 import com.ppdai.das.core.DasConfigureFactory;
-import com.ppdai.das.core.DasCoreVersion;
 import com.ppdai.das.core.client.DalConnection;
-import com.ppdai.das.core.status.StatusManager;
 import com.ppdai.das.core.status.DataSourceStatus;
 import com.ppdai.das.core.status.MarkdownStatus;
+import com.ppdai.das.core.status.StatusManager;
 
 public class MarkdownManager {
 	private static Logger logger = LoggerFactory.getLogger(MarkdownManager.class);
@@ -97,7 +97,7 @@ public class MarkdownManager {
 		if ((System.currentTimeMillis() - item.getAutoMarkdownTime().getTime()) <= mcb.getAutoMarkupDelay() * 1000)
 			return true;
 	
-		autoMarkup(new MarkupInfo(key, DasCoreVersion.getVersion(), 0));
+		autoMarkup(new MarkupInfo(key, DasClientVersion.getVersion(), 0));
 
 		return false;
 	}

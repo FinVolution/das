@@ -14,8 +14,8 @@ import javax.management.ObjectName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ppdai.das.client.DasClientVersion;
 import com.ppdai.das.core.DasConfigure;
-import com.ppdai.das.core.DasCoreVersion;
 import com.ppdai.das.core.markdown.MarkdownManager;
 
 /**
@@ -24,7 +24,7 @@ import com.ppdai.das.core.markdown.MarkdownManager;
  *
  */
 public class StatusManager {
-	private static Logger logger = LoggerFactory.getLogger(DasCoreVersion.getLoggerName());
+	private static Logger logger = LoggerFactory.getLogger(DasClientVersion.getLoggerName());
 	
 	private static final String GLOBAL_CONFIG_DOMAIN_PREFIX = "com.ppdai.das";
 	private static final String TYPE = "type";

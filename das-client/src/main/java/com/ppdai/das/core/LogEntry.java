@@ -36,7 +36,7 @@ public class LogEntry {
 	private String dao;
 	private String method;
 	private String source;
-	private String coreVersion;
+	private String clientVersion;
 
 	private Throwable exception;
 	private StackTraceElement stackTraceElement = new StackTraceElement("N/A", "N/A", "N/A", -1);
@@ -295,12 +295,12 @@ public class LogEntry {
 		return dbUrl;
 	}
 
-	public String getCoreVersion() {
-		return coreVersion;
+	public String getClientVersion() {
+		return clientVersion;
 	}
 
-	public void setCoreVersion(String coreVersion) {
-		this.coreVersion = coreVersion;
+	public void setClientVersion(String clientVersion) {
+		this.clientVersion = clientVersion;
 	}
 
     public int getSqlSize() {
