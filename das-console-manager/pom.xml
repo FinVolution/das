@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ppdai.das</groupId>
-    <artifactId>das-code-gen-manager-open-source</artifactId>
+    <artifactId>das-console-manager</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>das-code-gen-manager-open-source</name>
-    <description>das-code-gen-manager-open-source</description>
+    <name>das-console-manager-open-source</name>
+    <description>das-console-manager-open-source</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
