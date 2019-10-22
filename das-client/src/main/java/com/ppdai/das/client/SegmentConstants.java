@@ -1,14 +1,5 @@
 package com.ppdai.das.client;
 
-import java.sql.JDBCType;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import com.ppdai.das.client.delegate.EntityMeta;
-import com.ppdai.das.client.delegate.EntityMetaManager;
 import com.ppdai.das.client.delegate.local.PPDaiDalParser;
 import com.ppdai.das.client.sqlbuilder.BooleanExpression;
 import com.ppdai.das.client.sqlbuilder.Bracket;
@@ -18,6 +9,14 @@ import com.ppdai.das.client.sqlbuilder.Keyword;
 import com.ppdai.das.client.sqlbuilder.Operator;
 import com.ppdai.das.client.sqlbuilder.Template;
 import com.ppdai.das.client.sqlbuilder.Text;
+import com.ppdai.das.core.client.DalParser;
+
+import java.sql.JDBCType;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public interface SegmentConstants {
     ParameterDefinition VAR = ParameterDefinition.builder().name("VAR").build();
@@ -42,7 +41,7 @@ public interface SegmentConstants {
     
     Keyword INTO = new Keyword("INTO");
     
-    Keyword VALUES = new Keyword("VALUES"); 
+    Keyword VALUES = new Keyword("VALUES");
     
     Keyword SET = new Keyword("SET");
 
@@ -134,22 +133,22 @@ public interface SegmentConstants {
         return inVar(VAR.getName(), type);
     }
 
-    static Template template(String template, Parameter...parameters) {
+    static Template template(String template, Parameter... parameters) {
         return new Template(template, parameters);
     }
-    
-    static Template template(String template, ParameterDefinition...parameterDefinitions) {
+
+    static Template template(String template, ParameterDefinition... parameterDefinitions) {
         return new Template(template, parameterDefinitions);
     }
 
     static Parameter set(String name, JDBCType type, Object value) {
         return new Parameter(name, type, value);
     }
-    
+
     static Parameter set(JDBCType type, Object value) {
         return set("", type, value);
     }
-    
+
     static Parameter set(String name, JDBCType type, List<?> values) {
         return new Parameter(name, type, values);
     }
@@ -161,18 +160,18 @@ public interface SegmentConstants {
     /**
      * You can import this method to build segments in bracket in the fly
      */
-    static Object[] bracket(Object...segs) {
+    static Object[] bracket(Object... segs) {
         List<Object> l = new ArrayList<>();
         l.add(leftBracket);
-        
+
         for(Object seg: segs)
             add(l, seg);
 
         l.add(rightBracket);
         return l.toArray(new Object[segs.length + 2]);
     }
-    
-    static Object[] concatWith(Text separator, Object...segs) {
+
+    static Object[] concatWith(Text separator, Object... segs) {
         LinkedList<Object> l = new LinkedList<>();
         for(Object seg: segs) {
             add(l, seg);
@@ -182,16 +181,16 @@ public interface SegmentConstants {
         if(segs.length > 0) l.removeLast();
         return l.toArray();
     }
-    
-    static Object[] comma(Object...segs) {
+
+    static Object[] comma(Object... segs) {
         return concatWith(COMMA, segs);
     }
 
-    static Object[] allOf(Object...exps) {
+    static Object[] allOf(Object... exps) {
         return bracket(concatWith(AND, (Object[])exps));
     }
 
-    static Object[] anyOf(Object...exps) {
+    static Object[] anyOf(Object... exps) {
         return bracket(concatWith(OR, (Object[])exps));
     }
     
@@ -204,9 +203,8 @@ public interface SegmentConstants {
         }else
             list.add(value);
     }
-    
-    static Object[] match(TableDefinition table, Object sample) throws SQLException {
-        PPDaiDalParser parser = new PPDaiDalParser(sample.getClass());
+
+    static Object[] match(TableDefinition table, Object sample, DalParser parser) throws SQLException {
         Map<String, ?> fields = parser.getFields(sample);
 
         for (String columnName : parser.getColumnNames())
@@ -221,9 +219,13 @@ public interface SegmentConstants {
             conditions.add(table.getColumnDefinition(columnName).eq(fields.get(columnName)));
             conditions.add(SegmentConstants.AND);
         }
-        
+
         conditions.remove(conditions.size() -1);
-        
+
         return conditions.toArray(new Object[conditions.size()]);
+    }
+
+    static Object[] match(TableDefinition table, Object sample) throws SQLException {
+        return match(table, sample, new PPDaiDalParser(sample.getClass()));
      }
 }

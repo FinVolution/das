@@ -1,16 +1,20 @@
 package com.ppdai.das.client.sqlbuilder;
 
+import com.ppdai.das.client.ParameterDefinition;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.ppdai.das.client.ParameterDefinition;
-
 public class ColumnDefinitionExpression extends ColumnExpression implements ParameterDefinitionProvider {
     private ParameterDefinition definition;
 
-    public ColumnDefinitionExpression(String template, AbstractColumn column, ParameterDefinition definition) {
+    public ColumnDefinitionExpression(String template, AbstractColumn column){
         super(template, column);
+    }
+
+    public ColumnDefinitionExpression(String template, AbstractColumn column, ParameterDefinition definition) {
+        this(template, column);
         if(column.getType() != definition.getType())
             throw new IllegalArgumentException("The parameter definition's type does not match column type");
         

@@ -7,8 +7,10 @@ import com.ppdai.das.client.Segment;
 
 import java.util.List;
 
+import static com.ppdai.das.client.SegmentConstants.AND;
 import static com.ppdai.das.client.SegmentConstants.COMMA;
 import static com.ppdai.das.client.SegmentConstants.NOT;
+import static com.ppdai.das.client.SegmentConstants.OR;
 import static com.ppdai.das.client.SegmentConstants.leftBracket;
 import static com.ppdai.das.client.SegmentConstants.rightBracket;
 
@@ -66,7 +68,16 @@ public class TextSerializers {
     static class OperatorSerializer extends TextSerializer {
         @Override
         Text createText(String text) {
-            return text.equals(NOT.getText()) ? NOT : new Operator(text);
+            if (text.equals(NOT.getText())){
+                return NOT;
+            }
+            if(text.equals(OR.getText())){
+                return OR;
+            }
+            if(text.equals(AND.getText())){
+                return AND;
+            }
+            return new Operator(text);
         }
 
         @Override

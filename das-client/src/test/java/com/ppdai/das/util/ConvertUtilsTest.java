@@ -1,6 +1,5 @@
 package com.ppdai.das.util;
 
-import com.google.common.collect.Lists;
 import com.ppdai.das.client.delegate.remote.DasRemoteDelegate;
 import com.ppdai.das.service.Entity;
 import com.ppdai.das.service.EntityMeta;
@@ -20,14 +19,15 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+
 public class ConvertUtilsTest {
 
     @Test @Ignore
     public void testPojo2EntityMySQL() {
         TesttableMySQL pojo = createMySQLPOJO();
         EntityMeta meta = DasRemoteDelegate.extract(pojo.getClass());
-        List<Entity> entities = ConvertUtils.pojo2Entity(Arrays.asList(pojo), meta);
-        List<Map<String, Object>> maps = ConvertUtils.entity2Map(entities, meta);
+        List<Entity> entities = ConvertUtils.pojo2Entities(Arrays.asList(pojo), meta);
+        List<Map<String, Object>> maps = ConvertUtils.entity2POJOs(entities, meta, Map.class);
 
         assertEquals(1, maps.size());
         Map<String, Object> map = maps.get(0);
@@ -55,12 +55,12 @@ public class ConvertUtilsTest {
         assertArrayEquals(pojo.getMyBlob(), (byte[])map.get("MyBlob"));
     }
 
-    @Test  @Ignore
+    @Test @Ignore
     public void testPojo2EntitySQLServer() {
         TesttableSQLServer pojo = createSQLServerPOJO();
         EntityMeta meta = DasRemoteDelegate.extract(pojo.getClass());
-        List<Entity> entities = ConvertUtils.pojo2Entity(Arrays.asList(pojo), meta);
-        List<Map<String, Object>> maps = ConvertUtils.entity2Map(entities, meta);
+        List<Entity> entities = ConvertUtils.pojo2Entities(Arrays.asList(pojo), meta);
+        List<Map<String, Object>> maps = ConvertUtils.entity2POJOs(entities, meta, Map.class);
 
         assertEquals(1, maps.size());
         Map<String, Object> map = maps.get(0);
@@ -87,6 +87,49 @@ public class ConvertUtilsTest {
         assertArrayEquals(pojo.getMyVarbinary(), (byte[])map.get("MyVarbinary"));
         assertArrayEquals(pojo.getMyImage(), (byte[])map.get("MyImage"));
     }
+/*
+    @Test
+    public void testMap2EntityMySQL() {
+        TesttableMySQL pojo = createMySQLPOJO();
+        EntityMeta meta = DasRemoteDelegate.extract(pojo.getClass());
+        List<Entity> entities = ConvertUtils.pojo2Entities(Arrays.asList(pojo), meta);
+        List<Map<String, Object>> maps = ConvertUtils.entity2Map(entities, meta);
+
+        List<Entity> entities1 = ConvertUtils.map2Entity(maps, meta);
+        List<Object> l = ConvertUtils.entity2POJO(entities1, meta, TesttableMySQL.class);
+        assertTrue(pojo.equals(l.get(0)));
+    }*/
+
+   /* @Test
+    public void testMap2EntitySQLServer() {
+        TesttableSQLServer pojo = createSQLServerPOJO();
+        EntityMeta meta = DasRemoteDelegate.extract(pojo.getClass());
+        List<Entity> entities = ConvertUtils.pojo2Entities(Arrays.asList(pojo), meta);
+        List<Map<String, Object>> maps = ConvertUtils.entity2Map(entities, meta);
+
+        List<Entity> entities1 = ConvertUtils.map2Entity(maps, meta);
+        List<Object> l = ConvertUtils.entity2POJO(entities1, meta, TesttableSQLServer.class);
+        assertTrue(pojo.equals(l.get(0)));
+    }*/
+/*
+
+    @Test
+    public void testPojo2EntityIntLong(){
+        List<Entity> rows = Lists.newArrayList(new Entity().setValue(ConvertUtils.obj2bytesWithTag(5)));
+        assertEquals(5, ConvertUtils.entity2POJO(rows, null, int.class).get(0));
+
+        List<Entity> rows2 = Lists.newArrayList(new Entity().setValue(ConvertUtils.obj2bytesWithTag(999L)));
+        assertEquals(999L, ConvertUtils.entity2POJO(rows2, null, long.class).get(0));
+    }
+*/
+
+ /*   @Test
+    public void testInts2Entities(){
+        List<Entity> ints = ConvertUtils.ints2Entities(new int[]{1,2});
+        List<Object> rs = ConvertUtils.entity2POJO(ints, null, int.class);
+        assertEquals(1, (int)rs.get(0));
+        assertEquals(2, (int)rs.get(1));
+    }*/
 
     private TesttableMySQL createMySQLPOJO() {
         TesttableMySQL pojo = new TesttableMySQL();

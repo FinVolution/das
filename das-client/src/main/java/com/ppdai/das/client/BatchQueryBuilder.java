@@ -19,6 +19,11 @@ public class BatchQueryBuilder {
         return queries;
     }
 
+    public BatchQueryBuilder setHints(Hints hints) {
+        this.hints = hints;
+        return this;
+    }
+
     public Hints hints() {
         return hints;
     }

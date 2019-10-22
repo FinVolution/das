@@ -1,13 +1,13 @@
 package com.ppdai.das.client;
 
-import java.sql.JDBCType;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ppdai.das.client.sqlbuilder.BuilderContext;
 import com.ppdai.das.client.sqlbuilder.DefaultBuilderContext;
 import com.ppdai.das.client.sqlbuilder.ParameterDefinitionProvider;
 import com.ppdai.das.core.enums.ParameterDirection;
+
+import java.sql.JDBCType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BatchCallBuilder implements Segment, ParameterDefinitionProvider {
     private String name;
@@ -21,6 +21,11 @@ public class BatchCallBuilder implements Segment, ParameterDefinitionProvider {
 
     public static BatchCallBuilder call(String name) {
         return new BatchCallBuilder(name);
+    }
+
+    public BatchCallBuilder setHints(Hints hints) {
+        this.hints = hints;
+        return this;
     }
 
     public BatchCallBuilder registerOutput(String name, JDBCType type) {

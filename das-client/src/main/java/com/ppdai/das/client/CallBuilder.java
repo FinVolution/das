@@ -1,13 +1,13 @@
 package com.ppdai.das.client;
 
-import java.sql.JDBCType;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ppdai.das.client.sqlbuilder.BuilderContext;
 import com.ppdai.das.client.sqlbuilder.DefaultBuilderContext;
 import com.ppdai.das.client.sqlbuilder.ParameterProvider;
 import com.ppdai.das.core.enums.ParameterDirection;
+
+import java.sql.JDBCType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CallBuilder implements Segment, ParameterProvider {
     private String name;
@@ -23,7 +23,12 @@ public class CallBuilder implements Segment, ParameterProvider {
     public static CallBuilder call(String name) {
         return new CallBuilder(name);
     }
-    
+
+    public CallBuilder setHints(Hints hints) {
+        this.hints = hints;
+        return this;
+    }
+
     public CallBuilder registerOutput(String name, JDBCType type) {
         parameters.add(Parameter.output(name, type));
         return this;
