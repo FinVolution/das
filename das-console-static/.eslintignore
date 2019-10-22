@@ -1,0 +1,9 @@
+node_modules/*
+dist/*
+src/html/*
+neurons/*
+src/lib/*
+src/utils/*
+src/model/*
+system/*
+gulpfile.js

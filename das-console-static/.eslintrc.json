@@ -1,0 +1,43 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "installedESLint": true,
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "strict": 0,
+        "linebreak-style": [
+            "error", "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "never"
+        ],
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "warn",
+        "react/no-deprecated": "error",
+        "react/no-danger": "warn",
+        "react/prefer-es6-class": "warn",
+        "react/self-closing-comp": "warn",
+        "react/jsx-no-duplicate-props": "warn",
+        "react/jsx-no-comment-textnodes": "error",
+        "react/jsx-no-undef": "error"
+    }
+}
