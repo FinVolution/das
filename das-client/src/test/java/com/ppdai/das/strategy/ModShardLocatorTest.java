@@ -87,6 +87,10 @@ public class ModShardLocatorTest {
         assertEquals(all,  test.locateForBetween((exp(M, 2, 4))));
         assertEquals(all,  test.locateForBetween((exp(M, 2, 5))));
         
+        //For same value
+        assertEquals(set(1),  test.locateForBetween((exp(M, 1, 1))));
+        
+        //For illegal value
         try {
             assertEquals(set(0, 1),  test.locateForBetween((exp(M, 2, 1))));
             fail();
