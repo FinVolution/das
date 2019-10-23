@@ -16,7 +16,7 @@ import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.ServerConfigureLoader;
 import com.ppdai.das.core.helper.ServiceLoaderHelper;
 import com.ppdai.das.core.status.StatusManager;
-import com.ppdai.das.core.task.DalRequestExecutor;
+import com.ppdai.das.core.task.SqlRequestExecutor;
 
 /**
  * @author hejiehui
@@ -52,10 +52,10 @@ public class DasServerContext {
             serverConfigure = serverLoader.getServerConfigure();
             logger.info("Das Server Configures are " + serverConfigure);
             
-            String poolSize = serverConfigure.get(DalRequestExecutor.MAX_POOL_SIZE);
-            String keepAliveTime = serverConfigure.get(DalRequestExecutor.KEEP_ALIVE_TIME);
+            String poolSize = serverConfigure.get(SqlRequestExecutor.MAX_POOL_SIZE);
+            String keepAliveTime = serverConfigure.get(SqlRequestExecutor.KEEP_ALIVE_TIME);
 
-            DalRequestExecutor.init(poolSize, keepAliveTime);
+            SqlRequestExecutor.init(poolSize, keepAliveTime);
             StatusManager.initializeGlobal();
 
             for(String appId: serverLoader.getAppIds(serverGroup)) {
