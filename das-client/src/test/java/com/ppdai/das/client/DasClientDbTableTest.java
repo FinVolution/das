@@ -252,6 +252,22 @@ public class DasClientDbTableTest extends DataPreparer {
     }
 
     @Test
+    public void testQueryBySampleHints() throws Exception {
+        for(int i = 0; i < DB_MODE;i++) {
+            for(int j = 0; j < TABLE_MODE;j++) {
+                Person pk = new Person();
+                pk.setName("test");
+                Hints hints = new Hints().fetchSize(100).maxRows(1000).timeout(1);
+                process(pk, hints, i, j);
+                List<Person> plist = dao.queryBySample(pk, hints);
+                assertNotNull(plist);
+                assertEquals(4, plist.size());
+                assertEquals("test", pk.getName());
+            }
+        }
+    }
+
+    @Test
     public void testQueryBySampleByDate() throws Exception {
         Date date = SDF.parse(testDate);
         for(int i = 0; i < DB_MODE;i++) {
