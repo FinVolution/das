@@ -86,6 +86,13 @@ public class ModShardLocatorTest {
         assertEquals(set(2, 0),  test.locateForBetween((exp(M, 2, 3))));
         assertEquals(all,  test.locateForBetween((exp(M, 2, 4))));
         assertEquals(all,  test.locateForBetween((exp(M, 2, 5))));
+        
+        try {
+            assertEquals(set(0, 1),  test.locateForBetween((exp(M, 2, 1))));
+            fail();
+        }catch(Throwable e) {
+            assertEquals(IllegalArgumentException.class, e.getClass());
+        }
     }
 
     @Test
