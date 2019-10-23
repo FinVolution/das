@@ -216,8 +216,9 @@ public class DatabaseService {
         try {
             for (DataBaseInfo item : dBList) {
                 String dbname = item.getDbname().trim();
-                if (dbname.length() > 24) {
-                    return ServiceResult.fail(dbname + "物理库名称过长，不大于24个字符");
+                int maxlegnth = dataBaseConfiguration.getDataBaseNameMaxLength();
+                if (dbname.length() > maxlegnth) {
+                    return ServiceResult.fail(dbname + "物理库名称过长，不能大于" + maxlegnth + "个字符");
                 }
                 if (!item.isAddToGroup()) {
                     item.setDal_group_id(null);

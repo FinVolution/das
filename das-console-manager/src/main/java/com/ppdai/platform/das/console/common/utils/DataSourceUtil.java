@@ -20,7 +20,7 @@ public class DataSourceUtil {
     private static final String DRIVER_SQLSERVRE = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
     private static final String DBURL_MYSQL_CACHE = "jdbc:mysql://%s:%s/%s";
-    private static final String DBURL_SQLSERVER_CACHE = "jdbc:sqlserver://%s:%s;DatabaseName=%s";
+    public static final String DBURL_SQLSERVER_CACHE = "jdbc:sqlserver://%s:%s;DatabaseName=%s";
 
     // dbAddress+port+User+password,DataSource
     private static volatile Map<String, DataSource> cache1 = new ConcurrentHashMap<>();
