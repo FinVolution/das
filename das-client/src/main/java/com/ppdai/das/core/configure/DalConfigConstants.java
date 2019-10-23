@@ -1,7 +1,7 @@
 package com.ppdai.das.core.configure;
 
 public interface DalConfigConstants {
-    String DAL_XML = "dal.xml";
+    String DAS_XML = "das.xml";
     String DAL_CONFIG = "Dal.config";
 
     String NAME = "name";
