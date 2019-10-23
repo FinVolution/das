@@ -47,7 +47,9 @@ public class ClientDasDelegate implements DasDelegate {
     private final int[] BATCH_DEFAULT = new int[0];
     private SqlRequestExecutor executor = new SqlRequestExecutor();
     private TaskFactory taskFactory = DasConfigureFactory.getTaskFactory();
-
+    
+    private static final boolean NULLABLE = true;
+    private static final boolean NOT_NULLABLE = false;
 
     public ClientDasDelegate(String appId, String logicDbName, String customerClientVersion) {
         this.appId = appId;
@@ -76,7 +78,7 @@ public class ClientDasDelegate implements DasDelegate {
         TableDefinition table = getTableDefinition(id);
         SqlBuilder builder = queryByPkSqlBuilder(table, id, hints);
 
-        return executeQuery(builder, true, null);
+        return executeQuery(builder, NULLABLE, null);
     }
 
     protected <T> SqlBuilder queryBySampleSqlBuilder(TableDefinition table, T sample) throws SQLException {
@@ -160,51 +162,53 @@ public class ClientDasDelegate implements DasDelegate {
 
     @Override
     public int update(SqlBuilder builder) throws SQLException {
-        return executeRequest(SqlBuilderProvider.update(builder), true);
+        return executeRequest(SqlBuilderProvider.update(builder), NULLABLE);
     }
 
     @Override
     public int[] batchUpdate(BatchUpdateBuilder builder) throws SQLException {
-        return executeRequest(SingleShardProvider.create(builder), true);
+        return executeRequest(SingleShardProvider.create(builder), NULLABLE);
     }
 
     @Override
     public void call(CallBuilder builder) throws SQLException {
-        executeRequest(SingleShardProvider.create(builder), true);
+        executeRequest(SingleShardProvider.create(builder), NULLABLE);
     }
 
     @Override
     public int[] batchCall(BatchCallBuilder builder) throws SQLException {
-        return executeRequest(SingleShardProvider.create(builder), true);
+        return executeRequest(SingleShardProvider.create(builder), NULLABLE);
     }
 
     @Override
     public <T> T queryObject(SqlBuilder builder) throws SQLException {
-        if(builder.isSelectCount())
-            return executeRequest(SqlBuilderProvider.queryObject(builder, ResultMerger.LongNumberSummary::new), false);
-        return executeQuery(builder, false, null);
+        return queryObject(builder, NOT_NULLABLE);
     }
 
     @Override
     public <T> T queryObjectNullable(SqlBuilder builder) throws SQLException {
-        if(builder.isSelectCount())
-            return executeRequest(SqlBuilderProvider.queryObject(builder, ResultMerger.LongNumberSummary::new), true);
-        return executeQuery(builder, true, null);
+        return queryObject(builder, NULLABLE);
     }
 
+    private <T> T queryObject(SqlBuilder builder, boolean nullable) throws SQLException {
+        if(builder.isSelectCount())
+            return executeRequest(SqlBuilderProvider.queryObject(builder, ResultMerger.LongNumberSummary::new), nullable);
+        return executeQuery(builder, nullable, null);
+    }
+    
     @Override
     public <T> List<T> query(SqlBuilder builder) throws SQLException {
-        return executeRequest(SqlBuilderProvider.queryList(builder), true);
+        return executeRequest(SqlBuilderProvider.queryList(builder), NULLABLE);
     }
 
     @Override
     public List<?> batchQuery(BatchQueryBuilder builder) throws SQLException {
-        return executeRequest(new BatchQueryBuilderProvider(builder), true);
+        return executeRequest(new BatchQueryBuilderProvider(builder), NULLABLE);
     }
 
     @Override
     public <T> T execute(CallableTransaction<T> transaction, Hints hints) throws SQLException {
-        return executeRequest(SingleShardProvider.create(transaction, hints), true);
+        return executeRequest(SingleShardProvider.create(transaction, hints), NULLABLE);
     }
 
     private <T> T executeQuery(SqlBuilder builder, boolean nullable, Supplier<ResultMerger<T>> mergerFactory) throws SQLException {
@@ -213,14 +217,12 @@ public class ClientDasDelegate implements DasDelegate {
 
     private <T> T executeRequest(StatementConditionProvider provider, boolean nullable) throws SQLException {
         SqlBuilderRequest<T> request = new SqlBuilderRequest<>(appId, logicDbName, provider);
-        Hints dalHints = getHints(request);
-        return executor.execute(dalHints, request, nullable);
+        return execute(request, nullable);
     }
 
     private <T> int exectuteSingle(T entity, Hints hints, SingleTask<T> singleTask) throws SQLException {
         SingleTaskRequest<T> request = new SingleTaskRequest<>(appId, logicDbName, hints, entity, singleTask);
-        Hints dalHints = getHints(request);
-        return getSafeResult(executor.execute(dalHints, request));
+        return getSafeResult(execute(request, NOT_NULLABLE));
     }
 
     private <K, T> K exectuteBatch(List<T> entities, Hints hints, K defaultValue, BulkTask<K, T> bulkTask) throws SQLException {
@@ -228,8 +230,7 @@ public class ClientDasDelegate implements DasDelegate {
             return defaultValue;
 
         BulkTaskRequest<K, T> request = new BulkTaskRequest<>(appId, logicDbName, hints, entities, bulkTask);
-        Hints dalHints = getHints(request);
-        return executor.execute(dalHints, request);
+        return execute(request, NOT_NULLABLE);
     }
 
     private <T> boolean isInvalid(List<T> entities) {
@@ -276,9 +277,8 @@ public class ClientDasDelegate implements DasDelegate {
         return EntityMetaManager.extract(sample.getClass()).getTableDefinition();
     }
 
-    private <T> Hints getHints(SqlRequest<T> request) {
-        Hints hints = request.getHints();
-        hints.getVersionInfo().setCustomerClientVersion(customerClientVersion);
-        return hints;
+    private <T> T execute(SqlRequest<T> request, boolean nullable) throws SQLException {
+        request.getHints().getVersionInfo().setCustomerClientVersion(customerClientVersion);
+        return executor.execute(request, nullable);
     }
 }

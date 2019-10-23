@@ -86,19 +86,16 @@ public class SqlRequestExecutor {
 		}
 	}
 
-	public <T> T execute(final Hints hints, final SqlRequest<T> request) throws SQLException {
-		return execute(hints, request, false);
-	}
-	
-	public <T> T execute(final Hints hints, final SqlRequest<T> request, final boolean nullable) throws SQLException {
+	public <T> T execute(final SqlRequest<T> request, final boolean nullable) throws SQLException {
 	    // We don't support asynchronized execution
-		return internalExecute(hints, request, nullable);
+		return internalExecute(request, nullable);
 	}
 
-	private <T> T internalExecute(Hints hints, SqlRequest<T> request, boolean nullable) throws SQLException {
+	private <T> T internalExecute(SqlRequest<T> request, boolean nullable) throws SQLException {
 		T result = null;
 		Throwable error = null;
-		
+		Hints hints = request.getHints();
+
 		LogContext logContext = logger.start(request);
 		
 		try {
