@@ -115,7 +115,7 @@ public class Hints {
      * @return this {@code Hints}
      * @see HintEnum#shard
      */
-    public Hints inShard(Integer shardId) {
+    public Hints inShard(int shardId) {
         hints.put(HintEnum.shard, shardId);
         return this;
     }
@@ -139,7 +139,7 @@ public class Hints {
      * @return this {@code Hints}
      * @see HintEnum#tableShard
      */
-    public Hints inTableShard(Integer tableShardId) {
+    public Hints inTableShard(int tableShardId) {
         hints.put(HintEnum.tableShard, tableShardId);
         return this;
     }
@@ -182,7 +182,7 @@ public class Hints {
      * @return this {@code Hints}
      * @see HintEnum#fetchSize
      */
-    public Hints fetchSize(Integer fetchSize) {
+    public Hints fetchSize(int fetchSize) {
         Preconditions.checkArgument(fetchSize > 0, "Please input valid fetchSize > 0, fetchSize: " + fetchSize);
         set(HintEnum.fetchSize, fetchSize);
         return this;
@@ -194,7 +194,7 @@ public class Hints {
      * @return this {@code Hints}
      * @see HintEnum#maxRows
      */
-    public Hints maxRows(Integer maxRows) {
+    public Hints maxRows(int maxRows) {
         Preconditions.checkArgument(maxRows > 0, "Please input valid maxRows > 0, maxRows: " + maxRows);
         set(HintEnum.maxRows, maxRows);
         return this;

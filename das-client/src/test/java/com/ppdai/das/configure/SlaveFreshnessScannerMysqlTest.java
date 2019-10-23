@@ -88,6 +88,13 @@ public class SlaveFreshnessScannerMysqlTest {
     }
 
     @Test
+    public void testMasterOnly() throws SQLException {
+        String id = queryForObject(GET_DB_NAME, new ArrayList<>(),
+                new Hints().masterOnly().setVersionInfo(versionInfo), String.class, "das-test", DATABASE_NAME);
+        Assert.assertEquals("dal_shard_0", id);
+    }
+
+    @Test
     public void testNoFreshness() throws SQLException {
         String id = queryForObject(GET_DB_NAME, new ArrayList<>(),
                 new Hints().freshness(10).setVersionInfo(versionInfo), String.class,"das-test",NO_FRESHNESS_DATABASE_NAME);
@@ -109,6 +116,14 @@ public class SlaveFreshnessScannerMysqlTest {
     }
     
     @Test
+    public void testBelowMasterOnly() throws SQLException {
+        testBelowMasterOnly(3);
+        testBelowMasterOnly(5);
+        testBelowMasterOnly(7);
+        testBelowMasterOnly(9);
+    }
+    
+    @Test
     public void testMaster() throws SQLException {
         testMaster(2);
         testMaster(1);
@@ -121,6 +136,14 @@ public class SlaveFreshnessScannerMysqlTest {
             String id = queryForObject(GET_DB_NAME, new ArrayList<>(),
                     new Hints().setVersionInfo(versionInfo).freshness(freshness), String.class, "das-test", DATABASE_NAME);
             Assert.assertTrue(freshnessMap.get(id) <= freshness);
+        }
+    }
+     
+    private void testBelowMasterOnly(int freshness) throws SQLException {
+        for(int i = 0; i < 100; i++){
+            String id = queryForObject(GET_DB_NAME, new ArrayList<>(),
+                    new Hints().setVersionInfo(versionInfo).freshness(freshness).masterOnly(), String.class, "das-test", DATABASE_NAME);
+            Assert.assertEquals("dal_shard_0", id);
         }
     }
     
@@ -146,6 +169,14 @@ public class SlaveFreshnessScannerMysqlTest {
     }
     
     @Test
+    public void testShardBelowMasterOnly() throws SQLException {
+        testShardBelowMasterOnly(0, 3);
+        testShardBelowMasterOnly(0, 5);
+        testShardBelowMasterOnly(1, 7);
+        testShardBelowMasterOnly(1, 9);
+    }
+    
+    @Test
     public void testShardMaster() throws SQLException {
         testShardMaster(2);
         testShardMaster(1);
@@ -161,6 +192,13 @@ public class SlaveFreshnessScannerMysqlTest {
         }
     }
     
+    private void testShardBelowMasterOnly(int shardId, int freshness) throws SQLException {
+        for(int i = 0; i < 100; i++){
+            String id = queryForObject(GET_DB_NAME, new ArrayList<>(),
+                    new Hints().freshness(freshness).setVersionInfo(versionInfo).inShard(shardId), String.class, "das-test", SHARD_DATABASE_NAME);
+            Assert.assertEquals(masterShard[shardId], id);
+        }
+    }
     private void testShardMaster(int freshness) throws SQLException {
         int shardId = 0;
         while(shardId<2) {

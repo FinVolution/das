@@ -1,4 +1,4 @@
-<dal name="das-test">
+<das name="das-test">
   <databaseSets>
 
     <!-- MySqlSimple -->
@@ -100,4 +100,4 @@
          <selectField>r</selectField>
       </settings>
   </DatabaseSelector>
-</dal>
+</das>
