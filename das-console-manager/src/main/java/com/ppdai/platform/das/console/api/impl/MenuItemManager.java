@@ -27,7 +27,7 @@ public class MenuItemManager implements MenuItemConfiguration {
                     .databaseManage(true).dataBaseGroupManage(true)
                     .dataBaseSetManage(true).publicStrategyManage(false)
                     .groupManage(true).memberManage(true)
-                    .appGroupManage(true).serverManage(true)
+                    .appGroupManage(false).serverManage(false)
                     .userManage(true)
                     .groupSyncManage(true).projectSyncManage(true).dataBaseSyncManage(true).dataBaseSetSyncManage(true)
                     .build();
