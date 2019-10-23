@@ -24,7 +24,7 @@ public interface DataBaseConfiguration {
     /**
      * 更新物理库信息
      *
-     * @param user 当前操作人信息
+     * @param user         当前操作人信息
      * @param dataBaseInfo
      * @return
      * @
@@ -34,7 +34,7 @@ public interface DataBaseConfiguration {
     /**
      * 删除物理库
      *
-     * @param user 当前操作人信息
+     * @param user         当前操作人信息
      * @param dataBaseInfo
      * @return
      * @
@@ -44,7 +44,7 @@ public interface DataBaseConfiguration {
     /**
      * 同步物理库信息到配置中心
      *
-     * @param user 当前操作人信息
+     * @param user         当前操作人信息
      * @param dataBaseInfo
      * @return
      * @
@@ -54,11 +54,18 @@ public interface DataBaseConfiguration {
     /**
      * 数据校验, 两组数据或者三组对比，如果传多组，默认最多取前三组对比
      *
-     * @param user 当前操作人信息
+     * @param user         当前操作人信息
      * @param dataBaseInfo
      * @return
      * @
      */
     List<ConfigDataResponse> getCheckData(LoginUser user, DataBaseInfo dataBaseInfo) throws Exception;
+
+    /**
+     * 设置物理库名称长度最大值
+     *
+     * @return
+     */
+    int getDataBaseNameMaxLength();
 
 }

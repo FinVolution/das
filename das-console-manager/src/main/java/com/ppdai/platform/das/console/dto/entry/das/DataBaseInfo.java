@@ -3,6 +3,7 @@ package com.ppdai.platform.das.console.dto.entry.das;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ppdai.das.client.ColumnDefinition;
 import com.ppdai.das.client.TableDefinition;
+import com.ppdai.platform.das.console.common.utils.DataSourceUtil;
 import com.ppdai.platform.das.console.common.validates.group.db.AddDataBase;
 import com.ppdai.platform.das.console.common.validates.group.db.DeleteDataBase;
 import com.ppdai.platform.das.console.common.validates.group.db.UpdateDataBase;
@@ -190,7 +191,10 @@ public class DataBaseInfo {
     }
 
     public String getConnectionUrl() {
-        return String.format(SetupDataBaseService.jdbcUrlTemplate, this.getDb_address(), this.getDb_port(), this.getDb_catalog());
+        if(DataBaseEnum.MYSQL.getType().equals(db_type)){
+            return String.format(SetupDataBaseService.jdbcUrlTemplate, this.getDb_address(), this.getDb_port(), this.getDb_catalog());
+        }
+        return String.format(DataSourceUtil.DBURL_SQLSERVER_CACHE, this.getDb_address(), this.getDb_port(), this.getDb_catalog());
     }
 
     public String getDriverClassName() {
