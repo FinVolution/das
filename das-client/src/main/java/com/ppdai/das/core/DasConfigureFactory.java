@@ -11,7 +11,7 @@ import com.ppdai.das.client.DasClientVersion;
 import com.ppdai.das.core.client.DalClient;
 import com.ppdai.das.core.client.DalDirectClient;
 import com.ppdai.das.core.status.StatusManager;
-import com.ppdai.das.core.task.DalRequestExecutor;
+import com.ppdai.das.core.task.SqlRequestExecutor;
 import com.ppdai.das.core.task.TaskFactory;
 
 public class DasConfigureFactory {
@@ -41,9 +41,9 @@ public class DasConfigureFactory {
             
             try {
                 if(configContext.isLocalMode()) {
-                    DalRequestExecutor.init(
-                            configContext.getTaskFactory().getProperty(DalRequestExecutor.MAX_POOL_SIZE),
-                            configContext.getTaskFactory().getProperty(DalRequestExecutor.KEEP_ALIVE_TIME));
+                    SqlRequestExecutor.init(
+                            configContext.getTaskFactory().getProperty(SqlRequestExecutor.MAX_POOL_SIZE),
+                            configContext.getTaskFactory().getProperty(SqlRequestExecutor.KEEP_ALIVE_TIME));
             
                     StatusManager.initializeGlobal();
                     for(String appId: configContext.getAppIds())
@@ -136,7 +136,7 @@ public class DasConfigureFactory {
                 getLogger().shutdown();
                 logger.info("Dal Logger is shutdown");
 
-                DalRequestExecutor.shutdown();
+                SqlRequestExecutor.shutdown();
                 logger.info("Dal Java Client Factory is shutdown");
 
                 StatusManager.shutdown();

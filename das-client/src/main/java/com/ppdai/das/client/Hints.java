@@ -12,7 +12,6 @@ import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.DasDiagnose;
 import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasVersionInfo;
-import com.ppdai.das.core.HaContext;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.KeyHolder;
 
@@ -23,8 +22,6 @@ import com.ppdai.das.core.KeyHolder;
  * Hints is not thread safe, you should never share it among threads.
  * Hints is not designed for reuse, you should never create a Hints instance and use it in multiple operations
  *
- * Since das-client 2.2.2, DalHints is moved here and deprecated.
- * 
  * @author hejiehui
  *
  */
@@ -33,9 +30,6 @@ public class Hints {
     private boolean diagnoseMode;
     private DasDiagnose dasDiagnose;
 
-    /**
-     * Following fields are moved from DalHints
-     */
     private Map<HintEnum, Object> hints = new ConcurrentHashMap<>();
     // It is not so nice to put keyholder here, but to make Task stateless, I have no other choice
     private KeyHolder keyHolder;
@@ -259,17 +253,13 @@ public class Hints {
     /**
      * Specify which db to execute the operation
      *
-     * @param databaseName the connectionString part of the dal.xml/config
+     * @param databaseName the connectionString part of the das.xml/config
      * @return this {@code Hints}
      */
     public Hints inDatabase(String databaseName) {
         hints.put(HintEnum.designatedDatabase, databaseName);
         return this;
     }
-
-    /*
-      Following methods are moved from DalHints
-     */
 
     /**
      * Returns {@code KeyHolder} instance.
@@ -357,52 +347,31 @@ public class Hints {
     }
 
     /**
-     * Returns <tt>true</tt> if given {@code DalHintEnum} is used.
+     * Returns <tt>true</tt> if given {@code HintEnum} is used.
      *
      * @param hint
-     * @return <tt>true</tt> if given {@code DalHintEnum} is used
+     * @return <tt>true</tt> if given {@code HintEnum} is used
      */
     public boolean is(HintEnum hint) {
         return hints.containsKey(hint);
     }
 
     /**
-     * Returns object associated with given {@code DalHintEnum}.
+     * Returns object associated with given {@code HintEnum}.
      *
      * @param hint
-     * @return object associated with given {@code DalHintEnum}.
+     * @return object associated with given {@code HintEnum}.
      */
     public Object get(HintEnum hint) {
         return hints.get(hint);
     }
 
     /**
-     * Returns {@code DalHA}.
-     *
-     * @return {@code DalHA}
-     * @see HintEnum#heighAvaliable
-     */
-    public HaContext getHaContext(){
-        return (HaContext)hints.get(HintEnum.heighAvaliable);
-    }
-
-    /**
-     * Set given {@code DalHA}.
-     *
-     * @param ha
-     * @return {@code Hints}
-     */
-    public Hints setHA(HaContext ha){
-        hints.put(HintEnum.heighAvaliable, ha);
-        return this;
-    }
-
-    /**
-     * Get integer associated with given {@code DalHintEnum}.
+     * Get integer associated with given {@code HintEnum}.
      *
      * @param hint
      * @param defaultValue if null is associated
-     * @return integer associated with given {@code DalHintEnum}, defaultValue if null is associated
+     * @return integer associated with given {@code HintEnum}, defaultValue if null is associated
      */
     public Integer getInt(HintEnum hint, int defaultValue) {
         Object value = hints.get(hint);
@@ -412,20 +381,20 @@ public class Hints {
     }
 
     /**
-     * Get integer associated with given {@code DalHintEnum}.
+     * Get integer associated with given {@code HintEnum}.
      *
      * @param hint
-     * @return integer associated with given {@code DalHintEnum}.
+     * @return integer associated with given {@code HintEnum}.
      */
     public Integer getInt(HintEnum hint) {
         return (Integer)hints.get(hint);
     }
 
     /**
-     * Get string associated with given {@code DalHintEnum}.
+     * Get string associated with given {@code HintEnum}.
      *
      * @param hint
-     * @return string associated with given {@code DalHintEnum}
+     * @return string associated with given {@code HintEnum}
      */
     public String getString(HintEnum hint) {
         Object value = hints.get(hint);
@@ -439,17 +408,17 @@ public class Hints {
     }
 
     /**
-     * Get {@code Set<String>} associated with given {@code DalHintEnum}.
+     * Get {@code Set<String>} associated with given {@code HintEnum}.
      *
      * @param hint
-     * @return {@code Set<String>} associated with given {@code DalHintEnum} as {@code Set<String>}
+     * @return {@code Set<String>} associated with given {@code HintEnum} as {@code Set<String>}
      */
     public Set<String> getStringSet(HintEnum hint) {
         return (Set<String>)hints.get(hint);
     }
 
     /**
-     * Set dummy object with given {@code DalHintEnum}
+     * Set dummy object with given {@code HintEnum}
      *
      * @param hint
      * @return {@code Hints}
@@ -460,7 +429,7 @@ public class Hints {
     }
 
     /**
-     * Set dummy given object with given {@code DalHintEnum}
+     * Set dummy given object with given {@code HintEnum}
      *
      * @param hint
      * @param value
@@ -511,7 +480,7 @@ public class Hints {
     }
 
     /**
-     * Log {@code Throwable} with {@code DalLogger}.
+     * Log {@code Throwable} with {@code DasLogger}.
      *
      * @param msg
      * @param e
@@ -717,10 +686,10 @@ public class Hints {
 //     *
 //     * @param insertNullField
 //     * @return this {@code Hints}
-//     * @see DalHintEnum#insertNullField
+//     * @see HintEnum#insertNullField
 //     */
 //    public Hints insertNullField() {
-//        set(DalHintEnum.insertNullField, Boolean.TRUE);
+//        set(HintEnum.insertNullField, Boolean.TRUE);
 //        return this;
 //    }
 //
@@ -729,10 +698,10 @@ public class Hints {
 //     *
 //     * @param updateNullField
 //     * @return this {@code Hints}
-//     * @see DalHintEnum#updateNullField
+//     * @see HintEnum#updateNullField
 //     */
 //    public Hints updateNullField() {
-//        set(DalHintEnum.updateNullField, Boolean.TRUE);
+//        set(HintEnum.updateNullField, Boolean.TRUE);
 //        return this;
 //    }
 //
@@ -741,10 +710,10 @@ public class Hints {
 //     *
 //     * @param isolationLevel
 //     * @return this {@code Hints}
-//     * @see DalHintEnum#isolationLevel
+//     * @see HintEnum#isolationLevel
 //     */
 //    public Hints isolationLevel(int isolationLevel) {
-//        set(DalHintEnum.isolationLevel, isolationLevel);
+//        set(HintEnum.isolationLevel, isolationLevel);
 //        return this;
 //    }
 

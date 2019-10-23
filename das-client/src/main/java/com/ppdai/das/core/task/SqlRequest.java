@@ -8,7 +8,7 @@ import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.DasVersionInfo;
 import com.ppdai.das.core.ResultMerger;
 
-public interface DalRequest<T> {
+public interface SqlRequest<T> {
     /**
      * @return Current calling application Id
      */

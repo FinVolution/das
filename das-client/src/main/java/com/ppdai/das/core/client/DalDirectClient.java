@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import com.ppdai.das.core.EventEnum;
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.core.HintEnum;
+import com.ppdai.das.client.Parameter;
 import com.ppdai.das.core.DasConfigure;
 import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasLogger;
+import com.ppdai.das.core.EventEnum;
+import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.KeyHolder;
 import com.ppdai.das.core.LogEntry;
-import com.ppdai.das.client.Parameter;
 import com.ppdai.das.core.helper.DalColumnMapRowMapper;
 import com.ppdai.das.core.helper.DalRowMapperExtractor;
 import com.ppdai.das.core.helper.HintsAwareExtractor;
@@ -424,7 +424,7 @@ public class DalDirectClient implements DalClient {
         action.beginConnect();
 
         long connCost = System.currentTimeMillis();
-        action.connHolder = transManager.getConnection(hints, action.operation);
+        action.connHolder = transManager.getConnection(hints, action.operation, action.highAvalible);
         Connection conn = action.connHolder.getConn();
         connCost = System.currentTimeMillis() - connCost;
         action.entry.setConnectionCost(connCost);

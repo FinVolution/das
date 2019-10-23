@@ -8,8 +8,8 @@ import com.ppdai.das.client.BatchQueryBuilder;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.Parameter;
 import com.ppdai.das.client.SqlBuilder;
-import com.ppdai.das.core.ResultMerger;
 import com.ppdai.das.core.client.DalResultSetExtractor;
+import com.ppdai.das.core.ResultMerger;
 import com.ppdai.das.core.helper.DalListMerger;
 import com.ppdai.das.core.helper.DalRowMapperExtractor;
 import com.ppdai.das.core.helper.MultipleResultMerger;
@@ -17,7 +17,7 @@ import com.ppdai.das.strategy.ConditionList;
 
 public class BatchQueryBuilderProvider implements StatementConditionProvider {
     private BatchQueryBuilder builder;
-    
+
     public BatchQueryBuilderProvider(BatchQueryBuilder builder) {
         this.builder = builder;
     }
@@ -60,7 +60,7 @@ public class BatchQueryBuilderProvider implements StatementConditionProvider {
     public <T> SqlBuilderTask<T> buildTask(String appId, String logicDbName) throws SQLException {
         List<DalResultSetExtractor<?>> extractors = new LinkedList<>();
         for(SqlBuilder entry: builder.getQueries()) {
-            extractors.add(new DalRowMapperExtractor(StatementConditionProvider.getMapper(entry.getEntityType())));
+            extractors.add(new DalRowMapperExtractor(StatementConditionProvider.getMapper(entry)));
         }
 
         return (SqlBuilderTask<T>)new BatchQueryBuilderTask(appId, logicDbName, extractors);

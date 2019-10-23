@@ -13,7 +13,7 @@ public class BatchUpdateBuilder implements Segment, ParameterDefinitionProvider 
 
     private List<Object[]> valuesList = new ArrayList<>();
     private Hints hints = new Hints();
-    
+
     private String[] statements;
 
     public BatchUpdateBuilder(SqlBuilder builder) {
@@ -38,13 +38,13 @@ public class BatchUpdateBuilder implements Segment, ParameterDefinitionProvider 
 
         builder.append(new Template(statement, definitions));
     }
-    
+
     public BatchUpdateBuilder(String[] statements) {
         this.statements = statements;
     }
 
     public void addBatch(Object...values) {
-        checkPermission();        
+        checkPermission();
         valuesList.add(values);
     }
 
@@ -68,7 +68,7 @@ public class BatchUpdateBuilder implements Segment, ParameterDefinitionProvider 
     public Hints hints() {
         return builder == null ? hints : builder.hints();
     }
-    
+
     private void checkPermission() {
         if(statements != null)
             throw new IllegalArgumentException("Parameter should not be defined for multiple SQL update");
@@ -82,6 +82,15 @@ public class BatchUpdateBuilder implements Segment, ParameterDefinitionProvider 
     @Override
     public List<ParameterDefinition> buildDefinitions() {
         return builder.buildDefinitions();
+    }
+
+    public BatchUpdateBuilder setHints(Hints hints) {
+        this.hints = hints;
+        return this;
+    }
+
+    public Hints getHints() {
+        return hints;
     }
 
     public String toString() {

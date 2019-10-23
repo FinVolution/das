@@ -41,7 +41,7 @@ public interface ServerConfigureLoader {
      */
     DasConfigure load(String appId) throws Exception;
 
-    DasLogger getDalLogger() throws Exception;
+    DasLogger getDasLogger() throws Exception;
 
     TaskFactory getDalTaskFactory() throws Exception;
 

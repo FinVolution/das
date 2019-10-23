@@ -17,7 +17,7 @@ import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.KeyHolder;
 import com.ppdai.das.core.ResultMerger;
 
-public class SingleTaskRequest<T> implements DalRequest<Integer> {
+public class SingleTaskRequest<T> implements SqlRequest<Integer> {
     private String appId;
     private String logicDbName;
     private String logicTableName;

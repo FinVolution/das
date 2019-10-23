@@ -22,7 +22,7 @@ import com.ppdai.das.core.DasVersionInfo;
 import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.KeyHolder;
 
-public class BulkTaskRequest<K, T> implements DalRequest<K>{
+public class BulkTaskRequest<K, T> implements SqlRequest<K>{
     private String appId;
     private String logicDbName;
     private String rawTableName;

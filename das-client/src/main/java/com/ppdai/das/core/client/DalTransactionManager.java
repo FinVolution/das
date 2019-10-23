@@ -1,20 +1,15 @@
 package com.ppdai.das.core.client;
 
-import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+import com.ppdai.das.client.Hints;
 import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.ErrorCode;
 import com.ppdai.das.core.EventEnum;
-import com.ppdai.das.client.Hints;
+import com.ppdai.das.core.HaContext;
 import com.ppdai.das.core.markdown.MarkdownManager;
-
-import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.CallbackFilter;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.NoOp;
 
 public class DalTransactionManager {
 	private DalConnectionManager connManager;
@@ -34,7 +29,7 @@ public class DalTransactionManager {
 
 		if(transaction == null) {
 			transaction = new DalTransaction( 
-					getConnection(hints, true, action.operation), 
+					getConnection(hints, true, action.operation, action.highAvalible), 
 					connManager.getLogicDbName());
 			
 			transactionHolder.set(transaction);
@@ -86,8 +81,8 @@ public class DalTransactionManager {
 		transaction.rollbackTransaction();
 	}
 	
-	public DalConnection getConnection(Hints hints, EventEnum operation) throws SQLException {
-		return getConnection(hints, false, operation);
+	public DalConnection getConnection(Hints hints, EventEnum operation, HaContext ha) throws SQLException {
+		return getConnection(hints, false, operation, ha);
 	}
 	
 	public static String getLogicDbName() {
@@ -108,11 +103,11 @@ public class DalTransactionManager {
 					null;
 	}
 	
-	private DalConnection getConnection(Hints hints, boolean useMaster, EventEnum operation) throws SQLException {
+	private DalConnection getConnection(Hints hints, boolean useMaster, EventEnum operation, HaContext ha) throws SQLException {
 		DalTransaction transaction = transactionHolder.get();
 		
 		if(transaction == null) {
-			return connManager.getNewConnection(hints, useMaster, operation);
+			return connManager.getNewConnection(hints, useMaster, operation, ha);
 		} else {
 			transaction.validate(connManager.getLogicDbName(), connManager.evaluateShard(hints));
 			return transaction.getConnection();

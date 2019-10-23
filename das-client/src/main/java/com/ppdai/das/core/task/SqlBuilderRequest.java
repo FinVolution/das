@@ -22,7 +22,7 @@ import com.ppdai.das.core.ResultMerger;
 import com.ppdai.das.core.client.DalClient;
 import com.ppdai.das.strategy.ConditionList;
 
-public class SqlBuilderRequest<T> implements DalRequest<T>{
+public class SqlBuilderRequest<T> implements SqlRequest<T>{
     private String appId;
     private DasLogger logger;
     private String logicDbName;

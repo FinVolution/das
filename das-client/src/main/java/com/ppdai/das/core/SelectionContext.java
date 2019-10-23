@@ -18,16 +18,17 @@ public class SelectionContext {
     
     public SelectionContext(String appId, String logicDbName, Hints hints, String shard,
             boolean isMaster,
-            boolean isSelect) {
+            boolean isSelect,
+            HaContext ha) {
         this.appId = appId;
         this.logicDbName = logicDbName;
         this.hints = hints;
         this.shard = shard;
         if(hints != null) {
-            this.ha = hints.getHaContext();
             this.designatedDatabase = hints.getString(HintEnum.designatedDatabase);
         }
         
+        this.ha = ha;
         this.masterOnly = isMaster;
         this.select = isSelect;
     }
