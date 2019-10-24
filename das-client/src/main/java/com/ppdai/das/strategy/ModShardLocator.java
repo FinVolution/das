@@ -34,17 +34,25 @@ public class ModShardLocator<CTX extends ConditionContext> extends AbstractCommo
         long lowerValue = getLongValue(ctx.getValue());
         long upperValue = getLongValue(ctx.getSecondValue());
         
+        Set<String> shards = new HashSet<>();
+        // Illegal case for between
         if(lowerValue > upperValue)
-            throw new IllegalArgumentException(String.format("The lower argument %d is greater than upper argument %d in between", lowerValue, upperValue));
+            return shards;
         
-        // Cross shard case
+        // Cross all shards case
         if(upperValue - lowerValue >= (mod -1))
             return ctx.getAllShards();
         
+        //For same value
+        if(upperValue == lowerValue) {
+            int shard = Integer.parseInt(mod(mod, ctx.getValue()));
+            shards.add(String.valueOf(shard));
+            return shards;
+        }
+
         int lowerShard = Integer.parseInt(mod(mod, ctx.getValue()));
         int upperShard = Integer.parseInt(mod(mod, ctx.getSecondValue()));
         
-        Set<String> shards = new HashSet<>();
         if(lowerShard < upperShard) {
             while(lowerShard <= upperShard)
                 shards.add(String.valueOf(lowerShard++));

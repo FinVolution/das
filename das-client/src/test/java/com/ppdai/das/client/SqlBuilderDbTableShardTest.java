@@ -427,6 +427,11 @@ public class SqlBuilderDbTableShardTest extends DataPreparer {
                     result = dao.queryObject(builder);
                     assertEquals(name,  result);
     
+                    //For illegal between value, lower value is greater than upper value
+                    builder = select(p.Name).from(p).where(p.CountryID.between(4, 0)).or(p.Name.eq(name)).into(String.class);
+                    result = dao.queryObject(builder);
+                    assertEquals(name,  result);
+    
                     builder = select(p.Name).from(p).where(p.Name.eq(name)).and(bracket(p.CountryID.eq(0), OR, p.CountryID.eq(1))).into(String.class);
                     result = dao.queryObject(builder);
                     assertEquals(name,  result);

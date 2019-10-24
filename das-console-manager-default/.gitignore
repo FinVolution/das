@@ -34,3 +34,6 @@ target
 out
 gen
 
+.settings
+.classpath
+.project
