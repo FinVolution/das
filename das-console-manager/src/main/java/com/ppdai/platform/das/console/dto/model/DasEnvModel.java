@@ -20,5 +20,6 @@ public class DasEnvModel {
     private boolean isLocal;
     private boolean isDasLogin;
     private boolean isDev;
+    private ConsModel cons;
 
 }

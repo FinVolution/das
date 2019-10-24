@@ -59,7 +59,7 @@ public class DataBaseManager implements DataBaseConfiguration {
 
     @Override
     public int getDataBaseNameMaxLength() {
-        return 100;
+        return 22;
     }
 
     private List<ItemResponse> toList(DataBaseInfo dataBaseInfo) {

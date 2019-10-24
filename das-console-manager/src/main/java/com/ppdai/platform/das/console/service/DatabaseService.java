@@ -101,6 +101,11 @@ public class DatabaseService {
                 }
             }
         }
+        String dbname = dataBaseInfo.getDbname().trim();
+        int maxlegnth = dataBaseConfiguration.getDataBaseNameMaxLength();
+        if (dbname.length() > maxlegnth) {
+            return ServiceResult.fail(dbname + "物理库名称过长，不能大于" + maxlegnth + "个字符");
+        }
         dataBaseInfo.setDb_password(DasEnv.encdecConfiguration.encrypt(dataBaseInfo.getDb_password()));
         Long dbId = dataBaseDao.insertDataBaseInfo(dataBaseInfo);
         if (dbId <= 0) {

@@ -117,7 +117,7 @@ export default class DatabaseTab extends Component {
                                             <InputPlus {..._props}
                                                        defaultValue={dbname}
                                                        valueLink={`DatabaseModel.dalGroupDBList.${index}.dbname`}
-                                                       validRules={{isDbName: true, maxLength: 22}}
+                                                       validRules={{isDbName: true, maxLength: UserEnv.getCons().dataBaseNameMaxLength}}
                                                        onChangeCallBack={onChangeCallback}
                                                        placeholder={das_msg.apollo_namespace}/>
                                         </td>

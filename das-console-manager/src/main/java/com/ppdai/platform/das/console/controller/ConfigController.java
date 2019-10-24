@@ -1,5 +1,6 @@
 package com.ppdai.platform.das.console.controller;
 
+import com.ppdai.platform.das.console.api.DataBaseConfiguration;
 import com.ppdai.platform.das.console.api.DefaultConfiguration;
 import com.ppdai.platform.das.console.api.SyncConfiguration;
 import com.ppdai.platform.das.console.common.utils.DasEnv;
@@ -7,6 +8,7 @@ import com.ppdai.platform.das.console.config.annotation.CurrentUser;
 import com.ppdai.platform.das.console.constant.Consts;
 import com.ppdai.platform.das.console.dto.entry.das.DataBaseInfo;
 import com.ppdai.platform.das.console.dto.entry.das.LoginUser;
+import com.ppdai.platform.das.console.dto.model.ConsModel;
 import com.ppdai.platform.das.console.dto.model.DasEnvModel;
 import com.ppdai.platform.das.console.dto.model.ServiceResult;
 import com.ppdai.platform.das.console.service.ConfigService;
@@ -38,6 +40,9 @@ public class ConfigController {
     private DefaultConfiguration defaultConfiguration;
 
     @Autowired
+    private DataBaseConfiguration dataBaseConfiguration;
+
+    @Autowired
     private SyncConfiguration syncConfiguration;
 
     @RequestMapping(value = "/datasourceValid", method = RequestMethod.GET)
@@ -62,6 +67,7 @@ public class ConfigController {
                     .isAdmin(permissionService.isManagerById(user.getId()))
                     .isLocal(DasEnv.isLocal(request))
                     .isDev(consts.applicationIsdev)
+                    .cons(ConsModel.builder().dataBaseNameMaxLength(dataBaseConfiguration.getDataBaseNameMaxLength()).build())
                     .build();
             return ServiceResult.success(configService.removeSensitiveInfo(dasEnvModel));
         } catch (Exception e) {
