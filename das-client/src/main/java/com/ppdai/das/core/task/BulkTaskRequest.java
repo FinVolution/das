@@ -228,7 +228,7 @@ public class BulkTaskRequest<K, T> implements SqlRequest<K>{
                 }
 
                 mergePartial(task, hints.getKeyHolder(), indexList, localHints.getKeyHolder(), error);
-                hints.handleError("Error when execute table shard operation", error);
+                DasException.handleError("Error when execute table shard operation", error);
             }
             return merger.merge();
         }

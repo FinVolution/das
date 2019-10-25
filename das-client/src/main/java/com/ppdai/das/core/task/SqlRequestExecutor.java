@@ -182,7 +182,7 @@ public class SqlRequestExecutor {
 			try {
 				merger.addPartial(entry.getKey(), entry.getValue().get());
 			} catch (Throwable e) {
-				hints.handleError("There is error during parallel execution: ", e);
+			    DasException.handleError("There is error during parallel execution: ", e);
 			}
 		}
 		
@@ -194,7 +194,7 @@ public class SqlRequestExecutor {
 			try {
 				merger.addPartial(shard, new RequestTaskWrapper<T>(shard, tasks.get(shard), logContext).call());
 			} catch (Throwable e) {
-				hints.handleError("There is error during sequential execution: ", e);
+			    DasException.handleError("There is error during sequential execution: ", e);
 			}
 		}
 		

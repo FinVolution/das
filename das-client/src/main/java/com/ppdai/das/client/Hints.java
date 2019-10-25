@@ -1,6 +1,5 @@
 package com.ppdai.das.client;
 
-import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
-import com.ppdai.das.core.DasConfigureFactory;
 import com.ppdai.das.core.DasDiagnose;
-import com.ppdai.das.core.DasException;
 import com.ppdai.das.core.DasVersionInfo;
 import com.ppdai.das.core.HintEnum;
 import com.ppdai.das.core.KeyHolder;
@@ -477,22 +474,6 @@ public class Hints {
             return this;
 
         return set(HintEnum.parameters, parameters);
-    }
-
-    /**
-     * Log {@code Throwable} with {@code DasLogger}.
-     *
-     * @param msg
-     * @param e
-     * @throws SQLException
-     */
-    public void handleError(String msg, Throwable e) throws SQLException {
-        if(e == null)
-            return;
-
-        // Just make sure error is not swallowed by us
-        DasConfigureFactory.getLogger().error(msg, e);
-        throw DasException.wrap(e);
     }
 
     /**
