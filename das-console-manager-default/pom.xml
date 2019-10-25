@@ -40,7 +40,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.ppdai.platform.das.console.DasConsoleManagerApplication</mainClass>
+                    <mainClass>com.ppdai.das.console.DasConsoleManagerApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
