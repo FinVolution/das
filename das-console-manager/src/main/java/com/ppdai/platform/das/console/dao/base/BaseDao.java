@@ -14,9 +14,7 @@ import java.util.List;
 @Component
 public class BaseDao {
 
-    // @Qualifier("dasClient")
     @Setter
-    //@Autowired
     public DasClient dasClient;
 
     public DasClient getDasClient() {

@@ -21,7 +21,7 @@ public class ResourceUtil {
 
     public static final String SCRIPT_FILE = "script.sql";
     public static final String DATASOURCE_XML = "datasource.xml";
-    public static final String DAL_XML = "dal.xml";
+    public static final String DAL_XML = "das.xml";
     public static final String jdbcUrlTemplate = "jdbc:mysql://%s:%s/%s";
 
     public static final String DATASOURCE = "Datasource";
@@ -33,7 +33,7 @@ public class ResourceUtil {
     public static final String DATASOURCE_MYSQL_DRIVER = "com.mysql.jdbc.Driver";
 
     public static final String DATA_SET_BASE = "das_code_gen";
-    public static final String DATA_SET_ROOT = "dal";
+    public static final String DATA_SET_ROOT = "das";
     public static final String DATA_BASE = "dao";
     public static final String DAS_SET_APPID = "das_console";
 

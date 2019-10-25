@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 @SpringBootApplication
 @ServletComponentScan
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
-public class CodeGenManagerApplication extends SpringBootServletInitializer {
+public class DasConsoleManagerApplication extends SpringBootServletInitializer {
 
     @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
@@ -37,10 +37,10 @@ public class CodeGenManagerApplication extends SpringBootServletInitializer {
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(CodeGenManagerApplication.class);
+        return application.sources(DasConsoleManagerApplication.class);
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(CodeGenManagerApplication.class, args);
+        SpringApplication.run(DasConsoleManagerApplication.class, args);
     }
 }

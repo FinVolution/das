@@ -33,6 +33,7 @@ public class ConfigService {
         try {
             this.addConfig(dataBaseInfo.getDbname(), dataBaseInfo.getDb_address(), dataBaseInfo.getDb_port(), dataBaseInfo.getDb_user(), dataBaseInfo.getDb_password());
         } catch (Exception e) {
+            e.printStackTrace();
             return ServiceResult.fail("初始化数据异常:操作数据库需要DROP TABLE，和 CTEATE TABLE权限！！" + StringUtil.getMessage(e));
         }
         return ServiceResult.success();

@@ -30,7 +30,7 @@ public class SetupDatabaseDao extends BaseDao {
         ResultSet resultSet = null;
 
         try {
-            connection = DasConfigureFactory.getDalConfigure(ResourceUtil.DAS_SET_APPID).getLocator().getConnection(ResourceUtil.DATA_BASE);
+            connection = DasConfigureFactory.getConfigure(ResourceUtil.DAS_SET_APPID).getConnectionLocator().getConnection(ResourceUtil.DATA_BASE);
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             if (databaseMetaData == null) {
                 return set;

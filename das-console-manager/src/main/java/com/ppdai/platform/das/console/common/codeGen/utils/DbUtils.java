@@ -3,7 +3,7 @@ package com.ppdai.platform.das.console.common.codeGen.utils;
 import com.mysql.jdbc.StringUtils;
 import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.Parameter;
-import com.ppdai.das.core.DalResultSetExtractor;
+import com.ppdai.das.core.client.DalResultSetExtractor;
 import com.ppdai.das.core.client.DalStatementCreator;
 import com.ppdai.das.core.enums.DatabaseCategory;
 import com.ppdai.platform.das.console.common.codeGen.CodeGenConsts;

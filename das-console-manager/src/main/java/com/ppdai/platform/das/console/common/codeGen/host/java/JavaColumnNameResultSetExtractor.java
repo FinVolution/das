@@ -1,6 +1,6 @@
 package com.ppdai.platform.das.console.common.codeGen.host.java;
 
-import com.ppdai.das.core.DalResultSetExtractor;
+import com.ppdai.das.core.client.DalResultSetExtractor;
 import com.ppdai.platform.das.console.common.codeGen.CodeGenConsts;
 import com.ppdai.platform.das.console.common.codeGen.enums.DatabaseCategory;
 import com.ppdai.platform.das.console.common.codeGen.host.AbstractParameterHost;
