@@ -37,6 +37,12 @@ UserEnv.getSecurityCenterName = () => {
     return window.DASENV.securityName ? window.DASENV.securityName : '安全服务'
 }
 
+UserEnv.getCons = () => {
+    return window.DASENV.cons ? window.DASENV.cons : {
+        dataBaseNameMaxLength: 100
+    }
+}
+
 UserEnv.refresh = callBack => {
     FrwkUtil.fetch.fetchGet('/config/env', null, UserEnv, data => {
         if (data.code === 200) {

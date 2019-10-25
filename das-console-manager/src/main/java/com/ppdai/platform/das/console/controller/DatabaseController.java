@@ -143,7 +143,6 @@ public class DatabaseController {
     @RequestMapping(value = "/addDbs", method = RequestMethod.POST)
     public ServiceResult<String> addDbs(@RequestBody List<DataBaseInfo> list, @CurrentUser LoginUser user, Errors errors) throws Exception {
         ValidateResult validateRes = databaseService.validatePermision(user, errors)
-                //.addAssert(apolloResourceService.isDataBaseNamespaceListNotExist(list))
                 .addAssert(() -> databaseService.encryptAndOptUser(user, list))
                 .addAssert(() -> databaseService.addDataCenter(user, list))
                 .addAssert(() -> databaseService.addDataBaseList(list)).validate();

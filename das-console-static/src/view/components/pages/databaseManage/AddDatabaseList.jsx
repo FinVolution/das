@@ -154,7 +154,7 @@ export default class AddDatabaseList extends Component {
                     this.cleanSubmitDbs()
                 })
             } else {
-                this.showErrorsNotification('添加失败!!! ' + data.msg + '，DB中已经存在!')
+                this.showErrorsNotification('添加失败!!! ' + data.msg)
                 this.setState({
                     submitLoading: false
                 }, () => {
