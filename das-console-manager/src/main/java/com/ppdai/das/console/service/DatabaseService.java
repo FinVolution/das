@@ -11,6 +11,7 @@ import com.ppdai.das.console.common.exceptions.TransactionException;
 import com.ppdai.das.console.common.utils.DasEnv;
 import com.ppdai.das.console.common.utils.StringUtil;
 import com.ppdai.das.console.common.validates.chain.ValidatorChain;
+import com.ppdai.das.console.constant.Consts;
 import com.ppdai.das.console.constant.Message;
 import com.ppdai.das.console.dao.*;
 import com.ppdai.das.console.dto.entry.configCheck.ConfigDataResponse;
@@ -36,6 +37,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class DatabaseService {
+
+    @Autowired
+    private Consts consts;
 
     @Autowired
     private Message message;
@@ -102,7 +106,7 @@ public class DatabaseService {
             }
         }
         String dbname = dataBaseInfo.getDbname().trim();
-        int maxlegnth = dataBaseConfiguration.getDataBaseNameMaxLength();
+        int maxlegnth = consts.dataBaseNameMaxLength;
         if (dbname.length() > maxlegnth) {
             return ServiceResult.fail(dbname + "物理库名称过长，不能大于" + maxlegnth + "个字符");
         }
@@ -221,7 +225,7 @@ public class DatabaseService {
         try {
             for (DataBaseInfo item : dBList) {
                 String dbname = item.getDbname().trim();
-                int maxlegnth = dataBaseConfiguration.getDataBaseNameMaxLength();
+                int maxlegnth = consts.dataBaseNameMaxLength;
                 if (dbname.length() > maxlegnth) {
                     return ServiceResult.fail(dbname + "物理库名称过长，不能大于" + maxlegnth + "个字符");
                 }

@@ -70,7 +70,6 @@ public class IndexController {
                     String loginUrl = userConfiguration.fetchLoginUrl(request, response);
                     UserIdentity userIdentity = userConfiguration.getUserIdentity(request, response);
                     if (isNeedDasLogin) {
-                        request.getSession().removeAttribute("isNeedDasLogin");
                         request.setAttribute("isDasLogin", "true");
                     } else {
                         if (userIdentity == null || StringUtils.isBlank(userIdentity.getUserName()) || StringUtils.isBlank(userIdentity.getUserEmail())) {
