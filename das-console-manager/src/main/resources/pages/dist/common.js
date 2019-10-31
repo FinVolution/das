@@ -88,7 +88,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 /******/
-/******/ 			script.src = __webpack_require__.p + "" + ({"1":"index"}[chunkId]||chunkId) + "." + {"1":"259b58ab6d319b0da211"}[chunkId] + ".js";
+/******/ 			script.src = __webpack_require__.p + "" + ({"1":"index"}[chunkId]||chunkId) + "." + {"1":"926c0e09ab74c160a1e0"}[chunkId] + ".js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -3415,7 +3415,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ (function(module, exports) {
 
-	var core = module.exports = { version: '2.6.10' };
+	var core = module.exports = { version: '2.6.9' };
 	if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 

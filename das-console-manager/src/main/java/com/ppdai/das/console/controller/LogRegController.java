@@ -84,6 +84,7 @@ public class LogRegController {
             String pw = user.getPassword();
             if (StringUtils.isNotBlank(pw) && pw.equals(encdecConfiguration.parseUnidirection(loginUser.getPassword()))) {
                 request.getSession().removeAttribute("isConfigNeedDasLogin");
+                request.getSession().setAttribute("isNeedDasLogin", "false");
                 UserContext.setUser(request, user);
                 return ServiceResult.success(LoginUser.builder().userRealName(user.getUserRealName()).id(user.getId()).userEmail(user.getUserEmail()).build());
             }

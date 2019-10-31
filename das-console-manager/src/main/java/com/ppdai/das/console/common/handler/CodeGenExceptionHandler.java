@@ -5,6 +5,9 @@ import com.ppdai.das.console.common.exceptions.ValidataException;
 import com.ppdai.das.console.common.utils.StringUtil;
 import com.ppdai.das.console.dto.model.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.List;
 
 @Slf4j
 @ControllerAdvice
@@ -22,14 +26,22 @@ public class CodeGenExceptionHandler {
     private Object exeute(HttpServletRequest reqest, HttpServletResponse response, Exception e) {
         log.error(StringUtil.getMessage(e), e);
         //if (isAjax(reqest)) {
-            String exMsg = StringUtil.getMessage(e);
-            if (e instanceof InvocationTargetException && exMsg == null) {
-                exMsg = ((InvocationTargetException) e).getTargetException().getMessage();
+        String exMsg = StringUtil.getMessage(e);
+        if (e instanceof InvocationTargetException && exMsg == null) {
+            exMsg = ((InvocationTargetException) e).getTargetException().getMessage();
+        } else if (e instanceof MethodArgumentNotValidException) {
+            List<String> list = StringUtil.toList(exMsg, "default message");
+            if (CollectionUtils.isNotEmpty(list) && list.size() > 1) {
+                List<FieldError> errors = ((MethodArgumentNotValidException) e).getBindingResult().getFieldErrors();
+                if (CollectionUtils.isNotEmpty(list)) {
+                    exMsg = errors.get(0).getDefaultMessage();
+                }
             }
-            if (exMsg == null) {
-                exMsg = e.toString();
-            }
-            return ServiceResult.fail(exMsg);
+        }
+        if (exMsg == null) {
+            exMsg = e.toString();
+        }
+        return ServiceResult.fail(exMsg);
        /* } else {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("/err/500/index.html");

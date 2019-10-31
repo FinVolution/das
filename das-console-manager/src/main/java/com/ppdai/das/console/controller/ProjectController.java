@@ -138,12 +138,11 @@ public class ProjectController {
         ValidateResult validateRes = projectService.validatePermision(user, project, errors)
                 .addAssert(() -> projectService.isNotExistByName(project), project.getName() + " 已存在！")
                 .addAssert(() -> projectService.isNotExistByAppId(project), "APPID:" + project.getApp_id() + " 已存在！")
-                .addAssert(() -> projectService.updateProject(project))
-                .addAssert(() -> projectService.updateDataCenter(user, oldProject, oldProjectView, project)).validate();
+                .addAssert(() -> projectService.updateProject(project)).validate();
         if (!validateRes.isValid()) {
             return ServiceResult.fail(validateRes.getSummarize());
         }
-        return ServiceResult.success();
+        return projectService.updateDataCenter(user, oldProject, oldProjectView, project);
     }
 
     /**
@@ -221,12 +220,11 @@ public class ProjectController {
         ValidateResult validateRes = projectService.validatePermision(user, project, errors)
                 .addAssert(() -> groupService.isNotExistInProjectAndGroup(project.getName()), project.getName() + " 已存在！且组名和项目名不能重复！")
                 .addAssert(() -> projectDao.getCountByAppId(project.getApp_id()) == 0, "APPID:" + project.getApp_id() + " 已存在！")
-                .addAssert(() -> projectService.insertProject(project))
-                .addAssert(() -> projectService.addDataCenter(user, project)).validate();
+                .addAssert(() -> projectService.insertProject(project)).validate();
         if (!validateRes.isValid()) {
             return ServiceResult.fail(validateRes.getSummarize());
         }
-        return ServiceResult.success();
+        return projectService.addDataCenter(user, project);
     }
 
     @RequestMapping(value = "/generate", method = RequestMethod.POST)

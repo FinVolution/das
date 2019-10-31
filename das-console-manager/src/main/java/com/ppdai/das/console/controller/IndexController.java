@@ -73,7 +73,7 @@ public class IndexController {
                         request.setAttribute("isDasLogin", "true");
                     } else {
                         if (userIdentity == null || StringUtils.isBlank(userIdentity.getUserName()) || StringUtils.isBlank(userIdentity.getUserEmail())) {
-                            request.getSession().setAttribute("isDasLogin", "false");
+                            //request.getSession().setAttribute("isDasLogin", "false");
                             return "redirect:" + loginUrl;
                         }
                         if (StringUtils.isNotBlank(userIdentity.getUserName())) {

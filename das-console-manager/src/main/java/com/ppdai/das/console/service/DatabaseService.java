@@ -27,6 +27,7 @@ import com.ppdai.das.console.dto.view.treeSelect.TreeSelectView;
 import com.ppdai.das.console.enums.DbMasterSlaveEnum;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -228,6 +229,8 @@ public class DatabaseService {
                 int maxlegnth = consts.dataBaseNameMaxLength;
                 if (dbname.length() > maxlegnth) {
                     return ServiceResult.fail(dbname + "物理库名称过长，不能大于" + maxlegnth + "个字符");
+                }else if(StringUtils.isBlank(dbname)){
+                    return ServiceResult.fail("物理库标识符不能为空！");
                 }
                 if (!item.isAddToGroup()) {
                     item.setDal_group_id(null);
