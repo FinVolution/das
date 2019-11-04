@@ -61,11 +61,5 @@ public interface DataBaseConfiguration {
      */
     List<ConfigDataResponse> getCheckData(LoginUser user, DataBaseInfo dataBaseInfo) throws Exception;
 
-    /**
-     * 设置物理库名称长度最大值
-     *
-     * @return
-     */
-    int getDataBaseNameMaxLength();
 
 }

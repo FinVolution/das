@@ -8,6 +8,9 @@ public class Consts {
 
     public final Long SUPER_GROUP_ID = 1L;
 
+    @Value("${dataBase.name.max.length:100}")
+    public int dataBaseNameMaxLength;
+
     @Value("${test.permissions.validate.canManagerCRUDManager}")
     public boolean canManagerCRUDManager;
 

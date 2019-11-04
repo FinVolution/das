@@ -40,11 +40,9 @@ public class UserInitCommandLineRunner implements ApplicationRunner {
         DasEnv.setDefaultConfiguration(defaultConfiguration);
         DasEnv.setAdditionalConfiguration(additionalConfiguration);
         DasEnv.setEncdecConfiguration(encdecConfiguration);
-        log.info("---==--- 服务启动后，当前环境 ---==---> " + consts.springActive);
+        //log.info("---==--- 服务启动后，当前环境 ---==---> " + consts.springActive);
         log.info("---==--- 服务启动后，当前路径 ---==---> " + ResourceUtil.getSingleInstance().getDbXmlPath());
-        log.info("---==--- 服务启动后，初始化数据 ---==---> " + consts.codeGenFilePath);
-        log.info("---==--- 服务启动后，加解密组件 ---==---> 加密前:" + pwd + " 加密后: " + DasEnv.encdecConfiguration.encrypt(pwd));
-
+        log.info("---==--- 服务启动后，文件路径 ---==---> " + consts.codeGenFilePath);
+        //log.info("---==--- 服务启动后，加解密组件 ---==---> 加密前:" + pwd + " 加密后: " + DasEnv.encdecConfiguration.encrypt(pwd));
     }
-
 }

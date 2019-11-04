@@ -6,6 +6,7 @@ import com.ppdai.das.console.common.utils.HttpServletUtil;
 import com.ppdai.das.console.dao.LoginUserDao;
 import com.ppdai.das.console.dto.entry.das.LoginUser;
 import com.ppdai.das.console.dto.model.ServiceResult;
+import com.ppdai.das.console.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class UserLoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if(PermissionService.getSUPERID().equals(UserContext.getUser(request).getId())){
+            return true;
+        }
         // 统一登录
         if (userConfiguration.isUseSSO()) {
             String userName = userConfiguration.getUserIdentity(request, response).getUserName();

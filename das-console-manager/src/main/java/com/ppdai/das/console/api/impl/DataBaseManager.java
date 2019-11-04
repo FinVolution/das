@@ -57,11 +57,6 @@ public class DataBaseManager implements DataBaseConfiguration {
         return Lists.newArrayList(das, con);
     }
 
-    @Override
-    public int getDataBaseNameMaxLength() {
-        return 22;
-    }
-
     private List<ItemResponse> toList(DataBaseInfo dataBaseInfo) {
         return toList(transform.toDataBaseVO(dataBaseInfo));
     }

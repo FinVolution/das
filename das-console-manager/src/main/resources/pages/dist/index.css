@@ -1540,50 +1540,6 @@ div.question-drop-down-menu ul.drop-down-list li:hover {
 .drop-down-suggestion .drop-down-suggestion-head:focus {
   box-shadow: 0 0 3px orangered, inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
-div.paleTable {
-  font-family: Arial, Helvetica, sans-serif;
-  border: 0px solid #FFFFFF;
-  width: 100%;
-  text-align: center;
-  border-collapse: collapse;
-}
-.divTable.paleTable .divTableCell,
-.divTable.paleTable .divTableHead {
-  border: 1px solid #dddddd;
-  padding: 3px 2px;
-}
-.divTable.paleTable .divTableBody .divTableCell {
-  font-size: 13px;
-}
-.divTable.paleTable .divTableRow:nth-child(even) {
-  background: #f5f5f5;
-}
-.paleTable .tableFootStyle {
-  font-size: 14px;
-}
-/* DivTable.com */
-.divTable {
-  display: table;
-}
-.divTableRow {
-  display: table-row;
-}
-.divTableHeading {
-  display: table-header-group;
-}
-.divTableCell,
-.divTableHead {
-  display: table-cell;
-}
-.divTableHeading {
-  display: table-header-group;
-}
-.divTableFoot {
-  display: table-footer-group;
-}
-.divTableBody {
-  display: table-row-group;
-}
 @media screen and (max-width: 1710px) {
   .tradeList {
     overflow-x: auto;
@@ -2476,8 +2432,8 @@ div.paleTable {
 .templateTableDiv .table td {
   width: 20%;
 }
-.apiParamsTab .divContent {
-  overflow-y: auto;
+.templateTable .divContent {
+  overflow-y: scroll;
   height: 300px;
   border: 1px solid #e1e1e1;
   font-size: 0.75rem;
@@ -2487,54 +2443,54 @@ div.paleTable {
   padding: 0;
   margin: 0;
 }
-.apiParamsTab .center {
+.templateTable .center {
   text-align: center;
 }
-.apiParamsTab .span-a {
+.templateTable .span-a {
   padding: 5px;
 }
-.apiParamsTab .select {
+.templateTable .select {
   width: 50px;
 }
-.apiParamsTab .hand {
+.templateTable .hand {
   color: #ff6633;
   cursor: pointer;
 }
-.apiParamsTab .float-left {
+.templateTable .float-left {
   float: left;
 }
-.apiParamsTab .eg-table tr td,
-.apiParamsTab .eg-table tr th {
+.templateTable .eg-table tr td,
+.templateTable .eg-table tr th {
   padding: 4px;
 }
-.apiParamsTab .paramPosition {
+.templateTable .paramPosition {
   text-align: center;
   width: 10%;
 }
-.apiParamsTab .th1 {
+.templateTable .th1 {
   text-align: center;
   width: 30%;
 }
-.apiParamsTab .th2 {
+.templateTable .th2 {
   text-align: center;
   width: 50%;
 }
-.apiParamsTab .operator {
+.templateTable .operator {
   text-align: center;
   width: 20%;
 }
-.apiParamsTab .table thead tr {
+.templateTable .table thead tr {
   display: block;
 }
-.apiParamsTab .table tbody {
+.templateTable .table tbody {
   display: block;
   height: 200px;
   overflow: auto;
 }
-.apiParamsTab .table th {
+.templateTable .table th {
   width: 20%;
 }
-.apiParamsTab .table td {
+.templateTable .table td {
   width: 20%;
 }
 .projectManage .ant-alert-description {
@@ -2605,8 +2561,8 @@ div.paleTable {
 .templateTable .table td {
   width: 20%;
 }
-.ApiParamsTab .divContent {
-  overflow-y: auto;
+.templateTable .divContent {
+  overflow-y: scroll;
   height: 240px;
   border: 1px solid #e1e1e1;
   font-size: 0.75rem;
@@ -2616,54 +2572,54 @@ div.paleTable {
   padding: 0;
   margin: 0;
 }
-.ApiParamsTab .center {
+.templateTable .center {
   text-align: center;
 }
-.ApiParamsTab .span-a {
+.templateTable .span-a {
   padding: 5px;
 }
-.ApiParamsTab .select {
+.templateTable .select {
   width: 50px;
 }
-.ApiParamsTab .hand {
+.templateTable .hand {
   color: #ff6633;
   cursor: pointer;
 }
-.ApiParamsTab .float-left {
+.templateTable .float-left {
   float: left;
 }
-.ApiParamsTab .eg-table tr td,
-.ApiParamsTab .eg-table tr th {
+.templateTable .eg-table tr td,
+.templateTable .eg-table tr th {
   padding: 4px;
 }
-.ApiParamsTab .paramPosition {
+.templateTable .paramPosition {
   text-align: center;
   width: 10%;
 }
-.ApiParamsTab .th1 {
+.templateTable .th1 {
   text-align: center;
   width: 30%;
 }
-.ApiParamsTab .th2 {
+.templateTable .th2 {
   text-align: center;
   width: 50%;
 }
-.ApiParamsTab .operator {
+.templateTable .operator {
   text-align: center;
   width: 20%;
 }
-.ApiParamsTab .table thead tr {
+.templateTable .table thead tr {
   display: block;
 }
-.ApiParamsTab .table tbody {
+.templateTable .table tbody {
   display: block;
   height: 200px;
   overflow: auto;
 }
-.ApiParamsTab .table th {
+.templateTable .table th {
   width: 20%;
 }
-.ApiParamsTab .table td {
+.templateTable .table td {
   width: 20%;
 }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */

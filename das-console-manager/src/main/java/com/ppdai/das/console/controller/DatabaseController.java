@@ -12,6 +12,7 @@ import com.ppdai.das.console.common.validates.group.db.UpdateDataBase;
 import com.ppdai.das.console.common.validates.sql.SQLValidateResult;
 import com.ppdai.das.console.common.validates.sql.SQLValidation;
 import com.ppdai.das.console.config.annotation.CurrentUser;
+import com.ppdai.das.console.constant.Message;
 import com.ppdai.das.console.dao.DataBaseDao;
 import com.ppdai.das.console.dao.GroupDao;
 import com.ppdai.das.console.dto.entry.configCheck.ConfigDataResponse;
@@ -23,13 +24,11 @@ import com.ppdai.das.console.dto.model.Paging;
 import com.ppdai.das.console.dto.model.ServiceResult;
 import com.ppdai.das.console.dto.model.SqlValidateRequest;
 import com.ppdai.das.console.dto.model.page.ListResult;
+import com.ppdai.das.console.dto.view.DataBaseView;
 import com.ppdai.das.console.dto.view.SqlValidateView;
 import com.ppdai.das.console.dto.view.tabStruct.TableStructure;
 import com.ppdai.das.console.service.DatabaseService;
 import com.ppdai.das.console.service.PermissionService;
-import com.ppdai.das.console.constant.Consts;
-import com.ppdai.das.console.constant.Message;
-import com.ppdai.das.console.dto.view.DataBaseView;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +46,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/db")
 public class DatabaseController {
-
-    @Autowired
-    private Consts consts;
 
     @Resource
     private Message message;
@@ -144,12 +140,11 @@ public class DatabaseController {
     public ServiceResult<String> addDbs(@RequestBody List<DataBaseInfo> list, @CurrentUser LoginUser user, Errors errors) throws Exception {
         ValidateResult validateRes = databaseService.validatePermision(user, errors)
                 .addAssert(() -> databaseService.encryptAndOptUser(user, list))
-                .addAssert(() -> databaseService.addDataCenter(user, list))
                 .addAssert(() -> databaseService.addDataBaseList(list)).validate();
         if (!validateRes.isValid()) {
             return ServiceResult.fail(validateRes.getSummarize());
         }
-        return ServiceResult.success();
+        return databaseService.addDataCenter(user, list);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)

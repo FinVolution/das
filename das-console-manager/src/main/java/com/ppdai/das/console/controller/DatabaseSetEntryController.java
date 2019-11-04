@@ -92,12 +92,11 @@ public class DatabaseSetEntryController {
     @RequestMapping(value = "/adds", method = RequestMethod.POST)
     public ServiceResult<String> adds(@Validated(AddDbSetEntry.class) @RequestBody List<DatabaseSetEntry> list, @CurrentUser LoginUser user, Errors errors) throws Exception {
         ValidateResult validateRes = databaseSetService.validatePermision(user, errors)
-                .addAssert(() -> databaseSetEntryService.addDatabaseSetEntryList(user, list))
-                .addAssert(() -> databaseSetEntryService.addDataCenterEntryList(user, list)).validate();
+                .addAssert(() -> databaseSetEntryService.addDatabaseSetEntryList(user, list)).validate();
         if (!validateRes.isValid()) {
             return ServiceResult.fail(validateRes.getSummarize());
         }
-        return ServiceResult.success();
+        return databaseSetEntryService.addDataCenterEntryList(user, list);
     }
 
     /**
@@ -109,12 +108,11 @@ public class DatabaseSetEntryController {
         String oldName = dataBaseSetEntryDao.getDataBaseSetEntryById(dbsetEntry.getId()).getName();
         ValidateResult validateRes = databaseSetService.validatePermision(user, errors)
                 .addAssert(() -> databaseSetEntryService.isNotExistByName(dbsetEntry), dbsetEntry.getName() + " 已存在！")
-                .addAssert(() -> dataBaseSetEntryDao.updateDatabaseSetEntry(dbsetEntry) > 0, message.db_message_update_operation_failed)
-                .addAssert(() -> databaseSetEntryService.updateDataCenter(user, dbsetEntry)).validate();
+                .addAssert(() -> dataBaseSetEntryDao.updateDatabaseSetEntry(dbsetEntry) > 0, message.db_message_update_operation_failed).validate();
         if (!validateRes.isValid()) {
             return ServiceResult.fail(validateRes.getSummarize());
         }
-        return ServiceResult.success();
+        return databaseSetEntryService.updateDataCenter(user, dbsetEntry);
     }
 
     /**
@@ -177,13 +175,12 @@ public class DatabaseSetEntryController {
         List<DatabaseSetEntry> list = new ArrayList<>();
         list.add(dbsetEntry);
         ValidateResult validateRes = databaseSetService.validatePermision(user, errors)
-                .addAssert(() -> databaseSetEntryService.addDataCenterEntryList(user, list))
                 .addAssert(() -> dataBaseSetEntryDao.getCountByName(dbsetEntry.getName()) == 0, dbsetEntry.getName() + " 已存在！")
                 .addAssert(() -> databaseSetEntryService.insertDatabaseSetEntry(dbsetEntry), message.db_message_add_operation_failed).validate();
         if (!validateRes.isValid()) {
             return ServiceResult.fail(validateRes.getSummarize());
         }
-        return ServiceResult.success();
+        return databaseSetEntryService.addDataCenterEntryList(user, list);
     }
 
     @RequestMapping("/buttons")

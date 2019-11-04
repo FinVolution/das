@@ -100,12 +100,11 @@ public class DatabaseSetController {
     public ServiceResult<String> update(@Validated(UpdateDbSet.class) @RequestBody DatabaseSet dbset, @CurrentUser LoginUser user, Errors errors) throws Exception {
         dbset.setUpdateUserNo(user.getUserNo());
         ValidateResult validateRes = databaseSetService.validatePermision(user, errors)
-                .addAssert(() -> databaseSetService.updateDataCenter(user, dbset))
                 .addAssert(() -> databaseSetService.updateDatabaseSet(dbset) > 0, message.db_message_update_operation_failed).validate();
         if (!validateRes.isValid()) {
             return ServiceResult.fail(validateRes.getSummarize());
         }
-        return ServiceResult.success();
+        return databaseSetService.updateDataCenter(user, dbset);
     }
 
     /**

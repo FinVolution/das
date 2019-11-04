@@ -120,7 +120,7 @@ public class Project {
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Date update_time;
 
-	@NotNull(message = "{project.app_id.notNull}", groups = {AddProject.class, UpdateProject.class})
+	@NotBlank(message = "{project.app_id.notNull}", groups = {AddProject.class, UpdateProject.class})
 	@Column(name = "app_id")
 	private String app_id;
 
