@@ -27,20 +27,28 @@ public class AdvancedModStrategy extends AbstractConditionStrategy {
     public void initialize(Map<String, String> settings) {
         super.initialize(settings);
         
-        if(settings.containsKey(MOD)) {
-            dbLoactor = new ModShardLocator<>(Integer.parseInt(settings.get(MOD)));
+        if(isShardByDb() == false && isShardByTable() == false)
+            throw new IllegalArgumentException("Property " + COLUMNS + " or " + TABLE_COLUMNS + " is required for the strategy");
+
+        if(isShardByDb()) {
+            if(settings.containsKey(MOD)) {
+                dbLoactor = new ModShardLocator<>(Integer.parseInt(settings.get(MOD)));
+            }else
+                throw new IllegalArgumentException("Property " + MOD + " is required for shard by database");
         }
         
-        if(settings.containsKey(TABLE_MOD)) {
-            Integer mod = Integer.parseInt(settings.get(TABLE_MOD));
-            tableLoactor = new ModShardLocator<>(mod);
-            
-            Set<String> allShards = new HashSet<>();
-            for(int i = 0; i < mod; i++)
-                allShards.add(String.valueOf(i));
-            
-            setAllTableShards(allShards);
-            setShardByTable(true);
+        if(isShardByTable()) {
+            if(settings.containsKey(TABLE_MOD)) {
+                Integer mod = Integer.parseInt(settings.get(TABLE_MOD));
+                tableLoactor = new ModShardLocator<>(mod);
+                
+                Set<String> allShards = new HashSet<>();
+                for(int i = 0; i < mod; i++)
+                    allShards.add(String.valueOf(i));
+                
+                setAllTableShards(allShards);
+            }else
+                throw new IllegalArgumentException("Property " + TABLE_MOD + " is required for shard by table");
         }
     }
 
