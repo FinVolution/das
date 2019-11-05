@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.ppdai.das.client.Hints;
@@ -191,6 +193,18 @@ public class AbstractConditionStrategyTest {
             fail();
         } catch (Exception e) {
             assertEquals(IllegalStateException.class, e.getClass());
+        }
+    }
+
+    @Test
+    public void testWrongDbTableConfig() throws Exception {
+        Map<String, String> settings = new HashMap<>();
+        
+        try {
+            test.initialize(settings);
+            fail();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), IllegalArgumentException.class);
         }
     }
 }

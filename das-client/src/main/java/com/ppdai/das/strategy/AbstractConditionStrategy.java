@@ -49,6 +49,9 @@ public abstract class AbstractConditionStrategy extends AbstractShardingStrategy
             tableShardColumns = parseNames(settings.get(TABLE_COLUMNS));
             setShardByTable(true);
         }
+
+        if(isShardByDb() == false && isShardByTable() == false)
+            throw new IllegalArgumentException("Property " + COLUMNS + " or " + TABLE_COLUMNS + " is required for the strategy");
     }
 
     protected boolean isDbShardingRelated(ConditionContext ctx) {

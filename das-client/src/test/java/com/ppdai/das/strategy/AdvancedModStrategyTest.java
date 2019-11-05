@@ -28,8 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ppdai.das.client.Hints;
-import com.ppdai.das.client.Person;
-import com.ppdai.das.client.SqlBuilder;
 
 public class AdvancedModStrategyTest {
     private static int MOD = 10;
@@ -440,22 +438,6 @@ public class AdvancedModStrategyTest {
         Map<String, String> settings = new HashMap<>();
         
         settings.put(AdvancedModStrategy.TABLE_COLUMNS, columnName);
-
-        try {
-            strategy.initialize(settings);
-            fail();
-        } catch (Exception e) {
-            assertEquals(e.getClass(), IllegalArgumentException.class);
-        }
-    }
-
-    @Test
-    public void testWrongDbTableConfig() throws Exception {
-        strategy = new AdvancedModStrategy();
-        Map<String, String> settings = new HashMap<>();
-        
-        settings.put(AdvancedModStrategy.MOD, String.valueOf(MOD));
-        settings.put(AdvancedModStrategy.TABLE_MOD, String.valueOf(MOD));
 
         try {
             strategy.initialize(settings);
