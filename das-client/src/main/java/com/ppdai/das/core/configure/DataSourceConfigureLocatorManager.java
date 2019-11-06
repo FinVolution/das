@@ -1,5 +1,7 @@
 package com.ppdai.das.core.configure;
 
+import com.ppdai.das.core.DataSourceConfigureLocator;
+import com.ppdai.das.core.DefaultDataSourceConfigureLocator;
 import com.ppdai.das.core.helper.ServiceLoaderHelper;
 
 public class DataSourceConfigureLocatorManager {

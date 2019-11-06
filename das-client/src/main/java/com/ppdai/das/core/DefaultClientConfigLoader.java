@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.ppdai.das.core.configure.DalConfigureFactory;
 
-public class XMLClientConfigLoader implements ClientConfigureLoader {
+public class DefaultClientConfigLoader implements ClientConfigureLoader {
 
     private DasConfigure dalConfigure = null;
 
-    public XMLClientConfigLoader() throws Exception {
+    public DefaultClientConfigLoader() throws Exception {
         try {
             dalConfigure = DalConfigureFactory.load();
         } catch (Exception e){

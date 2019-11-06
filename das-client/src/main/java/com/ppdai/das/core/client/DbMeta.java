@@ -7,8 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ppdai.das.core.LogEntry;
-import com.ppdai.das.core.configure.DataSourceConfigure;
-import com.ppdai.das.core.configure.DataSourceConfigureLocator;
+import com.ppdai.das.core.DataSourceConfigureLocator;
 import com.ppdai.das.core.configure.DataSourceConfigureLocatorManager;
 import com.ppdai.das.core.datasource.DataSourceLocator;
 import com.ppdai.das.core.enums.DatabaseCategory;
