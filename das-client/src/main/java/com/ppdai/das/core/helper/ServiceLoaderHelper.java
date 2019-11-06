@@ -31,13 +31,8 @@ public class ServiceLoaderHelper {
             Iterator<T> iterator = getIterator(clazz);
 
             if (!Ordered.class.isAssignableFrom(clazz)) {
-                if (iterator.hasNext()) {
-                    T t = iterator.next();
-                    if(t.getClass() == XMLClientConfigLoader.class && iterator.hasNext()){//Ignore XMLClientConfigLoader, if other exists
-                        return iterator.next();
-                    }
-                    return t;
-                }
+                if (iterator.hasNext())
+                    return iterator.next();
             } else {
                 List<T> sortServices = new LinkedList<>();
                 while (iterator.hasNext()) {
