@@ -64,12 +64,14 @@ export default class DataBaseSetSyncModel {
                 name: '修改时间',
                 width: 15,
                 key: 'update_time',
+                search: false,
                 sort: true
             },
             {
                 name: '操作人',
                 width: 10,
                 key: 'userRealName',
+                search: false,
                 sort: true,
                 sortKey: 'user_real_name'
             },

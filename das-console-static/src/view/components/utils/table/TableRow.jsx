@@ -50,7 +50,8 @@ export default class TradeRow extends Component {
             </Tooltip>
         }
         if (item.key === 'name') {
-            return <Popover placement='top' title='关联物理库' content={content} trigger='click'>
+            const _content = FrwkUtil.createContent(content)
+            return <Popover placement='right' title='关联物理库' content={_content} trigger='click'>
                 <a onClick={() => this.getDbInfo(ele.toJS().app_id)}>{ele.get(item.key)}</a>
             </Popover>
         }

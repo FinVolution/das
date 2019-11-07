@@ -35,13 +35,15 @@ export default class GroupSyncModel {
                 name: '创建时间',
                 width: 10,
                 key: 'insert_time',
-                sort: true
+                sort: true,
+                search: false
             },
             {
                 name: '操作人',
                 width: 20,
                 key: 'userRealName',
                 sort: true,
+                search: false,
                 sortKey: 'user_real_name'
             },
 

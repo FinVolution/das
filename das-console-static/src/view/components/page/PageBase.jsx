@@ -9,6 +9,7 @@ import ContentSort from 'material-ui/svg-icons/content/sort'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import Component from '../utils/base/Component'
 import QueueAnim from 'rc-queue-anim'
+import Texty from 'rc-texty'
 import _ from 'underscore'
 
 export default class PageBase extends Component {
@@ -55,7 +56,7 @@ export default class PageBase extends Component {
         const {addButtonShow, checkButtonShow} = this.state
         return (
             <div>
-                {navigation && <span style={globalStyles.navigation}>{navigation}</span>}
+                {navigation && <span style={globalStyles.navigation}><Texty>{navigation}</Texty></span>}
                 <Paper style={style == null ? globalStyles.paper : style} zDepth={zDepth}>
                     {!_.isEmpty(title) && <Row>
                         <QueueAnim type={['bottom', 'right']} delay={600}>
@@ -64,15 +65,16 @@ export default class PageBase extends Component {
                             </Col>
                             <Col sm={12}/>
                             <Col sm={6} key='b' style={{textAlign: 'right', paddingRight: '30px'}}>
-                                <div style={{display:checkButtonShow?'inline':'none', paddingRight: '10px'}}>
-                                    <Tooltip placement='top' title={'查看组逻辑库' + UserEnv.getConfigCenterName() + '数据的正确性'}>
+                                <div style={{display: checkButtonShow ? 'inline' : 'none', paddingRight: '10px'}}>
+                                    <Tooltip placement='top'
+                                             title={'查看组逻辑库' + UserEnv.getConfigCenterName() + '数据的正确性'}>
                                         <FloatingActionButton mini={true} zDepth={1}
                                                               onClick={(e) => this.clickCheckBack(e)}>
                                             <ContentSort/>
                                         </FloatingActionButton>
                                     </Tooltip>
                                 </div>
-                                <div style={{display:addButtonShow?'inline':'none'}}>
+                                <div style={{display: addButtonShow ? 'inline' : 'none'}}>
                                     <FloatingActionButton mini={true} zDepth={1} onClick={(e) => this.clickBack(e)}>
                                         <ContentAdd/>
                                     </FloatingActionButton>
