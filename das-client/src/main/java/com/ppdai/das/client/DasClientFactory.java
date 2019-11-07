@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.ppdai.das.core.DefaultClientConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class DasClientFactory {
 
             logger.info("Start initialize DAS client");
             try {
-                ClientConfigureLoader loader = ServiceLoaderHelper.getInstance(ClientConfigureLoader.class);
+                ClientConfigureLoader loader = ServiceLoaderHelper.getInstance(ClientConfigureLoader.class, new DefaultClientConfigLoader());
                 if(loader == null)
                     throw new IllegalStateException("Can not find ClientConfigureLoader");
                 

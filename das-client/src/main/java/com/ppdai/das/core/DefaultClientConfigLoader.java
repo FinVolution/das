@@ -1,19 +1,15 @@
-package com.ppdai.das.client;
+package com.ppdai.das.core;
 
 import java.util.Collections;
 import java.util.List;
 
-import com.ppdai.das.core.ClientConfigureLoader;
-import com.ppdai.das.core.DasConfigure;
-import com.ppdai.das.core.DasLogger;
-import com.ppdai.das.core.DasServerInstance;
 import com.ppdai.das.core.configure.DalConfigureFactory;
 
-public class XMLClientConfigLoader implements ClientConfigureLoader {
+public class DefaultClientConfigLoader implements ClientConfigureLoader {
 
     private DasConfigure dalConfigure = null;
 
-    public XMLClientConfigLoader() throws Exception {
+    public DefaultClientConfigLoader() throws Exception {
         try {
             dalConfigure = DalConfigureFactory.load();
         } catch (Exception e){

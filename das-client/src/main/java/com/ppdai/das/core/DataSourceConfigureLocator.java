@@ -1,8 +1,11 @@
-package com.ppdai.das.core.configure;
+package com.ppdai.das.core;
 
 import java.util.Map;
 import java.util.Set;
 
+import com.ppdai.das.core.configure.ConnectionString;
+import com.ppdai.das.core.configure.DataSourceConfigure;
+import com.ppdai.das.core.configure.PoolPropertiesConfigure;
 import com.ppdai.das.core.enums.IPDomainStatus;
 import com.ppdai.das.core.helper.Ordered;
 

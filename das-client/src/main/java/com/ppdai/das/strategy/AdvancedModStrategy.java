@@ -27,11 +27,17 @@ public class AdvancedModStrategy extends AbstractConditionStrategy {
     public void initialize(Map<String, String> settings) {
         super.initialize(settings);
         
-        if(settings.containsKey(MOD)) {
+        if(isShardByDb()) {
+            if(!settings.containsKey(MOD))
+                throw new IllegalArgumentException("Property " + MOD + " is required for shard by database");
+
             dbLoactor = new ModShardLocator<>(Integer.parseInt(settings.get(MOD)));
         }
         
-        if(settings.containsKey(TABLE_MOD)) {
+        if(isShardByTable()) {
+            if(!settings.containsKey(TABLE_MOD))
+                throw new IllegalArgumentException("Property " + TABLE_MOD + " is required for shard by table");
+
             Integer mod = Integer.parseInt(settings.get(TABLE_MOD));
             tableLoactor = new ModShardLocator<>(mod);
             
@@ -40,7 +46,6 @@ public class AdvancedModStrategy extends AbstractConditionStrategy {
                 allShards.add(String.valueOf(i));
             
             setAllTableShards(allShards);
-            setShardByTable(true);
         }
     }
 

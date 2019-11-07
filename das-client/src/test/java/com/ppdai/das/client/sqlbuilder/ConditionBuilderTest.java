@@ -1,7 +1,9 @@
 package com.ppdai.das.client.sqlbuilder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static com.ppdai.das.client.SegmentConstants.*;
 
 import java.sql.SQLException;
 
@@ -73,7 +75,7 @@ public class ConditionBuilderTest {
     @Test
     public void testUpdateWhere() throws SQLException {
         SqlBuilder builder = SqlBuilder.update(p).set(p.Name.eq("Jerry"), p.CountryID.eq(1)).
-                where().leftBracket().allOf(p.Name.eq(1), p.CountryID.gt(2)).rightBracket();;
+                where().leftBracket().allOf(p.Name.eq(1), p.CountryID.gt(2)).rightBracket();
         ConditionList cl = builder.buildUpdateConditions();
         assertTrue(cl.isIntersected());
         assertEquals(4, cl.size());
@@ -89,8 +91,22 @@ public class ConditionBuilderTest {
 
     @Test
     public void testDeleteWhere() throws SQLException {
-        SqlBuilder builder = SqlBuilder.deleteFrom(p).where().leftBracket().allOf(p.Name.eq(1), p.CountryID.gt(2)).rightBracket();;
+        SqlBuilder builder = SqlBuilder.deleteFrom(p).where().leftBracket().allOf(p.Name.eq(1), p.CountryID.gt(2)).rightBracket();
         ConditionList cl = builder.buildUpdateConditions();
+        assertTrue(cl.isIntersected());
+        assertEquals(2, cl.size());
+    }
+
+    @Test
+    public void testSelectWhere() throws SQLException {
+        SqlBuilder builder = SqlBuilder.selectAllFrom(p).where(p.CityID.eq(1), OR, p.CountryID.eq(1), AND, p.Name.like("A"), OR, p.PeopleID.eq(1));
+        ConditionList cl = builder.buildQueryConditions();
+        cl = (ConditionList)cl.get(0);//get first
+        
+        assertFalse(cl.isIntersected());
+        assertEquals(3, cl.size());
+        
+        cl = (ConditionList)cl.get(1);
         assertTrue(cl.isIntersected());
         assertEquals(2, cl.size());
     }
