@@ -229,20 +229,20 @@ public class ProjectController {
 
     @RequestMapping(value = "/generate", method = RequestMethod.POST)
     public ServiceResult generateProject(@CurrentUser LoginUser user, @RequestBody GenerateCodeModel generateCodeRequest) {
-        return projectService.generateProjectXml(user, generateCodeRequest.getProjectId(), consts.codeGenFilePath);
+        return projectService.generateProjectXml(user, generateCodeRequest.getProjectId(), consts.codeConsoleilePath);
     }
 
     @RequestMapping("/download")
     public String download(@RequestParam(value = "projectId") Long projectId, @CurrentUser LoginUser user, HttpServletResponse response) throws Exception {
-        ServiceResult sr = projectService.generateProjectXml(user, projectId, consts.codeGenFilePath);
+        ServiceResult sr = projectService.generateProjectXml(user, projectId, consts.codeConsoleilePath);
         if (sr.getCode() == ServiceResult.ERROR) {
             throw new Exception(sr.getMsg().toString());
         }
-        File file = new File(new File(new File(consts.codeGenFilePath, String.valueOf(projectId)), CodeGenConsts.JAVA), "db");
+        File file = new File(new File(new File(consts.codeConsoleilePath, String.valueOf(projectId)), CodeGenConsts.JAVA), "db");
         Project project = projectDao.getProjectByID(projectId);
         String date = DateUtil.getCurrentTime();
         final String zipFileName = project.getName() + "-db-" + date + ".zip";
-        return FileUtils.download(response, file, zipFileName, consts.codeGenFilePath);
+        return FileUtils.download(response, file, zipFileName, consts.codeConsoleilePath);
     }
 
     @RequestMapping("/buttons")

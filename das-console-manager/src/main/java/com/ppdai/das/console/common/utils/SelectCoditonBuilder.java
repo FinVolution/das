@@ -28,12 +28,12 @@ public class SelectCoditonBuilder {
         return new SelectCoditonBuilder();
     }
 
-    private SelectCoditonBuilder append(String key, Object val) {
+    public SelectCoditonBuilder append(String key, Object val) {
         expressions.add(new Codition(key, val));
         return this;
     }
 
-    private SelectCoditonBuilder and() {
+    public SelectCoditonBuilder and() {
         return append("and", StringUtils.EMPTY);
     }
 

@@ -22,7 +22,7 @@ public interface EncdecConfiguration {
     String decrypt(String input);
 
     /**
-     * 用户名密码单向 加密
+     * 用户密码单向 加密
      *
      * @param input
      * @return

@@ -151,7 +151,7 @@ public class DatabaseSetDao extends BaseDao {
     }
 
     public List<DatabaseSetView> findDbSetPageListByAppid(Paging<DatabaseSet> paging) throws SQLException {
-        String sql = "SELECT t1.id, t1.name, t1.db_type, t1.strategy_source, t1.dynamic_strategy_id, t1.class_name, t1.group_id, t1.update_user_no, t1.update_time ,t3.group_name \n" +
+        String sql = "SELECT t1.id, t1.name, t1.db_type, t1.strategy_type, t1.strategy_source, t1.dynamic_strategy_id, t1.class_name, t1.group_id, t1.update_user_no, t1.update_time ,t3.group_name \n" +
                 "FROM databaseset t1 \n" +
                 "inner join project_dbset_relation t2 on t2.dbset_id = t1.id \n" +
                 "inner join dal_group t3 on t1.group_id = t3.id\n" +

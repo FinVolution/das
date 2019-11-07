@@ -63,7 +63,7 @@ public class CodeController {
             String code = CodeGenConsts.JAVA;
             JavaDasGenerator generator = new JavaDasGenerator();
             JavaCodeGenContext context = generator.createContext(project_id, true, progress);
-            context.setGeneratePath(consts.codeGenFilePath);
+            context.setGeneratePath(consts.codeConsoleilePath);
 
             log.info(String.format("Begin to generate java task for project %s", project_id));
             generateLanguageProject(generator, context);
@@ -90,7 +90,7 @@ public class CodeController {
         }
         List<W2uiElement> files = new ArrayList<>();
 
-        File currentProjectDir = new File(new File(consts.codeGenFilePath, projectId), CodeGenConsts.JAVA);
+        File currentProjectDir = new File(new File(consts.codeConsoleilePath, projectId), CodeGenConsts.JAVA);
         if (currentProjectDir.exists()) {
             File currentFile;
             if (StringUtils.isBlank(name)) {
@@ -129,7 +129,7 @@ public class CodeController {
         if (StringUtils.isBlank(projectId) || StringUtils.isBlank(name)) {
             return ServiceResult.fail("projectId 或 name 为空!!!");
         }
-        File f = new File(new File(new File(consts.codeGenFilePath, projectId), CodeGenConsts.JAVA), name);
+        File f = new File(new File(new File(consts.codeConsoleilePath, projectId), CodeGenConsts.JAVA), name);
         StringBuilder sb = new StringBuilder();
         if (f.exists()) {
             BufferedReader reader = null;
@@ -159,17 +159,17 @@ public class CodeController {
 
     @RequestMapping("/download")
     public String download(@RequestParam(value = "projectId") Long projectId, HttpServletResponse response) throws Exception {
-        File file = new File(new File(consts.codeGenFilePath, String.valueOf(projectId)), CodeGenConsts.JAVA);
+        File file = new File(new File(consts.codeConsoleilePath, String.valueOf(projectId)), CodeGenConsts.JAVA);
         Project project = projectDao.getProjectByID(projectId);
         String date = DateUtil.getCurrentTime();
         final String zipFileName = project.getName() + "-" + date + ".zip";
-        return FileUtils.download(response, file, zipFileName, consts.codeGenFilePath);
+        return FileUtils.download(response, file, zipFileName, consts.codeConsoleilePath);
     }
 
     @RequestMapping(value = "/clearFiles")
     public ServiceResult clearFiles(@RequestParam(value = "projectId") Integer projectId) {
         try {
-            String path = consts.codeGenFilePath;
+            String path = consts.codeConsoleilePath;
             File dir = new File(String.format("%s/%s", path, projectId));
             if (dir.exists()) {
                 try {

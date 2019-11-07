@@ -17,8 +17,8 @@ public class Consts {
     @Value("${spring.evn.active}")
     public String springActive;
 
-    @Value("${code.gen.file.path}")
-    public String codeGenFilePath;
+    @Value("${code.console.file.path}")
+    public String codeConsoleilePath;
 
     @Value("${dbatool.file.path}")
     public String dbaToolFilePath;

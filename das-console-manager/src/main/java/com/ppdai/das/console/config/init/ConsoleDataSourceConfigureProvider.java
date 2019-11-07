@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * dal.xml:
+ * das.xml:
  *
  * <ConnectionLocator>
  * <locator>com.ppdai.das.core.datasource.DefaultDalConnectionLocator</locator>

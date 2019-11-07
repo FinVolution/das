@@ -9,6 +9,7 @@ import com.ppdai.das.console.dto.entry.das.Project;
 import com.ppdai.das.console.dto.model.Paging;
 import com.ppdai.das.console.dto.model.ProjectModel;
 import com.ppdai.das.console.dto.view.ProjectView;
+import com.ppdai.das.console.dto.view.search.CheckTypes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -150,6 +152,16 @@ public class ProjectDao extends BaseDao {
         return this.queryBySql(sql.toString(), Project.class);
     }
 
+    public List<Project> getProjectsListBySetName(String name) throws SQLException {
+        StringBuffer sql = new StringBuffer("select t1.id, t1.app_id, t1.name, t1.namespace, t1.dal_group_id, t1.dal_config_name, t1.update_user_no, t1.update_time from project t1 ");
+        sql.append("inner join project_dbset_relation t2 on t2.project_id = t1.id ");
+        sql.append("inner join databaseset t3 on t2.dbset_id = t3.id ");
+        if (StringUtils.isNotBlank(name)) {
+            sql.append(" where t3.name like '" + name + "%'");
+        }
+        return this.queryBySql(sql.toString(), Project.class);
+    }
+
     public List<Project> getProjectsNoGroup(Long appGroupId) throws SQLException {
         String cond = StringUtils.EMPTY;
         if (null != appGroupId && appGroupId > 0) {
@@ -191,12 +203,15 @@ public class ProjectDao extends BaseDao {
         return this.queryBySql(sql, ProjectView.class);
     }
 
-    private String appenWhere(Paging<ProjectModel> paging) {
+    private String appenWhere(Paging<ProjectModel> paging) throws SQLException {
         ProjectModel projectModel = paging.getData();
         if (null == projectModel) {
             return StringUtils.EMPTY;
         }
-        return SelectCoditonBuilder.getInstance().setTab("t1.").where()
+        SelectCoditonBuilder selectCoditonBuilder = SelectCoditonBuilder.getInstance()
+                .setTab("t7.")
+                .likeLeft("group_name", projectModel.getGroupName())
+                .setTab("t1.").where()
                 .equal(projectModel.getDal_group_id() != null && projectModel.getDal_group_id() != 0, "dal_group_id", projectModel.getDal_group_id())
                 .likeLeft("name", projectModel.getName())
                 .rangeData("first_release_time", projectModel.getFirst_release_times())
@@ -204,15 +219,19 @@ public class ProjectDao extends BaseDao {
                 .rangeData("insert_time", projectModel.getInsert_times())
                 .likeLeft("app_id", projectModel.getApp_id())
                 .likeLeft("app_scene", projectModel.getApp_scene())
-                .likeLeft("comment", projectModel.getComment())
-                .setTab("t3.")
-                .likeLeft("name", projectModel.getDbsetNamees())
-                .setTab("t7.")
-                .likeLeft("group_name", projectModel.getGroupName())
-                .builer();
+                .likeLeft("comment", projectModel.getComment());
+        if (StringUtils.isNotBlank(projectModel.getDbsetNamees())) {
+            List<Project> list = this.getProjectsListBySetName(projectModel.getDbsetNamees());
+            if (CollectionUtils.isNotEmpty(list)) {
+                List<Long> projectIds = list.stream().map(i -> i.getId()).collect(Collectors.toList());
+               // String ids = StringUtil.joinCollectByComma(projectIds);
+                selectCoditonBuilder.in("id", new CheckTypes(false, projectIds), Integer.class.getClass());
+            }
+        }
+        return selectCoditonBuilder.builer();
     }
 
-    private String appenCondition(Paging<ProjectModel> paging) {
+    private String appenCondition(Paging<ProjectModel> paging) throws SQLException {
         return appenWhere(paging) + SelectCoditonBuilder.getInstance()
                 .groupBy("t1.id")
                 .orderBy(paging)

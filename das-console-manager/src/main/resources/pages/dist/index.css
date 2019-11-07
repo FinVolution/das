@@ -1540,6 +1540,50 @@ div.question-drop-down-menu ul.drop-down-list li:hover {
 .drop-down-suggestion .drop-down-suggestion-head:focus {
   box-shadow: 0 0 3px orangered, inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
+div.paleTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border: 0px solid #FFFFFF;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.divTable.paleTable .divTableCell,
+.divTable.paleTable .divTableHead {
+  border: 1px solid #dddddd;
+  padding: 3px 2px;
+}
+.divTable.paleTable .divTableBody .divTableCell {
+  font-size: 13px;
+}
+.divTable.paleTable .divTableRow:nth-child(even) {
+  background: #f5f5f5;
+}
+.paleTable .tableFootStyle {
+  font-size: 14px;
+}
+/* DivTable.com */
+.divTable {
+  display: table;
+}
+.divTableRow {
+  display: table-row;
+}
+.divTableHeading {
+  display: table-header-group;
+}
+.divTableCell,
+.divTableHead {
+  display: table-cell;
+}
+.divTableHeading {
+  display: table-header-group;
+}
+.divTableFoot {
+  display: table-footer-group;
+}
+.divTableBody {
+  display: table-row-group;
+}
 @media screen and (max-width: 1710px) {
   .tradeList {
     overflow-x: auto;
@@ -2432,8 +2476,8 @@ div.question-drop-down-menu ul.drop-down-list li:hover {
 .templateTableDiv .table td {
   width: 20%;
 }
-.templateTable .divContent {
-  overflow-y: scroll;
+.apiParamsTab .divContent {
+  overflow-y: auto;
   height: 300px;
   border: 1px solid #e1e1e1;
   font-size: 0.75rem;
@@ -2443,54 +2487,54 @@ div.question-drop-down-menu ul.drop-down-list li:hover {
   padding: 0;
   margin: 0;
 }
-.templateTable .center {
+.apiParamsTab .center {
   text-align: center;
 }
-.templateTable .span-a {
+.apiParamsTab .span-a {
   padding: 5px;
 }
-.templateTable .select {
+.apiParamsTab .select {
   width: 50px;
 }
-.templateTable .hand {
+.apiParamsTab .hand {
   color: #ff6633;
   cursor: pointer;
 }
-.templateTable .float-left {
+.apiParamsTab .float-left {
   float: left;
 }
-.templateTable .eg-table tr td,
-.templateTable .eg-table tr th {
+.apiParamsTab .eg-table tr td,
+.apiParamsTab .eg-table tr th {
   padding: 4px;
 }
-.templateTable .paramPosition {
+.apiParamsTab .paramPosition {
   text-align: center;
   width: 10%;
 }
-.templateTable .th1 {
+.apiParamsTab .th1 {
   text-align: center;
   width: 30%;
 }
-.templateTable .th2 {
+.apiParamsTab .th2 {
   text-align: center;
   width: 50%;
 }
-.templateTable .operator {
+.apiParamsTab .operator {
   text-align: center;
   width: 20%;
 }
-.templateTable .table thead tr {
+.apiParamsTab .table thead tr {
   display: block;
 }
-.templateTable .table tbody {
+.apiParamsTab .table tbody {
   display: block;
   height: 200px;
   overflow: auto;
 }
-.templateTable .table th {
+.apiParamsTab .table th {
   width: 20%;
 }
-.templateTable .table td {
+.apiParamsTab .table td {
   width: 20%;
 }
 .projectManage .ant-alert-description {
@@ -2561,8 +2605,8 @@ div.question-drop-down-menu ul.drop-down-list li:hover {
 .templateTable .table td {
   width: 20%;
 }
-.templateTable .divContent {
-  overflow-y: scroll;
+.ApiParamsTab .divContent {
+  overflow-y: auto;
   height: 240px;
   border: 1px solid #e1e1e1;
   font-size: 0.75rem;
@@ -2572,54 +2616,54 @@ div.question-drop-down-menu ul.drop-down-list li:hover {
   padding: 0;
   margin: 0;
 }
-.templateTable .center {
+.ApiParamsTab .center {
   text-align: center;
 }
-.templateTable .span-a {
+.ApiParamsTab .span-a {
   padding: 5px;
 }
-.templateTable .select {
+.ApiParamsTab .select {
   width: 50px;
 }
-.templateTable .hand {
+.ApiParamsTab .hand {
   color: #ff6633;
   cursor: pointer;
 }
-.templateTable .float-left {
+.ApiParamsTab .float-left {
   float: left;
 }
-.templateTable .eg-table tr td,
-.templateTable .eg-table tr th {
+.ApiParamsTab .eg-table tr td,
+.ApiParamsTab .eg-table tr th {
   padding: 4px;
 }
-.templateTable .paramPosition {
+.ApiParamsTab .paramPosition {
   text-align: center;
   width: 10%;
 }
-.templateTable .th1 {
+.ApiParamsTab .th1 {
   text-align: center;
   width: 30%;
 }
-.templateTable .th2 {
+.ApiParamsTab .th2 {
   text-align: center;
   width: 50%;
 }
-.templateTable .operator {
+.ApiParamsTab .operator {
   text-align: center;
   width: 20%;
 }
-.templateTable .table thead tr {
+.ApiParamsTab .table thead tr {
   display: block;
 }
-.templateTable .table tbody {
+.ApiParamsTab .table tbody {
   display: block;
   height: 200px;
   overflow: auto;
 }
-.templateTable .table th {
+.ApiParamsTab .table th {
   width: 20%;
 }
-.templateTable .table td {
+.ApiParamsTab .table td {
   width: 20%;
 }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
