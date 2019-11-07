@@ -1,3 +1,4 @@
+import React from 'react'
 import DataUtil from './DataUtil'
 import {fetch} from 'ea-react-dm-v14'
 import _ from 'underscore'
@@ -120,9 +121,9 @@ FrwkUtil.fetch = {
                     })
                     url += params + args
                 } else if (arr.length === 2) {
-                    if(!params){
+                    if (!params) {
                         args = '?' + arr[1]
-                    }else{
+                    } else {
                         args = '&' + arr[1]
                     }
 
@@ -173,6 +174,41 @@ FrwkUtil.load = {
             }
         )
     }
+}
+
+FrwkUtil.createContent = data => {
+    const content = []
+    if (data.includes(';')) {
+        const arr = data.split(';')
+        arr.forEach(item => {
+            content.push(<p>{item}</p>)
+        })
+        return <div>
+            {content}
+        </div>
+    }
+    if (data.includes(',')) {
+        const arr = data.split(',')
+        let names = [], n = 0
+        arr.forEach((item, i) => {
+            n = i + 1
+            names.push(item)
+            if (n % 4 === 0) {
+                content.push(<p>{names.join(',')}</p>)
+                names = []
+            }
+        })
+        if (names.length > 0) {
+            content.push(<p>{names.join(',')}</p>)
+        }
+    } else {
+        return <div>
+            {data}
+        </div>
+    }
+    return <div>
+        {content}
+    </div>
 }
 
 export default FrwkUtil

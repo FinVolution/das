@@ -141,11 +141,9 @@ export default class App extends Common {
                             <LeftDrawer navDrawerOpen={navDrawerOpen} menus={Data.menus}
                                         onChangePage={::this.onChangePage}
                                         username={'你好！' + displayName}/>
-                            <div style={styles.container}>
-                                <QueueAnim component='ul' type={['bottom', 'right']} duration={600}>
-                                    {show ? pages : null}
-                                </QueueAnim>
-                            </div>
+                            <QueueAnim component='ul' type={['bottom', 'right']} duration={600} style={styles.container}>
+                                {show ? pages : null}
+                            </QueueAnim>
                         </div>
                     </MuiThemeProvider>
                 </div>

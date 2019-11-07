@@ -8,6 +8,7 @@ import './LeftDrawer.less'
 import {View} from 'ea-react-dm-v14'
 import {PageControl, UserControl} from '../../../controller/Index'
 import QueueAnim from 'rc-queue-anim'
+import Texty from 'rc-texty'
 //import Immutable from 'immutable'
 import {DataUtil} from '../utils/util/Index'
 import {storageCode} from '../../../model/base/BaseModel'
@@ -43,7 +44,7 @@ export default class LeftDrawer extends Component {
         this.state = {
             menus: [],
             open: false,
-            leftDrawer:null
+            leftDrawer: null
         }
     }
 
@@ -125,14 +126,14 @@ export default class LeftDrawer extends Component {
         })
 
         menus.forEach((item, i) => {
-            sidebarMenus.push(<Sidebar.Menu header={item.header}
+            const header = <Texty interval={70}>{item.header}</Texty>
+            sidebarMenus.push(<Sidebar.Menu header={header}
                                             icon={{className: item.className ? item.className : ''}} key={i}>
                 {
                     items[i]
                 }
             </Sidebar.Menu>)
         })
-
 
         return sidebarMenus
     }
@@ -166,7 +167,7 @@ export default class LeftDrawer extends Component {
     }
 
     onRequestChange(leftDrawer) {
-       return leftDrawer
+        return leftDrawer
     }
 
     handleToggle() {
@@ -220,7 +221,9 @@ export default class LeftDrawer extends Component {
                         onRequestChange={::this.onRequestChange(this)}
                         containerStyle={{overflow: 'hidden'}}>
                     <QueueAnim>
-                        <div key='k01' style={styles.logo}>DAS-CONSOLE</div>
+                        <div key='k01' style={styles.logo}>
+                            <Texty interval={70} mode='random'>DAS-CONSOLE</Texty>
+                        </div>
                         <div key='k02' style={styles.avatar.div}>
                             <span style={styles.avatar.span}>{this.props.username}</span>
                         </div>

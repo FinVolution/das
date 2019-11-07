@@ -4,7 +4,7 @@
 import React from 'react'
 import Component from '../base/ComponentAlert'
 import {Row, Col, Panel, PanelHeader, PanelContent, Paging} from 'eagle-ui'
-import TableRowNew from './TableRow'
+import TableRow from './TableRow'
 import Paper from 'material-ui/Paper'
 import './TableList.less'
 import classNames from 'classnames'
@@ -278,8 +278,8 @@ export default class TableList extends Component {
                         </PanelHeader>
                         <PanelContent style={{'padding-top': '0px'}}>
                             {list &&
-                            <TableRowNew {...this.props} columnInfo={columnInfo} list={list} search={search}
-                                         ref={(e) => this.tradeRow = e}/>}
+                            <TableRow {...this.props} columnInfo={columnInfo} list={list} search={search}
+                                      ref={(e) => this.tradeRow = e}/>}
                             <Row className='paging-margin'>
                                 <Col sm={1}/>
                                 <Col sm={11}>
@@ -291,7 +291,6 @@ export default class TableList extends Component {
                             </Row>
                         </PanelContent>
                     </Panel>
-
                 </div>
             </Paper>
         )

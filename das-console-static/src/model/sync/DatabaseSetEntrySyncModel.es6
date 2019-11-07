@@ -54,6 +54,7 @@ export default class DatabaseSetEntrySyncModel {
                 name: '修改时间',
                 width: 15,
                 key: 'update_time',
+                search: false,
                 sort: true
             },
             {
@@ -61,6 +62,7 @@ export default class DatabaseSetEntrySyncModel {
                 width: 10,
                 key: 'userRealName',
                 sort: true,
+                search: false,
                 sortKey: 'user_real_name'
             },
             {

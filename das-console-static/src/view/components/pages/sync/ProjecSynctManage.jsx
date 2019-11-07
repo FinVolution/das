@@ -134,8 +134,7 @@ export default class ProjecSynctManage extends ManagePanle {
                         projectsyncmodel={projectsyncmodel}
                         setValueByReducers={setValueByReducers}
                         loadList={::this.loadList}
-                        tree={<TreePanle rootShow={true}
-                                         showLine={true}
+                        tree={<TreePanle showLine={true}
                                          treeUrl={window.DASENV.dasSyncTarget + '/group/tree?' + sysnc.token}
                                          format={{tree: {title: 'group_name', key: 'id', isLeaf: true}}}
                                          onSelect={::this.onSelect}

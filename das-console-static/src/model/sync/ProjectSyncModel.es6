@@ -61,6 +61,7 @@ export default class ProjectSyncModel {
             {
                 name: '更新时间',
                 width: 6,
+                search: false,
                 key: 'update_time'
             },
             {

@@ -14,6 +14,7 @@ import Immutable from 'immutable'
 import {DataUtil} from '../util/Index'
 //import _ from 'underscore'
 import {CodeEditor, CheckboxGroupPlus} from '../index'
+import FrwkUtil from '../util/FrwkUtil'
 
 /**
  *  table
@@ -295,7 +296,8 @@ export default class TheadList extends Component {
                 }
                 const placement = item.popover.placement ? item.popover.placement : 'bottom'
                 const show = item.popover.content ? createShow(item, value, 1, maximum) : createShow(item, value, 2, maximum)
-                return <Popover placement={placement} content={value} title={item.popover.title}>
+                const content = FrwkUtil.createContent(value)
+                return <Popover placement={placement} content={content} title={item.popover.title}>
                     {show}
                 </Popover>
             }

@@ -49,7 +49,8 @@ export default class DataBaseSyncModel {
             {
                 name: '数据库名',
                 width: 15,
-                key: 'db_catalog'
+                key: 'db_catalog',
+                sort: true
             },
             {
                 name: '备注',
@@ -61,11 +62,13 @@ export default class DataBaseSyncModel {
                 name: '更新时间',
                 width: 10,
                 key: 'update_time',
+                search: false,
                 sort: true
             },
             {
                 name: '操作人',
                 width: 10,
+                search: false,
                 key: 'userRealName'
             },
             {
