@@ -77,7 +77,7 @@
       </settings>
   </LogListener>
   <ConnectionLocator>
-      <locator>com.ppdai.das.core.datasource.DefaultDalConnectionLocator</locator>
+      <locator>com.ppdai.das.core.DefaultConnectionLocator</locator>
       <settings>
         <!--
           <path>/opt/settings/dal/database.properties</path>

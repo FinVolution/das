@@ -16,7 +16,7 @@ public class DalConnectionPool extends ConnectionPool {
 
     private static Logger logger = LoggerFactory.getLogger(DalConnectionPool.class);
 
-    private static ConnectionListener connectionListener = ServiceLoaderHelper.getInstance(ConnectionListener.class, new DefaultConnectionListener());
+    private static ConnectionListener connectionListener = ServiceLoaderHelper.getInstance(ConnectionListener.class, DefaultConnectionListener.class);
 
     public DalConnectionPool(PoolConfiguration prop) throws SQLException {
         super(prop);

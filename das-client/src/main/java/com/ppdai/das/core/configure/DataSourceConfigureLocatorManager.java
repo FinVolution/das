@@ -5,7 +5,7 @@ import com.ppdai.das.core.DefaultDataSourceConfigureLocator;
 import com.ppdai.das.core.helper.ServiceLoaderHelper;
 
 public class DataSourceConfigureLocatorManager {
-    private volatile static DataSourceConfigureLocator locator = ServiceLoaderHelper.getInstance(DataSourceConfigureLocator.class, new DefaultDataSourceConfigureLocator());
+    private volatile static DataSourceConfigureLocator locator = ServiceLoaderHelper.getInstance(DataSourceConfigureLocator.class, DefaultDataSourceConfigureLocator.class);
 
     public static DataSourceConfigureLocator getInstance() {
         return locator;

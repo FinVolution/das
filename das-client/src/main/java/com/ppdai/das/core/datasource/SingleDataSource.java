@@ -30,7 +30,7 @@ public class SingleDataSource implements DataSourceConfigureConstants {
 
     private static final String DAL = "DAL";
     private static final String DATASOURCE_CREATE_DATASOURCE = "DataSource::createDataSource:%s";
-    private static ILogger ilogger = ServiceLoaderHelper.getInstance(ILogger.class, new DefaultLoggerImpl());
+    private static ILogger ilogger = ServiceLoaderHelper.getInstance(ILogger.class, DefaultLoggerImpl.class);
 
     private static ConnectionPhantomReferenceCleaner connectionPhantomReferenceCleaner = new DefaultConnectionPhantomReferenceCleaner();
     private static AtomicBoolean containsMySQL=new AtomicBoolean(false);

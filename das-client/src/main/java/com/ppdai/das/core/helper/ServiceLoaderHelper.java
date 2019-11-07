@@ -1,26 +1,30 @@
 package com.ppdai.das.core.helper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServiceLoaderHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceLoaderHelper.class);
 
-    private static Map<Class<?>, Object> allServices = new ConcurrentHashMap<>();
-
-
-    public static <T> T getInstance(Class<T> clazz, T defaultImpl) {
+    public static <T> T getInstance(Class<T> clazz, Class<?> defaultImplClass) {
         T inst = getInstance(clazz);
-        return inst == null ? defaultImpl : inst;
+        if(inst != null)
+            return inst;
+
+        LOGGER.warn("No customeized implementation found for: " + clazz);
+        try {
+            return (T)defaultImplClass.newInstance();
+        } catch (Throwable e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new IllegalArgumentException("Can not create default implementation: " + defaultImplClass);
+        }
     }
 
     public static <T> T getInstance(Class<T> clazz) {
@@ -45,6 +49,7 @@ public class ServiceLoaderHelper {
             }
         } catch (Throwable e) {
             LOGGER.error(e.getMessage(), e);
+            throw new IllegalArgumentException("Can not locate implementation of: " + clazz);
         }
         return instance;
     }
