@@ -1,5 +1,6 @@
 package com.ppdai.das.console.controller;
 
+import com.google.common.base.Joiner;
 import com.ppdai.das.console.common.configCenter.ConfigCheckBase;
 import com.ppdai.das.console.common.configCenter.ConfigCheckSubset;
 import com.ppdai.das.console.common.configCenter.ConfigCkeckResult;
@@ -8,6 +9,7 @@ import com.ppdai.das.console.common.validates.group.dbSet.AddDbSet;
 import com.ppdai.das.console.common.validates.group.dbSet.DeleteDbSet;
 import com.ppdai.das.console.common.validates.group.dbSet.UpdateDbSet;
 import com.ppdai.das.console.config.annotation.CurrentUser;
+import com.ppdai.das.console.constant.Message;
 import com.ppdai.das.console.dao.DatabaseSetDao;
 import com.ppdai.das.console.dao.GroupDao;
 import com.ppdai.das.console.dto.entry.configCheck.ConfigCheckItem;
@@ -21,7 +23,6 @@ import com.ppdai.das.console.dto.model.page.ListResult;
 import com.ppdai.das.console.dto.view.DatabaseSetView;
 import com.ppdai.das.console.service.DatabaseSetService;
 import com.ppdai.das.console.service.PermissionService;
-import com.ppdai.das.console.constant.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -155,6 +157,13 @@ public class DatabaseSetController {
             return ConfigCheckBase.checkData(list);
         }
         return ConfigCkeckResult.fail();
+    }
+
+    @RequestMapping(value = "/getdbsetnames")
+    public ServiceResult<String> getdbsetnames(@RequestParam("projectId") Long projectId) throws Exception {
+        List<DatabaseSetView> dbsets = databaseSetDao.getAllDatabaseSetByProjectId(projectId);
+        String names = Joiner.on(",").skipNulls().join(dbsets.stream().map(s -> s.getName()).collect(Collectors.toSet()));
+        return ServiceResult.success(names);
     }
 
     /**

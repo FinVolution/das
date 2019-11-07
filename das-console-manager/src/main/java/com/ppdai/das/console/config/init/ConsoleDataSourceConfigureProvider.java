@@ -1,8 +1,12 @@
 package com.ppdai.das.console.config.init;
 
-import com.ppdai.das.core.configure.*;
 import com.ppdai.das.console.common.utils.ResourceUtil;
 import com.ppdai.das.console.common.utils.XmlUtil;
+import com.ppdai.das.core.DataSourceConfigureLocator;
+import com.ppdai.das.core.configure.DataSourceConfigure;
+import com.ppdai.das.core.configure.DataSourceConfigureConstants;
+import com.ppdai.das.core.configure.DataSourceConfigureLocatorManager;
+import com.ppdai.das.core.configure.DefaultDataSourceConfigureProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
