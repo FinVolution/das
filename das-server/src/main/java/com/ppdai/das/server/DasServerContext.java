@@ -65,7 +65,7 @@ public class DasServerContext {
                 configureMap.put(appId, config);
             }
             
-            DasConfigureContext configContext = new DasConfigureContext(configureMap, serverLoader.getDasLogger(), serverLoader.getDalTaskFactory(), serverLoader.getDalConnectionLocator(), serverLoader.getDatabaseSelector());
+            DasConfigureContext configContext = new DasConfigureContext(configureMap, serverLoader.getDasLogger(), serverLoader.getTaskFactory(), serverLoader.getConnectionLocator(), serverLoader.getDatabaseSelector());
             DasConfigureFactory.initialize(configContext);
 
         } catch (Throwable e) {
