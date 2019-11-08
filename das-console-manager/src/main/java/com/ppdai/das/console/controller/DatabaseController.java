@@ -151,6 +151,7 @@ public class DatabaseController {
     public ServiceResult<String> update(@Validated(UpdateDataBase.class) @RequestBody DataBaseInfo dataBaseInfo, @CurrentUser LoginUser user, Errors errors) throws Exception {
         dataBaseInfo.setUpdateUserNo(user.getUserNo());
         ValidateResult validateRes = databaseService.validatePermision(user, errors)
+                .addAssert(() -> databaseService.checkupdateDBInfo(dataBaseInfo))
                 .addAssert(() -> databaseService.isNotExistByName(dataBaseInfo), dataBaseInfo.getDbname() + " 已存在！")
                 .addAssert(() -> databaseService.updateDBInfo(dataBaseInfo), message.db_message_update_operation_failed).validate();
         if (!validateRes.isValid()) {

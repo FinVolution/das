@@ -24,12 +24,13 @@ public interface DataBaseConfiguration {
     /**
      * 更新物理库信息
      *
-     * @param user         当前操作人信息
-     * @param dataBaseInfo
-     * @return
-     * @
+     * @param user            当前操作人信息
+     * @param oldDataBaseInfo
+     * @param newDataBaseInfo
+     * @throws Exception
      */
-    void updateDataBase(LoginUser user, DataBaseInfo dataBaseInfo) throws Exception;
+
+    void updateDataBase(LoginUser user, DataBaseInfo oldDataBaseInfo, DataBaseInfo newDataBaseInfo) throws Exception;
 
     /**
      * 删除物理库

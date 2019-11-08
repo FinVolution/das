@@ -119,7 +119,7 @@ public class DataBaseInfo {
     @Column(name = "db_password")
     private String db_password;
 
-    @NotBlank(message = "{dalgroupdb.db_catalog.notNull}", groups = {AddDataBase.class})
+    @NotBlank(message = "{dalgroupdb.db_catalog.notNull}", groups = {AddDataBase.class, UpdateDataBase.class})
     @Column(name = "db_catalog")
     private String db_catalog;
 

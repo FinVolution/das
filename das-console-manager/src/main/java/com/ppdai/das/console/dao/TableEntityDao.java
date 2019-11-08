@@ -129,4 +129,13 @@ public class TableEntityDao extends BaseDao {
                 .builer();
     }
 
+    public List<TaskTableView> findTableEntitysByDbId(Long paging) throws SQLException {
+        String sql = " select t1.id, t1.project_id, t1.table_names,t1.view_names,t1.custom_table_name,t1.update_user_no,t1.dbset_id, t1.update_user_no, t1.comment, t1.update_time, t1.field_type, t2.name as dbset_name from task_table t1 " +
+                " inner join databaseset t2 on t2.id = t1.dbset_id " +
+                " inner join databasesetentry t3 on t3.dbset_id = t2.id " +
+                " inner join alldbs t4 on t4.id = t3.db_Id " +
+                " where t4.id = " + paging;
+        return this.queryBySql(sql, TaskTableView.class);
+    }
+
 }

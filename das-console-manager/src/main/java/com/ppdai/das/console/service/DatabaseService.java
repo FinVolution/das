@@ -22,6 +22,7 @@ import com.ppdai.das.console.dto.model.ServiceResult;
 import com.ppdai.das.console.dto.model.page.ListResult;
 import com.ppdai.das.console.dto.model.page.PagerUtil;
 import com.ppdai.das.console.dto.view.DataBaseView;
+import com.ppdai.das.console.dto.view.TaskTableView;
 import com.ppdai.das.console.dto.view.treeSelect.TreeNodeView;
 import com.ppdai.das.console.dto.view.treeSelect.TreeSelectView;
 import com.ppdai.das.console.enums.DbMasterSlaveEnum;
@@ -44,6 +45,9 @@ public class DatabaseService {
 
     @Autowired
     private Message message;
+
+    @Autowired
+    private TableEntityDao tableEntityDao;
 
     @Autowired
     private UserGroupDao userGroupDao;
@@ -173,9 +177,21 @@ public class DatabaseService {
         return false;
     }
 
-    public boolean updateDBInfo(DataBaseInfo dataBaseInfo) throws SQLException {
+    public ServiceResult<String> checkupdateDBInfo(DataBaseInfo dataBaseInfo) throws SQLException {
         DataBaseInfo _dataBaseInfo = dataBaseDao.getDataBaseInfoByDbId(dataBaseInfo.getId());
-        dataBaseInfo.setDbname(_dataBaseInfo.getDbname());
+        if (_dataBaseInfo.getDb_catalog().equals(dataBaseInfo.getDb_catalog())) {
+            return ServiceResult.success();
+        } else {
+            List<TaskTableView> list = tableEntityDao.findTableEntitysByDbId(dataBaseInfo.getId());
+            if (CollectionUtils.isNotEmpty(list)) {
+                List<String> names = list.stream().map(i -> i.getTable_names()).collect(Collectors.toList());
+                return ServiceResult.fail("请先删除关联的实体类 : " + StringUtil.joinCollectByComma(names));
+            }
+        }
+        return ServiceResult.success();
+    }
+
+    public boolean updateDBInfo(DataBaseInfo dataBaseInfo) throws SQLException {
         dataBaseInfo.setDb_password(DasEnv.encdecConfiguration.encrypt(dataBaseInfo.getDb_password()));
         return dataBaseDao.updateDataBaseInfo(dataBaseInfo) > 0;
     }
@@ -229,7 +245,7 @@ public class DatabaseService {
                 int maxlegnth = consts.dataBaseNameMaxLength;
                 if (dbname.length() > maxlegnth) {
                     return ServiceResult.fail(dbname + "物理库名称过长，不能大于" + maxlegnth + "个字符");
-                }else if(StringUtils.isBlank(dbname)){
+                } else if (StringUtils.isBlank(dbname)) {
                     return ServiceResult.fail("物理库标识符不能为空！");
                 }
                 if (!item.isAddToGroup()) {
@@ -315,7 +331,8 @@ public class DatabaseService {
 
     public ServiceResult<String> updateDataCenter(LoginUser user, DataBaseInfo dataBaseInfo) {
         try {
-            dataBaseConfiguration.updateDataBase(user, dataBaseInfo);
+            DataBaseInfo oldDataBaseInfo = dataBaseDao.getDataBaseInfoByDbId(dataBaseInfo.getId());
+            dataBaseConfiguration.updateDataBase(user, oldDataBaseInfo, dataBaseInfo);
         } catch (Exception e) {
             return ServiceResult.fail(StringUtil.getMessage(e));
         }

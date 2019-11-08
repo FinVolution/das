@@ -31,8 +31,13 @@ public class DataBaseManager implements DataBaseConfiguration {
     }
 
     @Override
-    public void updateDataBase(LoginUser user, DataBaseInfo dataBaseInfo) throws Exception {
-        configProvider.updateDataBase(transform.toDataBaseVO(dataBaseInfo));
+    public void updateDataBase(LoginUser user, DataBaseInfo oldDataBaseInfo, DataBaseInfo newDataBaseInfo) throws Exception {
+        if (!oldDataBaseInfo.getDbname().equals(newDataBaseInfo.getDbname())) {
+            configProvider.deleteDataBase(oldDataBaseInfo.getDbname());
+            configProvider.addDataBase(Lists.newArrayList(transform.toDataBaseVO(newDataBaseInfo)));
+        } else {
+            configProvider.updateDataBase(transform.toDataBaseVO(newDataBaseInfo));
+        }
     }
 
     @Override
