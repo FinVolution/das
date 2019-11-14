@@ -179,13 +179,17 @@ public class DatabaseService {
 
     public ServiceResult<String> checkupdateDBInfo(DataBaseInfo dataBaseInfo) throws SQLException {
         DataBaseInfo _dataBaseInfo = dataBaseDao.getDataBaseInfoByDbId(dataBaseInfo.getId());
+        int maxlegnth = consts.dataBaseNameMaxLength;
+        if (dataBaseInfo.getDbname().length() > maxlegnth) {
+            return ServiceResult.fail(dataBaseInfo.getDbname() + "物理库名称过长，不能大于" + maxlegnth + "个字符");
+        }
         if (_dataBaseInfo.getDb_catalog().equals(dataBaseInfo.getDb_catalog())) {
             return ServiceResult.success();
         } else {
             List<TaskTableView> list = tableEntityDao.findTableEntitysByDbId(dataBaseInfo.getId());
             if (CollectionUtils.isNotEmpty(list)) {
-                List<String> names = list.stream().map(i -> i.getTable_names()).collect(Collectors.toList());
-                return ServiceResult.fail("请先删除关联的实体类 : " + StringUtil.joinCollectByComma(names));
+                List<String> names = list.stream().map(i -> i.getCustom_table_name()).collect(Collectors.toList());
+                return ServiceResult.fail("请先删除关联的自定义实体类 : " + StringUtil.joinCollectByComma(names));
             }
         }
         return ServiceResult.success();
