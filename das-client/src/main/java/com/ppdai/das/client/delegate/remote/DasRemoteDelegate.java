@@ -69,14 +69,10 @@ public class DasRemoteDelegate implements DasDelegate {
 
     private ServerSelector serverSelector;
     private TransactionClient transactionClient;
-
-    private List<DasServerInstance> servers = new ArrayList<>();
-
     private DasLogger dalLogger;
 
     public DasRemoteDelegate(String appId, String logicDbName, String customerClientVersion, List<DasServerInstance> servers, DasLogger dalLogger) throws TTransportException, UnknownHostException {
-        this.servers.addAll(servers);
-        serverSelector = new ServerSelector(appId, this.servers,  DasClientVersion.getVersion(), customerClientVersion, InetAddress.getLocalHost().getHostAddress());
+        serverSelector = new ServerSelector(appId, servers,  DasClientVersion.getVersion(), customerClientVersion, InetAddress.getLocalHost().getHostAddress());
         this.appId = appId;
         this.logicDbName = logicDbName;
         this.customerClientVersion = customerClientVersion;
@@ -95,7 +91,6 @@ public class DasRemoteDelegate implements DasDelegate {
         try {
             return serverSelector.execute(dasRequest);
         } catch (TException e) {
-            e.printStackTrace();
             ex = e;
             Throwable cause = e.getCause();
             if(cause instanceof com.ppdai.das.service.DasException){
@@ -445,7 +440,7 @@ public class DasRemoteDelegate implements DasDelegate {
         DasResult dasResult = callRemote(dasRequest);
 
         builder.hints().setDasDiagnose(diagInfo2Diagnose(dasResult.getDiagInfo()));
-        List flatList = entity2POJOs(dasResult.getRows(), meta, firstBuilder.getEntityType());;
+        List flatList = entity2POJOs(dasResult.getRows(), meta, firstBuilder.getEntityType());
         return toListOfList(flatList, dasResult.getBatchRowsIndex());
     }
 

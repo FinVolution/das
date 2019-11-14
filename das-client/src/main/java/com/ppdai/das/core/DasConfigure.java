@@ -140,8 +140,4 @@ public class DasConfigure {
     public DatabaseSelector getDatabaseSelector() {
         return selector;
     }
-
-    public Map<String, DatabaseSet> getDatabaseSets() {
-        return databaseSets;
-    }
 }

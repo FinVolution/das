@@ -188,6 +188,9 @@ public class PPDaiDasProxyParser implements DalParser<Entity> {
                         case "INTEGER":
                             value = f.get().getValue().getAsInt();
                             break;
+                        case "BIGINT":
+                            value = f.get().getValue().getAsLong();
+                            break;
                         case "VARCHAR":
                             value = f.get().getValue().getAsString();
                             break;

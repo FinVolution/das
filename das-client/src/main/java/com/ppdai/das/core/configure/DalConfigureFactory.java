@@ -27,9 +27,9 @@ import com.ppdai.das.core.DasLogger;
 import com.ppdai.das.core.DataBase;
 import com.ppdai.das.core.DatabaseSelector;
 import com.ppdai.das.core.DatabaseSet;
+import com.ppdai.das.core.DefaultConnectionLocator;
 import com.ppdai.das.core.DefaultDatabaseSelector;
 import com.ppdai.das.core.DefaultLogger;
-import com.ppdai.das.core.datasource.DefaultDalConnectionLocator;
 import com.ppdai.das.core.task.TaskFactory;
 import com.ppdai.das.core.task.DefaultTaskFactory;
 
@@ -97,7 +97,7 @@ public class DalConfigureFactory implements DalConfigConstants {
         TaskFactory factory = readComponent(root, TASK_FACTORY, new DefaultTaskFactory(), FACTORY);
 
         ConnectionLocator locator =
-                readComponent(root, CONNECTION_LOCATOR, new DefaultDalConnectionLocator(), LOCATOR);
+                readComponent(root, CONNECTION_LOCATOR, new DefaultConnectionLocator(), LOCATOR);
 
         Map<String, DatabaseSet> databaseSets = readDatabaseSets(getChildNode(root, DATABASE_SETS));
 

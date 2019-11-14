@@ -43,9 +43,9 @@ public interface ServerConfigureLoader {
 
     DasLogger getDasLogger() throws Exception;
 
-    TaskFactory getDalTaskFactory() throws Exception;
+    TaskFactory getTaskFactory() throws Exception;
 
-    ConnectionLocator getDalConnectionLocator() throws Exception;
+    ConnectionLocator getConnectionLocator() throws Exception;
 
     DatabaseSelector getDatabaseSelector() throws Exception;
 
