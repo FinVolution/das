@@ -334,6 +334,7 @@ export default class AddDatabaseList extends Component {
                     <Tabs defaultActiveKey='1' onChange={::this.tabsOnChangeCallback}>
                         <TabPane tab={<span><Icon type='plus-circle-o'/>使用新的连接</span>} key='1'>
                             <EditorDBInfo {..._props}
+                                          editerType={0}
                                           onCheckSetState={(nextBtndisable) => {
                                               this.setState({nextBtndisable})
                                           }}/>

@@ -2,8 +2,9 @@ import React from 'react'
 import Component from '../../utils/base/ComponentAlert'
 import {Inputlabel, InputPlus, RadioPlus} from '../../utils/index'
 import {Row} from 'antd'
-import './EditorDBInfo.less'
 import {databaseTypes} from '../../../../model/base/BaseModel'
+import {UserEnv} from '../../utils/util/Index'
+import './EditorDBInfo.less'
 
 export default class EditorDBInfo extends Component {
 
@@ -23,7 +24,7 @@ export default class EditorDBInfo extends Component {
     onSetValueByReducersCallback = val => {
         const dbconectInfo = this.getValueByReducers(this.dbconectInfoLink).toJS()
         let flag = false
-        const arr = [dbconectInfo.db_type, dbconectInfo.db_address, dbconectInfo.db_port, dbconectInfo.db_user, dbconectInfo.db_password, dbconectInfo.dbname]
+        const arr = [dbconectInfo.db_type, dbconectInfo.db_address, dbconectInfo.db_port, dbconectInfo.db_user, dbconectInfo.db_password, dbconectInfo.dbname, dbconectInfo.db_catalog]
         if (arr.every(f => {
             return String(f).length > 0
         })) {
@@ -38,7 +39,7 @@ export default class EditorDBInfo extends Component {
     }
 
     render() {
-        const rowHeight = '470px'
+        const rowHeight = '570px'
         const {databasemodel, editerType, setValueByReducers} = this.props
         const dbconectInfo = this.getValueToJson(this.dbconectInfoLink)
         const _props = {setValueByReducers, databasemodel}
@@ -52,6 +53,19 @@ export default class EditorDBInfo extends Component {
                                        disabled={editerType == 1} selectedId={dbconectInfo.db_type}/>
                         </div>
                     </Inputlabel>
+                    <Inputlabel type={1} star={true} title='数据库标识符' display={editerType == 1}>
+                        <InputPlus {..._props}
+                                   validRules={{isDbName: true, maxLength: UserEnv.getCons().dataBaseNameMaxLength}}
+                                   valueLink={this.dbconectInfoLink + '.dbname'}
+                                   onSetValueByReducersCallback={::this.onSetValueByReducersCallback}
+                                   defaultValue={dbconectInfo.dbname}/>
+                    </Inputlabel>
+                    <Inputlabel type={1} star={true} title='物理库名称' display={editerType == 1}>
+                        <InputPlus {..._props}
+                                   validRules={{maxLength: 50}} valueLink={this.dbconectInfoLink + '.db_catalog'}
+                                   onSetValueByReducersCallback={::this.onSetValueByReducersCallback}
+                                   defaultValue={dbconectInfo.db_catalog}/>
+                    </Inputlabel>
                     <Inputlabel type={1} star={true} title='数据库地址'>
                         <InputPlus {..._props}
                                    validRules={{maxLength: 50}} valueLink={this.dbconectInfoLink + '.db_address'}
@@ -60,7 +74,8 @@ export default class EditorDBInfo extends Component {
                     </Inputlabel>
                     <Inputlabel type={1} star={true} title='数据库端口'>
                         <InputPlus {..._props}
-                                   validRules={{isInt: true, maxLength: 10}} valueLink={this.dbconectInfoLink + '.db_port'}
+                                   validRules={{isInt: true, maxLength: 10}}
+                                   valueLink={this.dbconectInfoLink + '.db_port'}
                                    onSetValueByReducersCallback={::this.onSetValueByReducersCallback}
                                    defaultValue={dbconectInfo.db_port}/>
                     </Inputlabel>
