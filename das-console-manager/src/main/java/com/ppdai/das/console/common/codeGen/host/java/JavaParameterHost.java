@@ -238,6 +238,8 @@ public class JavaParameterHost extends AbstractParameterHost {
         String temp = name.replace("@", "");
         if (temp.contains("_")) {
             temp = WordUtils.capitalizeFully(temp.replace('_', ' ')).replace(" ", "");
+        } else if (temp.toUpperCase().equals(temp)) {
+            temp = WordUtils.capitalizeFully(temp);
         }
         return WordUtils.uncapitalize(temp);
     }
