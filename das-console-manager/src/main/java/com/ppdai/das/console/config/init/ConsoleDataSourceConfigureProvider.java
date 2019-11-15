@@ -25,7 +25,7 @@ import java.util.Map;
  * das.xml:
  *
  * <ConnectionLocator>
- * <locator>com.ppdai.das.core.datasource.DefaultDalConnectionLocator</locator>
+ * <locator>com.ppdai.das.core.DefaultConnectionLocator</locator>
  * <settings>
  * <dataSourceConfigureProvider>ConsoleDataSourceConfigureProvider</dataSourceConfigureProvider>
  * </settings>

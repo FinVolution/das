@@ -141,7 +141,7 @@ public class ResourceUtil {
                 .addAttribute("databaseType", "Master")
                 .addAttribute("sharding", "1");
         Element connectionLocator =  root.addElement("ConnectionLocator");
-        connectionLocator.addElement("locator").addText("com.ppdai.das.core.datasource.DefaultDalConnectionLocator");
+        connectionLocator.addElement("locator").addText("com.ppdai.das.core.DefaultConnectionLocator");
         connectionLocator.addElement("settings").addElement("dataSourceConfigureProvider").addText("com.ppdai.das.console.config.init.ConsoleDataSourceConfigureProvider");
         try (FileWriter fileWriter = new FileWriter(getDasXmlPath())) {
             XMLWriter writer = new XMLWriter(fileWriter);
