@@ -219,17 +219,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>ppdai-releases-repo</id>
-			<name>Internal Releases</name>
-			<url>http://maven.repo.ppdai.com/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>ppdai-snapshots-repo</id>
-			<name>Internal Snapshots</name>
-			<url>http://maven.repo.ppdai.com/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
