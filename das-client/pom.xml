@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ppdai.das</groupId>
 	<artifactId>das-client</artifactId>
-	<version>2.2.2-SNAPSHOT</version>
+	<version>2.2.2</version>
 	<properties>
 		<ver.version>${project.version}</ver.version>
 		<junit-version>4.4</junit-version>
@@ -219,4 +219,17 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>ppdai-releases-repo</id>
+			<name>Internal Releases</name>
+			<url>http://maven.repo.ppdai.com/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ppdai-snapshots-repo</id>
+			<name>Internal Snapshots</name>
+			<url>http://maven.repo.ppdai.com/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
