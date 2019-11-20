@@ -236,10 +236,9 @@ public class JavaParameterHost extends AbstractParameterHost {
 
     public String getCamelCaseUncapitalizedName() {
         String temp = name.replace("@", "");
+        temp = WordUtils.capitalizeFully(temp);
         if (temp.contains("_")) {
             temp = WordUtils.capitalizeFully(temp.replace('_', ' ')).replace(" ", "");
-        } else if (temp.toUpperCase().equals(temp)) {
-            temp = WordUtils.capitalizeFully(temp);
         }
         return WordUtils.uncapitalize(temp);
     }
