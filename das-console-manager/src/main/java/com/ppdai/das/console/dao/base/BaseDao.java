@@ -3,8 +3,10 @@ package com.ppdai.das.console.dao.base;
 import com.ppdai.das.client.DasClient;
 import com.ppdai.das.client.Parameter;
 import com.ppdai.das.client.SqlBuilder;
+import com.ppdai.das.console.api.ConfigLoader;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -17,9 +19,12 @@ public class BaseDao {
     @Setter
     public DasClient dasClient;
 
+    @Autowired
+    private ConfigLoader configLoader;
+
     public DasClient getDasClient() {
         if (dasClient == null) {
-            this.dasClient = DasClientGetter.getClient();
+            this.dasClient = DasClientGetter.getClient(configLoader.isLoaderFile());
         }
         return this.dasClient;
     }

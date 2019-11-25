@@ -13,10 +13,12 @@ public class DasClientGetter {
 
     private static DasClient client;
 
-    public synchronized static DasClient getClient() {
+    public synchronized static DasClient getClient(boolean isLoaderFile) {
         if (null == client) {
             try {
-                ResourceUtil.getSingleInstance().resetDalConfigUrl();
+                if (isLoaderFile) {
+                    ResourceUtil.getSingleInstance().resetDalConfigUrl();
+                }
                 client = DasClientFactory.getClient(ResourceUtil.DATA_SET_BASE);
             } catch (SQLException e) {
                 log.error(StringUtil.getMessage(e));
