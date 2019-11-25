@@ -4,6 +4,7 @@ import com.ppdai.das.client.DasClient;
 import com.ppdai.das.client.Parameter;
 import com.ppdai.das.client.SqlBuilder;
 import com.ppdai.das.console.api.ConfigLoader;
+import com.ppdai.das.console.api.impl.FileConfigLoader;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,10 @@ public class BaseDao {
 
     @Autowired
     private ConfigLoader configLoader;
+
+    public BaseDao(){
+        this.configLoader = new FileConfigLoader();
+    }
 
     public DasClient getDasClient() {
         if (dasClient == null) {
