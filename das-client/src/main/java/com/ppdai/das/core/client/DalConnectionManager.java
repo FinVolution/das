@@ -2,6 +2,7 @@ package com.ppdai.das.core.client;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Set;
 
 import com.ppdai.das.core.ConnectionLocator;
@@ -94,7 +95,11 @@ public class DalConnectionManager {
 	}
 	
 	private String getShardId(Hints hints) throws SQLException {
-	    Set<String> shards = config.getDatabaseSet(logicDbName).getStrategy().locateDbShards(new ShardingContext(config, logicDbName, hints, ConditionList.andList()));
+		ConditionList conditionList = ConditionList.andList();
+		if(hints.isDiagnose()) {
+			hints.getDiagnose().append("ConditionList", Objects.toString(conditionList, "conditions is null"));
+		}
+	    Set<String> shards = config.getDatabaseSet(logicDbName).getStrategy().locateDbShards(new ShardingContext(config, logicDbName, hints, conditionList));
 	    if(shards.isEmpty())
 	        return null;
 

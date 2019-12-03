@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.ppdai.das.client.Hints;
 import com.ppdai.das.client.sqlbuilder.AbstractColumn;
 
 /**
@@ -64,18 +65,28 @@ public abstract class AbstractConditionStrategy extends AbstractShardingStrategy
 
     @Override
     public Set<String> locateDbShards(ShardingContext ctx) {
-        return ctx.hasShardValue() ?
+        Set<String> dbShards = ctx.hasShardValue() ?
                 locateDbShardsByValue(ctx, ctx.getShardValue()):
                     locateShards(this::isDbShardingRelated, this::locateDbShards, ctx, ctx.getConditions());
+        recordShardsToDiagnose(ctx.getHints(), dbShards);
+        return dbShards;
     }
 
     @Override
     public Set<String> locateTableShards(TableShardingContext ctx) {
-        return ctx.hasTableShardValue() ? 
+        Set<String> tableShards = ctx.hasTableShardValue() ?
                 locateTableShardsByValue(ctx, ctx.getTableShardValue()) :
                     locateShards((tableCtx)->isTableShardingRelated((TableConditionContext)tableCtx), (tableCtx)->locateTableShards((TableConditionContext)tableCtx), ctx, ctx.getConditions());
+        recordShardsToDiagnose(ctx.getHints(), tableShards);
+        return tableShards;
     }
-    
+
+    private void recordShardsToDiagnose(Hints hints, Set<String> shards) {
+        if(hints.isDiagnose()) {
+            hints.getDiagnose().append("table shards of AbstractConditionStrategy", shards.toString());
+        }
+    }
+
     private Set<String> locateShards(Predicate<ConditionContext> isRelated, Function<ConditionContext, Set<String>> locator, ShardingContext shardingContext, ConditionList conditions) {
         Set<String> allShards = shardingContext.getAllShards();
         Set<String> shards = conditions.isIntersected() ? new TreeSet<>(allShards) : new TreeSet<>();
