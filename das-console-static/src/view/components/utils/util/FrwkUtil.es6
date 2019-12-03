@@ -177,6 +177,9 @@ FrwkUtil.load = {
 }
 
 FrwkUtil.createContent = data => {
+    if(!DataUtil.is.String(data)){
+        return data
+    }
     const content = []
     if (data.includes(';')) {
         const arr = data.split(';')
