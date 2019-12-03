@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.ppdai.das.client.Hints;
@@ -195,6 +196,9 @@ public class ShardingManager {
         DatabaseSet dbSet = DasConfigureFactory.getConfigure(appId).getDatabaseSet(logicDbName);
 
         Set<String> shards;
+        if(hints.isDiagnose()) {
+            hints.getDiagnose().append("ConditionList", Objects.toString(conditions, "conditions is null"));
+        }
         if(hints.is(HintEnum.shard)){
             shards = new HashSet<>();
             shards.add(hints.getShard());
