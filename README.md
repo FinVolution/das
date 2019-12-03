@@ -57,7 +57,9 @@ DAS最开始是由前拍拍贷基础框架负责人杨波发起，并获得时�
 * DAS透明的支持本地直连和基于代理的数据库连接模式，允许用户在数据库不断增长的情况下平滑升级整体架构
 
 # 技术支持
-TBD
+DAS支持QQ群：697580306
+
+![tect support](https://github.com/ppdaicorp/das/blob/master/das-client/doc/img/tech_support.png)
 
 # 用户文档
 [wiki](https://github.com/ppdaicorp/das/wiki)
